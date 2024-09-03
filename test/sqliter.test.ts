@@ -26,7 +26,7 @@ describe("sqlite", () => {
   });
 
   test("count", async () => {
-    const v = await sqlite.count(`name="title"`);
+    const v = await sqlite.count(`name='title'`);
     console.log(v)
     expect(v).toStrictEqual(1);
   });
@@ -34,7 +34,7 @@ describe("sqlite", () => {
   test('find', async () => {
     const docs = await sqlite.find('id=1').select('id,name').order('id ASC').limit(0).skip(0);
     expect(docs.length).toBe(1);
-    expect(docs[0].name).toBe('first');
+    expect(docs[0].name).toBe('title');
   });
 
   test('update', async () => {

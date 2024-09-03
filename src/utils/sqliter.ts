@@ -17,7 +17,7 @@ function transformValue(v: boolean | string | number | Date | Object | null) {
     case 'number':
       return v;
     case 'string':
-      return `"${v}"`;
+      return `'${v}'`;
     default:
       if (v === null) {
         return "NULL"

@@ -5,7 +5,7 @@
   "scripts": {
     "start": "bun src/server.ts",
     "dev": "bun --hot run src/server.ts",
-    "test": "bun test test/count.test.ts",
+    "test": "bun test test/*.ts",
     "coverage": "bun test --coverage test/*"
   },
   "devDependencies": {
