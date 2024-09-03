@@ -3,13 +3,14 @@ import Sqlite from "./utils/sqliter";
 
 const db = new Database("data/panel.db", { create: true });
 Sqlite(db, 'groups').create({
-  id: 'INTERGER PRIMARY KEY',
-  index: 'INTEGER',
+  id: 'CHAR(40) PRIMARY KEY',
+  nth: 'INTEGER',
   name: 'CHAR(50)',
   fold: "INTEGER"
 });
+
 Sqlite(db, 'apps').create({
-  id: 'INTEGER PRIMARY KEY',
+  id: 'CHAR(40) PRIMARY KEY',
   gid: 'INTEGER',
   name: 'CHAR(100)',
   desc: 'CHAR(100)',
@@ -21,17 +22,24 @@ Sqlite(db, 'apps').create({
   bg_url: 'CHAR(300)',
   bg_color: 'CHAR(50)',
 });
-Sqlite(db, 'engines').create({
-  id: 'INTEGER',
-  name: 'CHAR(100)',
-  inuse: 'INTEGER'
-});
-Sqlite(db, 'config').create({
-  mode: 'CHAR(10)',
-  engine_id: 'INTEGER',
+
+Sqlite(db, 'images').create({
+  id: 'CHAR(40)',
   title: 'CHAR(100)',
-  logo: 'CHAR(300)',
-  bg: 'CHAR(300)',
+  filepath: 'CHAR(300)',
+  created_time: 'CHAR(50)',
+});
+
+Sqlite(db, 'engines').create({
+  name: 'CHAR(100)',
+  title: 'CHAR(100)',
+  icon: 'CHAR(300)',
+  url: 'CHAR(300)',
+});
+Sqlite(db, 'configs').create({
+  name: 'CHAR(100)',
+  title: 'CHAR(100)',
+  value: 'CHAR(300)',
 });
 db.close(false);
 

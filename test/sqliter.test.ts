@@ -7,7 +7,8 @@ const db = new Database("data/temp.db", { create: true });
 db.query(`DROP TABLE IF EXISTS apps`).run();
 db.query(`CREATE TABLE IF NOT EXISTS apps(
     id INTEGER PRIMARY KEY,
-    name CHAR(100)
+    name CHAR(100),
+    title CHAR(100)
   ); `).run();
 const sqlite = Sqlite<{ id: number, name: string }>(db, 'apps');
 
@@ -21,7 +22,13 @@ describe("sqlite", () => {
   });
 
   test("insert", async () => {
-    expect(sqlite.insertOne({ id: 1, name: 'first' })).toStrictEqual({ changes: 1, lastInsertRowid: 1 });
+    expect(sqlite.insertOne({ id: 1, name: 'title' })).toStrictEqual({ id: 1, name: "title" });
+  });
+
+  test("count", async () => {
+    const v = await sqlite.count(`name="title"`);
+    console.log(v)
+    expect(v).toStrictEqual(1);
   });
 
   test('find', async () => {

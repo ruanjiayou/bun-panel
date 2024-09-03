@@ -3,19 +3,13 @@ import type {
   Response as ResponseBase,
   NextFunction,
 } from 'express';
-import type { ServerResponse } from 'http'
-
-export interface Response extends ResponseBase, ServerResponse {
-  success(data: any): void;
-  fail(message: string, code?: number): void;
-};
 
 declare global {
   namespace Express {
     interface Request extends RequsetBase {
       paging(): { limit: number, page: number, limit: number };
     };
-    interface Response extends ResponseBase, ServerResponse {
+    interface Response extends ResponseBase {
       success(data: any): void;
       fail(message: string, code?: number): void;
     };

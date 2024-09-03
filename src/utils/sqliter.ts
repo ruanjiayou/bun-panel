@@ -65,7 +65,8 @@ class Helper<T> {
    */
   insertOne(data: T) {
     const sql = `INSERT INTO ${this.table}(${Object.keys(data as Object).join(',')}) VALUES(${Object.keys(data as any).map((k: string) => transformValue((data as { [key: string]: string | boolean | Date | number | null })[k]))})`;
-    return this.db.query(sql).run();
+    this.db.query(sql).run();
+    return data;
   }
   /**
    * 设置查询数量
@@ -123,6 +124,16 @@ class Helper<T> {
     this.hql.where = where || '';
     return this;
   }
+  findOne(where?: string) {
+    this.hql.op = 'findOne';
+    this.hql.where = where || '';
+    return this;
+  }
+  count(where?: string) {
+    this.hql.op = 'count';
+    this.hql.where = where || '';
+    return this;
+  }
   /**
    * 更新记录
    * @param where 查询条件
@@ -152,7 +163,7 @@ class Helper<T> {
   exec(sql: string) {
     return this.db.query(sql).run();
   }
-  async then(resolve: (v: any) => void) {
+  async then(resolve: (v: any) => null | T | T[]) {
     let sql = '';
     const h = this.hql;
     switch (h.op) {
@@ -165,6 +176,15 @@ class Helper<T> {
           ${h.limit ? 'LIMIT ' + h.limit : ''} 
         `;
         break;
+      case 'findOne':
+        sql = `
+          SELECT ${h.attr || '*'}
+          FROM ${this.table}
+          ${h.where ? 'WHERE ' + h.where : ''}
+          ${h.order ? 'ORDER BY ' + h.order : ''}
+        `;
+        let v1: any = this.db.query(sql).get();
+        return resolve(v1);
       case 'update':
         sql = `
           UPDATE ${this.table}
@@ -177,11 +197,20 @@ class Helper<T> {
           DELETE FROM ${this.table}
           ${h.where ? 'WHERE ' + h.where : ''}
         `;
-        break;
+        const v3 = this.db.query(sql).run();
+        return resolve(v3);
+      case 'count':
+        sql = `SELECT COUNT(name) AS count FROM ${this.table} ${h.where ? 'WHERE ' + h.where : ''}`;
+        let v2 = await this.db.query(sql).get() as { count: number };
+        return resolve(v2.count);
       default: break;
     }
-    const result = h.op === 'find' ? this.db.query(sql).all() : this.db.query(sql).run();
-    resolve(result);
+    try {
+      const result = h.op === 'find' ? this.db.query(sql).all() : this.db.query(sql).run();
+      resolve(result);
+    } catch (e) {
+      resolve(e);
+    }
   }
 }
 
