@@ -22,7 +22,7 @@ router.post('/', upload.single('image'), async (req, res) => {
   const data = {
     id,
     title: req.body.title || '',
-    filepath: `static/uploads/${id}.jpg`,
+    filepath: `/uploads/${id}.jpg`,
     created_time: new Date().toISOString(),
   }
   if (req.file) {

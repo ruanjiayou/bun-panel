@@ -16,7 +16,7 @@ export default function (req: Request, res: Response, next: NextFunction) {
     res.json(result);
   }
   res.fail = function (message: string, code?: number) {
-    res.end({ code: code || -1, message });
+    res.json({ code: code || -1, message });
   }
   next();
 }

@@ -38,7 +38,7 @@ router.delete('/:name', async (req, res) => {
   const Sengine = Sqlite(db, 'engines');
   const Sconfig = Sqlite(db, 'configs');
   const engine = await Sconfig.find(`name="engine"`);
-  if (!engine) {
+  if (name !== engine) {
     await Sengine.destroy(`name="${name}"`);
     res.success();
   } else {

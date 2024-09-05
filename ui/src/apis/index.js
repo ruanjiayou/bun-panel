@@ -13,11 +13,11 @@ async function getGroups() {
 }
 
 async function createGroup(data) {
-  return await request.post('/api/groups', { body: JSON.stringify(data) });
+  return await request.post('/api/groups', data);
 }
 
 async function updateGroup(id, data) {
-  return await request.put(`/api/groups/${id}`, { body: JSON.stringify(data) });
+  return await request.put(`/api/groups/${id}`, data);
 }
 
 async function deleteGroup(id) {
@@ -27,27 +27,29 @@ async function getApps() {
   return await request.get('api/apps');
 }
 async function createApp(data) {
-  return await request.post('/api/apps', { body: JSON.stringify(data) });
+  return await request.post('/api/apps', data);
 }
 
 async function updateApp(id, data) {
-  return await request.put(`/api/apps/${id}`, { body: JSON.stringify(data) });
+  return await request.put(`/api/apps/${id}`, data);
 }
 
 async function deleteApp(id) {
   return await request.delete(`/api/apps/${id}`);
 }
-
+async function getEngines() {
+  return await request.get('/api/engines');
+}
 async function createEngine(data) {
-  return await request.post('/api/engines', { body: JSON.stringify(data) });
+  return await request.post('/api/engines', data);
 }
 
 async function updateEngine(id, data) {
-  return await request.put(`/api/engines/${id}`, { body: JSON.stringify(data) });
+  return await request.put(`/api/engines/${id}`, data);
 }
 
-async function deleteEngine(id) {
-  return await request.delete(`/api/engines/${id}`);
+async function deleteEngine(name) {
+  return await request.delete(`/api/engines/${name}`);
 }
 
 async function getImages() {
@@ -69,6 +71,7 @@ const apis = {
   createGroup,
   updateGroup,
   deleteGroup,
+  getEngines,
   createEngine,
   updateEngine,
   deleteEngine,
