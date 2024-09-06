@@ -3,17 +3,18 @@
 > 
 ![图片](./screen_shot_1.png)
 
-To install dependencies:
+## usage
+- bun install
+- bun start
 
-```bash
-bun install
-```
+## develope
+- bun install
+- cd ui && bun install
+- cd ../ && bun run dev
 
-To run:
-
-```bash
-bun start
-```
+## docker
+- docker pull ruanjiayou/bun-panel
+- docker run ruanjiayou/bun-panel -p 5555:5555 -v ./db://usr/src/app/data -v ./uploads://usr/src/app/static/uploads --name bun-panel
 
 ## TODO
 - [x] api设计
@@ -22,6 +23,7 @@ bun start
 - [x] 添加修改分组和应用
 - [ ] 删除应用
 - [ ] 分组和应用排序
+- [ ] push to npm & docker
 
 This project was created using `bun init` in bun v1.1.26. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
 
