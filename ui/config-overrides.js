@@ -9,7 +9,7 @@ module.exports = {
         headers: {
           'Content-Type': 'application/json'
         },
-        pathRewrite: { '^/api': '/' }
+        // pathRewrite: { '^/api': '/' }
       },
       '/uploads/': {
         target: 'http://127.0.0.1:5555',

@@ -33,10 +33,8 @@ router.delete('/:id', async (req, res) => {
   const db = getDb();
   const Sgroup = Sqlite(db, 'groups');
   const Sapp = Sqlite<{}>(db, 'apps');
-  const apps = await Sapp.find(`gid="${id}"`) as {}[];
-  if (apps.length === 0) {
-    await Sgroup.destroy(`id="${id}"`);
-  }
+  await Sgroup.destroy(`id="${id}"`);
+  await Sapp.destroy(`gid="${id}"`);
   db.close(false);
   res.success();
 });

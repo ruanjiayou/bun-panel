@@ -19,6 +19,9 @@ const Title = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  background-color: #eeeeee;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 `
 
 const Main = styled.div`
@@ -26,16 +29,16 @@ const Main = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%,-65%);
-  min-width: 600px;
-  min-height: 400px;
   background-color: #fff;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
 `
 const Body = styled.div`
-  flex: 1;
   overflow-y: auto;
+  width: 500px;
+  min-height: 200px;
+  display: flex;
 `
 const Footer = styled.div`
   margin: 10px;
@@ -60,7 +63,7 @@ const local = {
   total: 0,
   current: 1000,
 }
-export default function Modal({ title, children, visible, onSave, onClose }) {
+export default function Modal({ title, style, children, visible, onSave, onClose }) {
   const store = useLocalStore(() => ({
     index: local.current + 1,
     loading: false,
@@ -87,7 +90,7 @@ export default function Modal({ title, children, visible, onSave, onClose }) {
             <svg t="1725503348064" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="36100" width="24" height="24"><path d="M572.16 512l183.466667-183.04a42.666667 42.666667 0 1 0-60.586667-60.586667L512 451.84l-183.04-183.466667a42.666667 42.666667 0 0 0-60.586667 60.586667l183.466667 183.04-183.466667 183.04a42.666667 42.666667 0 0 0 0 60.586667 42.666667 42.666667 0 0 0 60.586667 0l183.04-183.466667 183.04 183.466667a42.666667 42.666667 0 0 0 60.586667 0 42.666667 42.666667 0 0 0 0-60.586667z" p-id="36101"></path></svg>
           </span>
         </Title>
-        <Body>
+        <Body style={style || {}}>
           {children}
         </Body>
         <Footer>

@@ -26,7 +26,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     created_time: new Date().toISOString(),
   }
   if (req.file) {
-    await rename(req.file.path, data.filepath)
+    await rename(req.file.path, "static/" + data.filepath)
   }
   const doc = sqliter.insertOne(data);
   sqliter.db.close(false);

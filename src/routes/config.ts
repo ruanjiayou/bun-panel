@@ -11,6 +11,17 @@ router.get('/', async (req, res) => {
   res.success(arr);
 });
 
+router.put('/', async (req, res) => {
+  const configs = req.body;
+  const sqliter = Sqlite<{ title: string, name: string, value: number | string }>(getDb(), 'configs');
+  for (let i = 0; i < configs.length; i++) {
+    const { name, value } = configs[i];
+    await sqliter.update(`name="${name}"`, { value });
+  }
+  sqliter.db.close(false);
+  res.success();
+});
+
 router.put('/:name', async (req, res) => {
   const sqliter = Sqlite<{ title: string, name: string, value: number | string }>(getDb(), 'configs');
   const count = await sqliter.count(`name="${req.params.name}"`);

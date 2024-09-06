@@ -1,3 +1,4 @@
+import { Observer } from 'mobx-react-lite';
 import apis from '../../apis/index.js';
 import styled from 'styled-components';
 
@@ -5,6 +6,7 @@ const Button = styled.label`
   border: 1px solid #ccc;
   padding: 5px 10px;
   border-radius: 5px;
+  font-size: 14px;
 `
 
 function Uploader({ value, id, field = "image", onUpload }) {
@@ -18,15 +20,13 @@ function Uploader({ value, id, field = "image", onUpload }) {
     fd.append(field, selectedFile);
     apis.uploadImage(fd).then(resp => {
       onUpload && onUpload(resp)
-    })
-    // 这里可以添加文件上传的逻辑，例如发送到服务器
-    console.log('Selected file:', selectedFile);
+    });
   };
 
-  return (
-    <div>
-      <div>
-        {value && <img src={value} alt="preview" />}
+  return <Observer>{() => (
+    <div style={{ marginBottom: 10 }}>
+      <div style={{ width: 150, marginBottom: 10 }}>
+        {value && <img src={value} style={{ width: '100%' }} alt="preview" />}
       </div>
       <input
         id={id}
@@ -39,7 +39,7 @@ function Uploader({ value, id, field = "image", onUpload }) {
       </Button>
 
     </div>
-  );
+  )}</Observer>;
 }
 
 export default Uploader;

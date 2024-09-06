@@ -4,6 +4,10 @@ async function getConfigs() {
   return await request.get('/api/config');
 }
 
+async function batchUpdateConfig(data) {
+  return request.put(`/api/config`, data);
+}
+
 async function updateConfig(name, value) {
   return await request.put(`/api/config/${name}`, { value });
 }
@@ -56,7 +60,7 @@ async function getImages() {
   return await request.get('/api/images');
 }
 async function uploadImage(formdata) {
-  return await request.post('/api/images', { body: formdata });
+  return await request.post('/api/images', formdata, { headers: { 'Content-Type': 'multipart/form-data' } });
 }
 async function deleteImage(id) {
   return await request.delete(`/api/images/${id}`);
@@ -77,6 +81,7 @@ const apis = {
   deleteEngine,
   getConfigs,
   updateConfig,
+  batchUpdateConfig,
   getImages,
   uploadImage,
   deleteImage,

@@ -4,15 +4,11 @@ export const Right = styled.div`
   text-align: right;
   flex: 1;
 `;
-export const CenterXY = styled.div`
-  height: 100%;
+
+export const Center = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-export const Center = styled.div`
-  text-align: center;
 `
 
 export const AlignAside = styled.div`
@@ -74,4 +70,20 @@ export const Padding = styled.div`
 
 export const PaddingSide = styled.div`
   padding: 0 15px;
+`
+
+
+export const FormItem = styled.div`
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+`
+export const FormLabel = styled.div`
+  width: 150px;
+  text-align: right;
+  padding-right: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: end;
+  font-size: 14px;
 `

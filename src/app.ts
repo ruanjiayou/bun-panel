@@ -15,19 +15,25 @@ const app = express();
 app.use(express.static('static'));
 app.use(compression());
 app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: false, parameterLimit: 100 }));
+app.use(bodyParser.urlencoded({ extended: true, parameterLimit: 100 }));
 
 app.use(ctx);
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
 app.get('/', (req, res) => {
   res.json({ message: 'ok' })
 });
 
-app.use('/groups', groups);
-app.use('/apps', apps);
-app.use('/config', configs);
-app.use('/engines', engines);
-app.use('/images', images);
+app.use('/api/groups', groups);
+app.use('/api/apps', apps);
+app.use('/api/config', configs);
+app.use('/api/engines', engines);
+app.use('/api/images', images);
 
 app.use((req, res, next) => {
   if (!res.headersSent) {
