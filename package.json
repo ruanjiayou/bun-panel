@@ -29,8 +29,5 @@
     "multer": "^1.4.5-lts.1",
     "patch-package": "^8.0.0",
     "uuid": "^10.0.0"
-  },
-  "patchedDependencies": {
-    "@types/express-serve-static-core@4.19.5": "patches/@types%2Fexpress-serve-static-core@4.19.5.patch"
   }
 }
