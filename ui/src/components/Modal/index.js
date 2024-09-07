@@ -14,7 +14,7 @@ const Mask = styled.div`
 
 `
 const Title = styled.div`
-  padding: 10px;
+  padding: 8px 15px;
   display: flex;
   flex-direction: row;
   align-items: center;

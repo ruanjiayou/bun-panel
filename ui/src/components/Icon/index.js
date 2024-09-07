@@ -6,7 +6,16 @@ import { ReactComponent as lan } from '../../assets/lan.svg'
 import { ReactComponent as menu } from '../../assets/menu.svg'
 import { ReactComponent as search } from '../../assets/search.svg'
 import { Observer } from 'mobx-react-lite'
-import { Center } from '../style.js'
+import styled from 'styled-components'
+
+export const Center = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    opacity: 0.4;
+  }
+`
 
 const types = {
   add,

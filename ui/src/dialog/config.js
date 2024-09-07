@@ -1,10 +1,10 @@
 import { Observer, useLocalStore } from "mobx-react-lite";
-import { Modal, Uploader, Switch } from "../components/index.js";
+import { Modal, Uploader, Switch, Select } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
 import { toJS } from "mobx";
 import { useEffect } from "react";
 
-export default function DialogConfig({ visible, data, onClose, onSave, children }) {
+export default function DialogConfig({ visible, data, engines, onClose, onSave, children }) {
   const local = useLocalStore(() => ({}));
   useEffect(() => {
     Object.keys(data).forEach(k => {
@@ -33,6 +33,12 @@ export default function DialogConfig({ visible, data, onClose, onSave, children 
           <FormLabel>网络模式</FormLabel>
           <div>
             <Switch checked={local.network === 'WAN'} onSwitch={checked => local.network = checked ? 'WAN' : 'LAN'}>{local.network === 'LAN' ? '内网' : '公网'}</Switch>
+          </div>
+        </FormItem>
+        <FormItem>
+          <FormLabel>默认搜索引擎</FormLabel>
+          <div>
+            <Select value={local.engine} items={engines.map(it => ({ title: it.name, value: it.name }))} onChange={v => local.engine = v}></Select>
           </div>
         </FormItem>
         <FormItem>

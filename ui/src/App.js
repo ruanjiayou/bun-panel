@@ -62,6 +62,7 @@ const AppIcon = styled.img`
   width: 50px;
   height: 50px;
   margin: 0 15px 0 10px;
+  border-radius:10px;
 `
 const AppTitle = styled.div`
   font-size: 16px;
@@ -105,14 +106,13 @@ function App() {
     const resp = await apis.getConfigs();
     const resp2 = await apis.getGroups();
     const resp3 = await apis.getApps();
-    await initEngine();
     if (resp.status === 200 && resp.data.code === 0) {
       local.configs = resp.data.data;
       local.configs.forEach(config => {
         local.config[config.name] = config.value;
       });
     }
-
+    await initEngine();
     if (resp2.status === 200 && resp3.status === 200) {
       const groups = resp2.data.data.map(g => { g.apps = []; return g; });
       const others = { id: '', name: '未分组', fold: true, apps: [] }
@@ -194,7 +194,10 @@ function App() {
       <div className="App" style={{ backgroundImage: local.config.background_url ? `url(${local.config.background_url})` : '' }}>
         <div style={{ position: 'relative', width: '100%', height: '5vh' }}>
           <MenuWrap>
-            <Icon type={local.config.network === 'LAN' ? 'lan' : 'wan'} size={20} />
+            <Icon type={local.config.network === 'LAN' ? 'lan' : 'wan'} size={20} onClick={async () => {
+              local.config.network = local.config.network === 'LAN' ? 'WAN' : 'LAN';
+              await apis.updateConfig('network', local.config.network);
+            }} />
             <Icon type={'menu'} size={20} onClick={() => {
               local.showMenu = !local.showMenu;
             }} />
@@ -202,8 +205,8 @@ function App() {
         </div>
         <div className='title'>{local.config.title}</div>
         {[1, "1"].includes(local.config.show_search) && <div className='search'>
-          <div>{local.defaultEngine && <img src={local.defaultEngine.icon} style={{ marginLeft: 15, width: 24 }} alt="engine" />}</div>
-          <input id="search" onCompositionStart={() => {
+          <Center>{local.defaultEngine && <img src={local.defaultEngine.icon} style={{ marginLeft: 10, marginRight: 5, width: 24 }} alt="engine" />}</Center>
+          <input id="search" autoComplete='off' placeholder='搜索答案' onCompositionStart={() => {
             setInputing(true);
           }} onCompositionEnd={() => {
             setInputing(false)
@@ -213,7 +216,7 @@ function App() {
               search(q);
             }
           }} />
-          <div style={{ paddingRight: 10, cursor: 'pointer' }} onClick={() => {
+          <div style={{ padding: 8, marginRight: 5, cursor: 'pointer' }} onClick={() => {
             const elem = document.getElementById('search');
             search(elem.value.trim())
             elem.value = '';
@@ -223,7 +226,7 @@ function App() {
         </div>}
         <div className='application'>
           {local.groups.map(group => {
-            return group.apps.length && <Group key={group.id}>
+            return group.apps.length !== 0 && <Group key={group.id}>
               <GroupTitle>
                 {group.name}
                 <div style={{ display: group.id ? 'flex' : 'none', marginLeft: 20, cursor: 'pointer', }} onClick={() => {
@@ -238,7 +241,7 @@ function App() {
                   return <Card key={app.id}
                     style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center' }}
                     target={app.open === 1 ? '_blank' : '_self'}
-                    href={local.config.net_mode === 'local' ? app.url_internal || app.url : app.url}
+                    href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
                     onContextMenu={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
@@ -247,9 +250,9 @@ function App() {
                     }}
                   >
                     {app.cover && <AppIcon src={app.cover} />}
-                    <div style={{ display: 'flex', height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
+                    <div style={{ display: 'flex', width: 150, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
                       <AppTitle>{app.name}</AppTitle>
-                      <AppDesc>{app.desc}</AppDesc>
+                      <AppDesc title={app.desc}>{app.desc}</AppDesc>
                     </div>
                   </Card>
                 })}
@@ -258,7 +261,7 @@ function App() {
             </Group>
           })}
         </div>
-        <DialogConfig visible={local.showMenu} data={toJS(local.config)} onClose={() => local.showMenu = false} onSave={async (data) => {
+        <DialogConfig visible={local.showMenu} engines={local.engines} data={toJS(local.config)} onClose={() => local.showMenu = false} onSave={async (data) => {
           await apis.batchUpdateConfig(data);
           await init();
         }}>
@@ -287,7 +290,7 @@ function App() {
                 local.showEditEngine = true;
                 local.temp_engine = {};
               }}>
-                添加搜索 <Icon type="add" size={16} />
+                添加搜索 <Icon type="add" size={16} style={{ marginLeft: 5 }} />
               </Center>
             </div>
           </FormItem>
@@ -295,7 +298,7 @@ function App() {
             <FormLabel>分组管理</FormLabel>
             <div style={{ width: 150 }}>
               {local.groups.map(group => (
-                <AlignAside key={group.id} style={{ marginBottom: 10 }}>
+                group.id && <AlignAside key={group.id} style={{ marginBottom: 10 }}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     {group.name}
                   </div>
@@ -313,7 +316,7 @@ function App() {
                 };
                 local.showEditGroup = true
               }}>
-                添加分组<Icon type="add" size={16} />
+                添加分组<Icon type="add" size={16} style={{ marginLeft: 5 }} />
               </Center>
             </div>
           </FormItem>

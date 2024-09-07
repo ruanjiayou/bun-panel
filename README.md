@@ -23,7 +23,8 @@
 - [x] 添加修改分组和应用
 - [ ] 删除应用
 - [ ] 分组和应用排序
-- [ ] push to npm & docker
+- [x] push to npm
+- [ ] push to docker
 
 This project was created using `bun init` in bun v1.1.26. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
 

@@ -7,6 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #363636;
 }
+
 /* 隐藏文件名 */
 input[type="file"]::-webkit-file-upload-button {
   display: none;
@@ -59,7 +60,7 @@ textarea:focus {
 }
 
 .search {
-  width: 30%;
+  width: 40%;
   max-width: 500px;
   text-align: center;
   margin: 50px auto 0 auto;
@@ -67,13 +68,14 @@ textarea:focus {
   border-radius: 20px;
   align-items: center;
   display: flex;
-
+  padding-right: 3px;
+  background-color: #00000080;
 }
 
 .search input {
   background-color: transparent;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 0;
   font-size: 18px;
   color: #fff;
   flex: 1;
@@ -82,6 +84,10 @@ textarea:focus {
 .search input:focus {
   box-shadow: none;
   outline: none;
+}
+
+.search input::placeholder {
+  color: #ccc;
 }
 
 .application {
