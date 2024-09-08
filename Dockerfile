@@ -17,9 +17,9 @@ RUN cd /temp/prod && HTTPS_PROXY=http://192.168.0.125:8888 bun install --frozen-
 
 # copy node_modules from temp folder
 # then copy all (non-ignored) project files into the image
-FROM install AS prerelease
-COPY --from=install /temp/dev/node_modules node_modules
-COPY . .
+# FROM install AS prerelease
+# COPY --from=install /temp/dev/node_modules node_modules
+# COPY . .
 
 # [optional] tests & build
 # ENV NODE_ENV=production
@@ -29,7 +29,7 @@ COPY . .
 # copy production dependencies and source code into final image
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
-COPY --from=prerelease . .
+COPY . .
 
 # run the app
 USER bun
