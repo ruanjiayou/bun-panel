@@ -23,14 +23,14 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'apps');
-  sqliter.update(`id="${req.params.id}"`, req.body);
+  await sqliter.update(`id="${req.params.id}"`, req.body);
   sqliter.db.close(false);
   res.success();
 });
 
 router.delete('/:id', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'apps');
-  sqliter.destroy(`id="${req.params.id}"`);
+  await sqliter.destroy(`id="${req.params.id}"`);
   sqliter.db.close(false);
   res.success();
 });

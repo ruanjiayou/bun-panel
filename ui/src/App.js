@@ -10,6 +10,7 @@ import DialogEngine from './dialog/engine.js';
 import { Icon, toast } from './components/index.js'
 import { FormItem, FormLabel, AlignAside, Center } from './components/style.js';
 import DialogApp from './dialog/app.js';
+import DialogApps from './dialog/apps.js';
 import DialogConfig from './dialog/config.js';
 import { toJS } from 'mobx';
 
@@ -49,7 +50,7 @@ const Card = styled.a`
   display: flex;
   flex-direction: row;
   min-height: 50px;
-  min-width: 200px;
+  min-width: 210px;
   color: white;
   border-radius: 10px;
   padding: 10px;
@@ -77,6 +78,7 @@ function App() {
   const local = useLocalStore(() => ({
     showMenu: false,
     showEditApp: false,
+    showEditApps: false,
     showEditGroup: false,
     showEditEngine: false,
     // temp
@@ -84,16 +86,14 @@ function App() {
     temp_group: {},
     temp_app: {},
 
-    app_icon: '',
-    app_open: 1,
-    app_gid: '',
-    group_fold: false,
+    drag_id: '',
 
     booted: false,
     defaultEngine: null,
     configs: [],
     config: {},
     groups: [],
+    apps: [],
     engines: [],
   }));
   const [inputing, setInputing] = useState(false);
@@ -118,6 +118,7 @@ function App() {
     if (resp2.status === 200 && resp3.status === 200) {
       const groups = resp2.data.data.map(g => { g.apps = []; return g; });
       const others = { id: '', name: '未分组', fold: true, apps: [] }
+      local.apps = resp3.data.data;
       resp3.data.data.forEach(app => {
         const group = groups.find(g => g.id === app.gid);
         if (group) {
@@ -148,7 +149,7 @@ function App() {
   }, []);
   const onSaveGroup = useCallback(async () => {
     const resp = !(local.temp_group.id)
-      ? await apis.createGroup({ name: local.temp_group.name, fold: local.temp_group.group_fold, nth: local.temp_group.nth })
+      ? await apis.createGroup({ name: local.temp_group.name, fold: local.temp_group.fold, nth: local.temp_group.nth })
       : await apis.updateGroup(local.temp_group.id, local.temp_group);
     if (resp.status === 200 && resp.data.code === 0) {
       toast({ content: '操作成功' });
@@ -195,8 +196,11 @@ function App() {
     <Observer>{() => (
       <div className="App" style={{ backgroundImage: local.config.background_url ? `url(${local.config.background_url})` : '' }}>
         <div style={{ position: 'relative', width: '100%', height: '5vh' }}>
-          <MenuWrap>
-            <Icon type={local.config.network === 'LAN' ? 'lan' : 'wan'} size={20} onClick={async () => {
+          <MenuWrap onDropCapture={e => {
+            console.log(e)
+          }}>
+            <Icon type={'del'} size={24} onClick={() => local.showEditApps = true} />
+            <Icon type={local.config.network === 'LAN' ? 'lan' : 'wan'} size={24} onClick={async () => {
               local.config.network = local.config.network === 'LAN' ? 'WAN' : 'LAN';
               await apis.updateConfig('network', local.config.network);
             }} />
@@ -207,7 +211,7 @@ function App() {
         </div>
         <div className='title'>{local.config.title}</div>
         {[1, "1"].includes(local.config.show_search) && <div className='search'>
-          <Center>{local.defaultEngine && <img src={local.defaultEngine.icon} style={{ marginLeft: 10, marginRight: 5, width: 24 }} alt="engine" />}</Center>
+          <Center>{local.defaultEngine && <img src={local.defaultEngine.icon} style={{ marginLeft: 20, marginRight: 5, width: 24 }} alt="engine" />}</Center>
           <input id="search" autoComplete='off' placeholder='搜索答案' onCompositionStart={() => {
             setInputing(true);
           }} onCompositionEnd={() => {
@@ -235,12 +239,16 @@ function App() {
                   local.temp_app = { gid: group.id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
                   local.showEditApp = true
                 }}>
-                  <Icon type={"add"} />
+                  <Icon type={"add"} style={{ fill: 'white' }} />
                 </div>
               </GroupTitle>
               <CardWrap>
                 {group.apps.map(app => {
                   return <Card key={app.id}
+                    onDragStart={() => {
+                      local.drag_id = app.id;
+                    }}
+                    draggable
                     style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center' }}
                     target={app.open === 1 ? '_blank' : '_self'}
                     href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
@@ -252,7 +260,7 @@ function App() {
                     }}
                   >
                     {app.cover && <AppIcon src={app.cover} />}
-                    <div style={{ display: 'flex', width: 150, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
+                    <div style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
                       <AppTitle>{app.name}</AppTitle>
                       <AppDesc title={app.desc}>{app.desc}</AppDesc>
                     </div>
@@ -330,6 +338,9 @@ function App() {
           onClose={() => local.showEditApp = false}
           onSave={onSaveApp}
         />
+        <DialogApps visible={local.showEditApps} onClose={() => local.showEditApps = false} apps={local.apps} onSave={async () => {
+          await init();
+        }} />
         <DialogGroup visible={local.showEditGroup} data={local.temp_group} onClose={() => {
           local.showEditGroup = false;
         }} onSave={onSaveGroup} />

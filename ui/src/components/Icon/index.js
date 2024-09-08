@@ -26,9 +26,9 @@ const types = {
   menu,
   search,
 }
-export default function Icon({ type, size = 20, cursor = 'pointer', color, ...props }) {
+export default function Icon({ type, size = 20, cursor = 'pointer', color = 'white', ...props }) {
   const Image = types[type];
   return <Observer>{() => (Image && <Center>
-    <Image style={{ width: size, height: size, cursor }} {...props} />
+    <Image style={{ width: size, height: size, cursor, fill: color }} {...props} />
   </Center>)}</Observer>
 }
