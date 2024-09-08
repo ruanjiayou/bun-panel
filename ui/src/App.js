@@ -37,6 +37,12 @@ const GroupTitle = styled.div`
   flex-direction: row;
   align-items: center;
   font-size: 20px;
+  & > div {
+    visibility: hidden;
+  }
+  &:hover > div{
+    visibility: visible;
+  }
 `
 const CardWrap = styled.div`
   display: flex;
@@ -49,6 +55,7 @@ const Card = styled.a`
   background-color: #3333338a;
   display: flex;
   flex-direction: row;
+  align-items: center;
   min-height: 50px;
   min-width: 210px;
   color: white;
@@ -62,8 +69,8 @@ const Card = styled.a`
   }
 `
 const AppIcon = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   margin: 0 15px 0 10px;
   border-radius:10px;
 `
@@ -200,7 +207,7 @@ function App() {
             console.log(e)
           }}>
             <Icon type={'del'} size={24} onClick={() => local.showEditApps = true} />
-            <Icon type={local.config.network === 'LAN' ? 'lan' : 'wan'} size={24} onClick={async () => {
+            <Icon type={local.config.network === 'LAN' ? 'lan' : 'wan'} size={20} onClick={async () => {
               local.config.network = local.config.network === 'LAN' ? 'WAN' : 'LAN';
               await apis.updateConfig('network', local.config.network);
             }} />
@@ -260,7 +267,7 @@ function App() {
                     }}
                   >
                     {app.cover && <AppIcon src={app.cover} />}
-                    <div style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
+                    <div key={app.cover} style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
                       <AppTitle>{app.name}</AppTitle>
                       <AppDesc title={app.desc}>{app.desc}</AppDesc>
                     </div>
@@ -284,7 +291,7 @@ function App() {
                     <img src={engine.icon} style={{ width: 20, marginRight: 5 }} alt="engine" />
                     {engine.name}
                   </div>
-                  <Icon type="del" size={16} onClick={async () => {
+                  <Icon type="del" size={16} color='#000' onClick={async () => {
                     const resp = await apis.deleteEngine(engine.name);
                     if (resp.status === 200 && resp.data.code === 0) {
                       await initEngine()
@@ -314,7 +321,7 @@ function App() {
                   </div>
                   <span style={{ display: 'flex', cursor: 'pointer' }} >
                     <Icon type="edit" size={18} onClick={() => { local.temp_group = group; local.showEditGroup = true; }} />
-                    <Icon type="del" size={18} onClick={deleteGroup} />
+                    <Icon type="del" size={18} color='#333' onClick={deleteGroup} />
                   </span>
                 </AlignAside>
               ))}
