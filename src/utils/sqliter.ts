@@ -206,6 +206,7 @@ class Helper<T> {
       default: break;
     }
     try {
+      console.log(sql, h.op);
       const result = h.op === 'find' ? this.db.query(sql).all() : this.db.query(sql).run();
       resolve(result);
     } catch (e) {

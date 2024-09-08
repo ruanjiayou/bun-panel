@@ -3,7 +3,7 @@ import Sqlite from 'utils/sqliter';
 import getDb from 'db';
 import { v4 } from 'uuid';
 import multer from 'multer';
-import { rename, unlink } from "node:fs/promises";
+import { copyFile, rename, unlink } from "node:fs/promises";
 
 
 const router = express.Router();
@@ -26,7 +26,12 @@ router.post('/', upload.single('image'), async (req, res) => {
     created_time: new Date().toISOString(),
   }
   if (req.file) {
-    await rename(req.file.path, "static/" + data.filepath)
+    await copyFile(req.file.path, "static/" + data.filepath);
+    try {
+      await unlink(req.file.path);
+    } catch (e) {
+      console.log(e);
+    }
   }
   const doc = sqliter.insertOne(data);
   sqliter.db.close(false);

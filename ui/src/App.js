@@ -41,6 +41,8 @@ const CardWrap = styled.div`
   display: flex;
   flex-direction: row;
   column-gap: 10px;
+  row-gap: 10px;
+  flex-flow: wrap;
 `
 const Card = styled.a`
   background-color: #3333338a;

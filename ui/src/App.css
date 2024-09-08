@@ -8,6 +8,10 @@ body {
   background-color: #363636;
 }
 
+#crawler-tool {
+  display: none !important;
+}
+
 /* 隐藏文件名 */
 input[type="file"]::-webkit-file-upload-button {
   display: none;
@@ -93,6 +97,11 @@ textarea:focus {
 .application {
   flex: 1;
   width: 100%;
+  overflow: auto;
+}
+
+.application::-webkit-scrollbar {
+  display: none;
 }
 
 .footer {

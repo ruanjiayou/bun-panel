@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'apps');
-  const docs = await sqliter.find().paging(req.paging());
+  const docs = await sqliter.find();
   sqliter.db.close(false);
   res.success(docs);
 });
