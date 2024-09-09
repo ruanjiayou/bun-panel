@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import DialogGroup from './dialog/group.js';
 import DialogEngine from './dialog/engine.js';
 import { Icon, toast } from './components/index.js'
-import { FormItem, FormLabel, AlignAside, Center } from './components/style.js';
+import { FormItem, FormLabel, Center } from './components/style.js';
 import DialogApp from './dialog/app.js';
 import DialogApps from './dialog/apps.js';
 import DialogConfig from './dialog/config.js';
@@ -66,6 +66,17 @@ const Card = styled.a`
     color: white;
     box-shadow: #666 0px 0px 15px 3px;
     cursor: pointer;
+  }
+`
+const HoverItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  &:hover {
+    background-color: #eee;
   }
 `
 const AppIcon = styled.img`
@@ -239,9 +250,14 @@ function App() {
         </div>}
         <div className='application'>
           {local.groups.map(group => {
-            return group.apps.length !== 0 && <Group key={group.id}>
+            return <Group key={group.id}>
               <GroupTitle>
-                {group.name}
+                <span onContextMenu={e => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  local.temp_group = group;
+                  local.showEditGroup = true;
+                }}>{group.name}</span>
                 <div style={{ display: group.id ? 'flex' : 'none', marginLeft: 20, cursor: 'pointer', }} onClick={() => {
                   local.temp_app = { gid: group.id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
                   local.showEditApp = true
@@ -286,7 +302,7 @@ function App() {
             <FormLabel>搜索引擎管理</FormLabel>
             <div style={{ width: 150 }}>
               {local.engines.map(engine => (
-                <AlignAside key={engine.name} style={{ marginBottom: 10 }}>
+                <HoverItem key={engine.name}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img src={engine.icon} style={{ width: 20, marginRight: 5 }} alt="engine" />
                     {engine.name}
@@ -301,13 +317,13 @@ function App() {
                       toast({ content: resp.data.message });
                     }
                   }} />
-                </AlignAside>
+                </HoverItem>
               ))}
-              <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc' }} onClick={() => {
+              <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
                 local.showEditEngine = true;
                 local.temp_engine = {};
               }}>
-                添加搜索 <Icon type="add" size={16} style={{ marginLeft: 5 }} />
+                添加搜索 <Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
               </Center>
             </div>
           </FormItem>
@@ -315,7 +331,7 @@ function App() {
             <FormLabel>分组管理</FormLabel>
             <div style={{ width: 150 }}>
               {local.groups.map(group => (
-                group.id && <AlignAside key={group.id} style={{ marginBottom: 10 }}>
+                group.id && <HoverItem key={group.id}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     {group.name}
                   </div>
@@ -323,9 +339,9 @@ function App() {
                     <Icon type="edit" size={18} onClick={() => { local.temp_group = group; local.showEditGroup = true; }} />
                     <Icon type="del" size={18} color='#333' onClick={deleteGroup} />
                   </span>
-                </AlignAside>
+                </HoverItem>
               ))}
-              <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc' }} onClick={() => {
+              <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
                 local.temp_group = {
                   name: '',
                   nth: local.groups.length + 1,
@@ -333,7 +349,7 @@ function App() {
                 };
                 local.showEditGroup = true
               }}>
-                添加分组<Icon type="add" size={16} style={{ marginLeft: 5 }} />
+                添加分组<Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
               </Center>
             </div>
           </FormItem>

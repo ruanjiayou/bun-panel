@@ -7,7 +7,7 @@ import { copyFile, rename, unlink } from "node:fs/promises";
 
 
 const router = express.Router();
-const upload = multer({ dest: '.tmp' });
+const upload = multer({ dest: 'data/.tmp' });
 
 router.get('/', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'images');
@@ -26,7 +26,7 @@ router.post('/', upload.single('image'), async (req, res) => {
     created_time: new Date().toISOString(),
   }
   if (req.file) {
-    await copyFile(req.file.path, "static/" + data.filepath);
+    await copyFile(req.file.path, "data" + data.filepath);
     try {
       await unlink(req.file.path);
     } catch (e) {

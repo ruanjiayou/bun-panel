@@ -42,7 +42,7 @@ export default function Select({ value, items, onChange }) {
     if (item) {
       local.title = item.title;
     }
-  }, [items, value])
+  }, [items, value, local])
   return <Observer>{() => (
     <div style={{ position: 'relative', fontSize: 14 }}>
       <Title onClick={() => {

@@ -7,6 +7,7 @@ import { ReactComponent as menu } from '../../assets/menu.svg'
 import { ReactComponent as search } from '../../assets/search.svg'
 import { Observer } from 'mobx-react-lite'
 import styled from 'styled-components'
+import { assign, omit } from 'lodash'
 
 export const Center = styled.div`
   display: flex;
@@ -29,6 +30,6 @@ const types = {
 export default function Icon({ type, size = 20, cursor = 'pointer', color = 'white', ...props }) {
   const Image = types[type];
   return <Observer>{() => (Image && <Center>
-    <Image style={{ width: size, height: size, cursor, fill: color }} {...props} />
+    <Image style={assign({ width: size, height: size, cursor, fill: color }, props.style || {})} {...omit(props, ['style'])} />
   </Center>)}</Observer>
 }

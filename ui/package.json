@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build && mv ./build/* ../static/",
+    "build": "rm -rf ../public/* && react-app-rewired build && mv ./build/* ../public/",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject"
   },

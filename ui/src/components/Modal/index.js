@@ -10,9 +10,7 @@ const Container = styled.div`
   bottom: 0;
   background-color: #0000008a;
 `
-const Mask = styled.div`
 
-`
 const Title = styled.div`
   padding: 8px 15px;
   display: flex;
