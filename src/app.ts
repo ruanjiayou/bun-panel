@@ -9,8 +9,10 @@ import groups from './routes/group';
 import configs from './routes/config';
 import engines from './routes/engine';
 import images from './routes/image';
+import getLogger from "utils/logger";
 
 const app = express();
+const logger = getLogger('access');
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -25,6 +27,10 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, parameterLimit: 100 }));
 
 app.use(ctx);
+app.use((req, res, next) => {
+  logger.info(req.url);
+  next();
+})
 
 app.get('/', (req, res) => {
   res.json({ message: 'ok' })

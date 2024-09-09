@@ -23,6 +23,9 @@ async function createGroup(data) {
 async function updateGroup(id, data) {
   return await request.put(`/api/groups/${id}`, data);
 }
+async function updateGroups(data) {
+  return await request.put(`/api/groups`, data);
+}
 
 async function deleteGroup(id) {
   return await request.delete(`/api/groups/${id}`);
@@ -36,6 +39,10 @@ async function createApp(data) {
 
 async function updateApp(id, data) {
   return await request.put(`/api/apps/${id}`, data);
+}
+
+async function updateApps(data) {
+  return await request.put('/api/apps', data);
 }
 
 async function deleteApp(id) {
@@ -70,10 +77,12 @@ const apis = {
   getApps,
   createApp,
   updateApp,
+  updateApps,
   deleteApp,
   getGroups,
   createGroup,
   updateGroup,
+  updateGroups,
   deleteGroup,
   getEngines,
   createEngine,

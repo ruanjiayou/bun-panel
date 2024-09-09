@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'apps');
-  const docs = await sqliter.find();
+  const docs = await sqliter.find().order('nth ASC');
   sqliter.db.close(false);
   res.success(docs);
 });
@@ -27,6 +27,16 @@ router.put('/:id', async (req, res) => {
   sqliter.db.close(false);
   res.success();
 });
+
+router.put('/', async (req, res) => {
+  const sqliter = Sqlite<{ nth: number }>(getDb(), 'apps');
+  const batch = req.body;
+  for (let i = 0; i < batch.length; i++) {
+    await sqliter.update(`id="${batch[i].id}"`, { nth: batch[i].nth });
+  }
+  sqliter.db.close(false);
+  res.success();
+})
 
 router.delete('/:id', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'apps');

@@ -5,6 +5,8 @@ import { ReactComponent as wan } from '../../assets/wan.svg'
 import { ReactComponent as lan } from '../../assets/lan.svg'
 import { ReactComponent as menu } from '../../assets/menu.svg'
 import { ReactComponent as search } from '../../assets/search.svg'
+import { ReactComponent as view } from '../../assets/view.svg'
+import { ReactComponent as voff } from '../../assets/view-off.svg'
 import { Observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { assign, omit } from 'lodash'
@@ -26,6 +28,8 @@ const types = {
   lan,
   menu,
   search,
+  view,
+  voff,
 }
 export default function Icon({ type, size = 20, cursor = 'pointer', color = 'white', ...props }) {
   const Image = types[type];

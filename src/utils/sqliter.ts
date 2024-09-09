@@ -1,4 +1,7 @@
 import { Database } from "bun:sqlite";
+import getLogger from "./logger";
+
+const logger = getLogger('sqlite');
 
 type Hql = {
   op: string,
@@ -45,9 +48,8 @@ class Helper<T> {
    * @returns 
    */
   create(columns: { [key: string]: string }, opt: { NE: boolean } = { NE: true }) {
-    const sql = `CREATE TABLE ${opt.NE ? 'IF NOT EXISTS' : ''} ${this.table} (
-      ${Object.keys(columns).map(column => column + " " + columns[column]).join(',')}
-    )`;
+    const sql = `CREATE TABLE ${opt.NE ? 'IF NOT EXISTS' : ''} ${this.table} (${Object.keys(columns).map(column => column + " " + columns[column]).join(',')})`;
+    logger.info(sql, 'create');
     return this.db.query(sql).run();
   }
   /**
@@ -56,6 +58,7 @@ class Helper<T> {
    */
   drop() {
     const sql = `DROP TABLE ${this.table}`;
+    logger.info(sql, 'drop');
     return this.db.query(sql).run();
   }
   /**
@@ -65,6 +68,7 @@ class Helper<T> {
    */
   insertOne(data: T) {
     const sql = `INSERT INTO ${this.table}(${Object.keys(data as Object).join(',')}) VALUES(${Object.keys(data as any).map((k: string) => transformValue((data as { [key: string]: string | boolean | Date | number | null })[k]))})`;
+    logger.info(sql, 'insert');
     this.db.query(sql).run();
     return data;
   }
@@ -168,44 +172,30 @@ class Helper<T> {
     const h = this.hql;
     switch (h.op) {
       case 'find':
-        sql = `
-          SELECT ${h.attr || '*'} 
-          FROM ${this.table} 
-          ${h.where ? 'WHERE ' + h.where : ''}
-          ${h.order ? 'ORDER BY ' + h.order : ''}
-          ${h.limit ? 'LIMIT ' + h.limit : ''} 
-        `;
+        sql = `SELECT ${h.attr || '*'} FROM ${this.table} ${h.where ? 'WHERE ' + h.where : ''} ${h.order ? 'ORDER BY ' + h.order : ''} ${h.limit ? 'LIMIT ' + h.limit : ''}`;
         break;
       case 'findOne':
-        sql = `
-          SELECT ${h.attr || '*'}
-          FROM ${this.table}
-          ${h.where ? 'WHERE ' + h.where : ''}
-          ${h.order ? 'ORDER BY ' + h.order : ''}
-        `;
+        sql = `SELECT ${h.attr || '*'} FROM ${this.table} ${h.where ? 'WHERE ' + h.where : ''} ${h.order ? 'ORDER BY ' + h.order : ''}`;
         let v1: any = this.db.query(sql).get();
+        logger.info(sql, JSON.stringify(v1), 'findOne')
         return resolve(v1);
       case 'update':
-        sql = `
-          UPDATE ${this.table}
-          SET ${Object.keys(h.data).map(k => `${k}=${transformValue(h.data[k])}`).join(',')}
-          ${h.where ? 'WHERE ' + h.where : ''}
-        `;
+        sql = `UPDATE ${this.table} SET ${Object.keys(h.data).map(k => `${k}=${transformValue(h.data[k])}`).join(',')} ${h.where ? 'WHERE ' + h.where : ''}`;
         break;
       case 'destroy':
-        sql = `
-          DELETE FROM ${this.table}
-          ${h.where ? 'WHERE ' + h.where : ''}
-        `;
+        sql = `DELETE FROM ${this.table} ${h.where ? 'WHERE ' + h.where : ''}`;
         const v3 = this.db.query(sql).run();
+        logger.info(sql, JSON.stringify(v3), 'delete')
         return resolve(v3);
       case 'count':
         sql = `SELECT COUNT(name) AS count FROM ${this.table} ${h.where ? 'WHERE ' + h.where : ''}`;
         let v2 = await this.db.query(sql).get() as { count: number };
+        logger.info(sql, v2.count, 'count')
         return resolve(v2.count);
       default: break;
     }
     try {
+      logger.info(sql, h.op);
       const result = h.op === 'find' ? this.db.query(sql).all() : this.db.query(sql).run();
       resolve(result);
     } catch (e) {

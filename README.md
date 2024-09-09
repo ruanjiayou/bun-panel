@@ -22,12 +22,14 @@
 - [x] api测试
 - [x] 添加修改分组和应用
 - [x] 删除应用
-- [ ] 分组和应用排序
+- [x] 分组和应用排序
 - [x] push to npm
 - [x] push to docker
 - [x] 修改app cover界面没实时同步
 - [x] 分组按钮改为hover显示
-- [ ] 折叠效果 
+- [x] 折叠效果 
+- [x] logger日志
+- [ ] Dockfile里build ui
 
 This project was created using `bun init` in bun v1.1.26. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
 

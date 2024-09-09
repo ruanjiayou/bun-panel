@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
-import { useCallback, useState } from 'react';
+import { Fragment, useCallback, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import { useLocalStore, Observer } from "mobx-react-lite"
 import apis from './apis'
@@ -13,6 +13,7 @@ import DialogApp from './dialog/app.js';
 import DialogApps from './dialog/apps.js';
 import DialogConfig from './dialog/config.js';
 import { toJS } from 'mobx';
+import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 
 const MenuWrap = styled.div`
   position: absolute;
@@ -27,8 +28,14 @@ const MenuWrap = styled.div`
 `
 const Group = styled.div`
   width: 80%;
-  max-width: 1000px;
+  max-width: 960px;
   margin: 0 auto;
+  flex: 1;
+  padding: 0 20px;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 const GroupTitle = styled.div`
   color: white;
@@ -45,13 +52,22 @@ const GroupTitle = styled.div`
   }
 `
 const CardWrap = styled.div`
-  display: flex;
-  flex-direction: row;
-  column-gap: 10px;
-  row-gap: 10px;
-  flex-flow: wrap;
+  display: block;
+  // display: flex;
+  // flex-direction: row;
+  // column-gap: 10px;
+  // row-gap: 10px;
+  // flex-flow: wrap;
+  &::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
 `
 const Card = styled.a`
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
   background-color: #3333338a;
   display: flex;
   flex-direction: row;
@@ -91,6 +107,66 @@ const AppTitle = styled.div`
 const AppDesc = styled.div`
   font-size: 14px;
 `
+const AppItem = SortableElement(({ local, app }) => <Card key={app.id}
+  style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center' }}
+  target={app.open === 1 ? '_blank' : '_self'}
+  href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
+  onContextMenu={(e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    local.temp_app = app;
+    local.showEditApp = true;
+  }}
+>
+  {app.cover && <AppIcon src={app.cover} />}
+  <div key={app.cover} style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
+    <AppTitle>{app.name}</AppTitle>
+    <AppDesc title={app.desc}>{app.desc}</AppDesc>
+  </div>
+</Card>)
+const AppList = SortableContainer(({ local, items }) => {
+  return <CardWrap>
+    {items.map((item, index) => <AppItem key={item.id} index={index} local={local} app={item} />)}
+  </CardWrap>
+});
+const GroupHandle = SortableHandle(({ local, group }) => (
+  <span onContextMenu={e => {
+    e.stopPropagation();
+    e.preventDefault();
+    local.temp_group = group;
+    local.showEditGroup = true;
+  }}>{group.name}</span>
+))
+const GroupItem = SortableElement(({ local, group }) => <div key={group.id} >
+  <Observer>{() => (
+    <Fragment>
+      <GroupTitle>
+        <GroupHandle local={local} group={group} />
+        <div style={{ display: group.id ? 'flex' : 'none', cursor: 'pointer', }}>
+          <Icon type={group.fold == 1 ? 'voff' : 'view'} style={{ marginLeft: 20, fill: 'white' }} onClick={() => {
+            group.fold = group.fold ? 0 : 1;
+          }} />
+          <Icon type={"add"} style={{ marginLeft: 10, fill: 'white' }} onClick={() => {
+            local.temp_app = { gid: group.id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
+            local.showEditApp = true
+          }} />
+        </div>
+      </GroupTitle>
+      {group.fold === 0 && <AppList axis="xy" local={local} items={group.apps} onSortEnd={({ oldIndex, newIndex }) => {
+        if (oldIndex !== newIndex) {
+          const [old] = group.apps.splice(oldIndex, 1);
+          group.apps.splice(newIndex, 0, old);
+          apis.updateApps(group.apps.map((app, nth) => ({ id: app.id, nth: nth + 1 })));
+        }
+      }} />}
+    </Fragment>
+  )}</Observer>
+</div>)
+const GroupList = SortableContainer(({ local, items }) => {
+  return <div className='application'>
+    {items.map((group, index) => <GroupItem key={group.id} local={local} group={group} index={index} />)}
+  </div>
+});
 
 function App() {
   const local = useLocalStore(() => ({
@@ -140,8 +216,10 @@ function App() {
       resp3.data.data.forEach(app => {
         const group = groups.find(g => g.id === app.gid);
         if (group) {
+          app.nth = group.apps.length;
           group.apps.push(app);
         } else {
+          app.nth = others.apps.length;
           others.apps.push(app);
         }
       });
@@ -168,7 +246,7 @@ function App() {
   const onSaveGroup = useCallback(async () => {
     const resp = !(local.temp_group.id)
       ? await apis.createGroup({ name: local.temp_group.name, fold: local.temp_group.fold, nth: local.temp_group.nth })
-      : await apis.updateGroup(local.temp_group.id, local.temp_group);
+      : await apis.updateGroup(local.temp_group.id, { name: local.temp_group.name, fold: local.temp_group.fold, nth: local.temp_group.nth });
     if (resp.status === 200 && resp.data.code === 0) {
       toast({ content: '操作成功' });
     } else if (resp.status !== 200) {
@@ -248,52 +326,15 @@ function App() {
             <Icon type="search" size={20} />
           </div>
         </div>}
-        <div className='application'>
-          {local.groups.map(group => {
-            return <Group key={group.id}>
-              <GroupTitle>
-                <span onContextMenu={e => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  local.temp_group = group;
-                  local.showEditGroup = true;
-                }}>{group.name}</span>
-                <div style={{ display: group.id ? 'flex' : 'none', marginLeft: 20, cursor: 'pointer', }} onClick={() => {
-                  local.temp_app = { gid: group.id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
-                  local.showEditApp = true
-                }}>
-                  <Icon type={"add"} style={{ fill: 'white' }} />
-                </div>
-              </GroupTitle>
-              <CardWrap>
-                {group.apps.map(app => {
-                  return <Card key={app.id}
-                    onDragStart={() => {
-                      local.drag_id = app.id;
-                    }}
-                    draggable
-                    style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center' }}
-                    target={app.open === 1 ? '_blank' : '_self'}
-                    href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
-                    onContextMenu={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      local.temp_app = app;
-                      local.showEditApp = true;
-                    }}
-                  >
-                    {app.cover && <AppIcon src={app.cover} />}
-                    <div key={app.cover} style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
-                      <AppTitle>{app.name}</AppTitle>
-                      <AppDesc title={app.desc}>{app.desc}</AppDesc>
-                    </div>
-                  </Card>
-                })}
-              </CardWrap>
-
-            </Group>
-          })}
-        </div>
+        <Group>
+          <GroupList axis="y" lockAxis='y' useDragHandle={true} local={local} items={local.groups} onSortEnd={({ oldIndex, newIndex }) => {
+            if (oldIndex !== newIndex && local.groups[oldIndex].id && local.groups[newIndex].id) {
+              const [old] = local.groups.splice(oldIndex, 1);
+              local.groups.splice(newIndex, 0, old);
+              apis.updateGroups(local.groups.filter(g => !!g.id).map((g, nth) => ({ id: g.id, nth: nth + 1 })))
+            }
+          }} />
+        </Group>
         <DialogConfig visible={local.showMenu} engines={local.engines} data={toJS(local.config)} onClose={() => local.showMenu = false} onSave={async (data) => {
           await apis.batchUpdateConfig(data);
           await init();
@@ -345,7 +386,7 @@ function App() {
                 local.temp_group = {
                   name: '',
                   nth: local.groups.length + 1,
-                  fold: false,
+                  fold: 0,
                 };
                 local.showEditGroup = true
               }}>

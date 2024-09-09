@@ -98,11 +98,7 @@ textarea:focus {
 .application {
   flex: 1;
   width: 100%;
-  overflow: auto;
-}
-
-.application::-webkit-scrollbar {
-  display: none;
+  user-select: none;
 }
 
 .footer {

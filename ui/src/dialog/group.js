@@ -15,7 +15,7 @@ export default function DialogGroup({ visible, data, onClose, onSave }) {
         <FormItem>
           <FormLabel>是否折叠</FormLabel>
           <div>
-            <Switch checked={data.group_fold} onSwitch={checked => data.group_fold = checked}>{data.group_fold ? '是' : '否'}</Switch>
+            <Switch checked={data.fold} onSwitch={checked => data.fold = checked ? 1 : 0}>{data.fold ? '是' : '否'}</Switch>
           </div>
         </FormItem>
       </div>
