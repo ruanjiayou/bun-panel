@@ -8,7 +8,7 @@ WORKDIR /user/app
 FROM base AS install
 RUN mkdir -p /temp/dev
 COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && HTTPS_PROXY=http://192.168.0.125:8888 bun install --verbose --frozen-lockfile
+RUN cd /temp/dev && HTTPS_PROXY=http://192.168.0.125:8888 bun install --frozen-lockfile
 
 # install with --production (exclude devDependencies)
 RUN mkdir -p /temp/prod
