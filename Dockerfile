@@ -17,7 +17,7 @@ RUN cd /temp/prod && HTTPS_PROXY=http://192.168.0.125:8888 bun install --frozen-
 
 RUN mkdir /temp/ui
 COPY ./ui /temp/ui
-RUN cd /temp/ui && HTTPS_PROXY=http://192.168.0.125:8888 bun install --verbose
+RUN cd /temp/ui && bun install --verbose
 RUN cd /temp/ui && bun run build
 
 # copy node_modules from temp folder
