@@ -30,6 +30,7 @@
 - [x] group hover effect 
 - [x] logger日志
 - [ ] ~~Dockfile里build ui~~ (bun run build fail)
+- [ ] windows上拖动但mouseup失败
 
 ## design
 - groups: 分组表, id,nth,name,fold(是否折叠)
