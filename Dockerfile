@@ -35,7 +35,6 @@ FROM base AS release
 RUN mkdir public
 COPY --from=install /temp/prod/node_modules node_modules
 COPY . .
-COPY --from=install ui/build public
 
 # run the app
 USER bun
