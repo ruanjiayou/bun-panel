@@ -4,15 +4,15 @@
 ![图片](./screen_shot_1.png)
 
 ## usage
-- bun install
-- bun start
+- start api server:
+  - bun install
+  - bun run dev
+- start ui server:
+  - cd ui
+  - bun install
+  - bun start
 
-## develope
-- bun install
-- cd ui && bun install
-- cd ../ && bun run dev
-
-## docker
+## run in docker
 - docker pull ruanjiayou/bun-panel
 - docker run ruanjiayou/bun-panel -p 5555:5555 -v ./data://usr/src/app/data --name bun-panel
 
