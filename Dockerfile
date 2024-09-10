@@ -19,6 +19,9 @@ COPY package.json bunfig.toml /temp/prod/
 COPY patches/* /temp/prod/patches/
 RUN cd /temp/prod && bun install --production
 
+COPY ui /temp/ui
+RUN cd /temp/ui && bun run build
+
 # copy node_modules from temp folder
 # then copy all (non-ignored) project files into the image
 # FROM install AS prerelease
@@ -34,7 +37,7 @@ RUN cd /temp/prod && bun install --production
 FROM base AS release
 COPY --from=install /temp/prod/node_modules node_modules
 COPY . .
-COPY ui/build public
+COPY --from=install ui/build public
 
 # run the app
 USER bun
