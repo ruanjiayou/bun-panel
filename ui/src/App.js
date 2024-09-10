@@ -143,8 +143,9 @@ const GroupItem = SortableElement(({ local, group }) => <div key={group.id} >
       <GroupTitle>
         <GroupHandle local={local} group={group} />
         <div style={{ display: group.id ? 'flex' : 'none', cursor: 'pointer', }}>
-          <Icon type={group.fold == 1 ? 'voff' : 'view'} style={{ marginLeft: 20, fill: 'white' }} onClick={() => {
+          <Icon type={group.fold === 1 ? 'voff' : 'view'} style={{ marginLeft: 20, fill: 'white' }} onClick={() => {
             group.fold = group.fold ? 0 : 1;
+            apis.updateGroup(group.id, { fold: group.fold });
           }} />
           <Icon type={"add"} style={{ marginLeft: 10, fill: 'white' }} onClick={() => {
             local.temp_app = { gid: group.id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
@@ -191,6 +192,15 @@ function App() {
     engines: [],
   }));
   const [inputing, setInputing] = useState(false);
+  const initConfig = useCallback(async () => {
+    const resp = await apis.getConfigs();
+    if (resp.status === 200 && resp.data.code === 0) {
+      local.configs = resp.data.data;
+      local.configs.forEach(config => {
+        local.config[config.name] = config.value;
+      });
+    }
+  }, []);
   const initEngine = useCallback(async () => {
     const resp4 = await apis.getEngines();
     if (resp4.status === 200 && resp4.data.code === 0) {
@@ -198,17 +208,9 @@ function App() {
       local.defaultEngine = local.engines.find(it => it.name === local.config.engine)
     }
   }, []);
-  const init = useCallback(async () => {
-    const resp = await apis.getConfigs();
+  const initAppGroup = useCallback(async () => {
     const resp2 = await apis.getGroups();
     const resp3 = await apis.getApps();
-    if (resp.status === 200 && resp.data.code === 0) {
-      local.configs = resp.data.data;
-      local.configs.forEach(config => {
-        local.config[config.name] = config.value;
-      });
-    }
-    await initEngine();
     if (resp2.status === 200 && resp3.status === 200) {
       const groups = resp2.data.data.map(g => { g.apps = []; return g; });
       const others = { id: '', name: '未分组', fold: true, apps: [] }
@@ -227,6 +229,11 @@ function App() {
       local.groups = groups;
     }
   }, []);
+  const init = useCallback(async () => {
+    await initConfig();
+    await initEngine();
+    await initAppGroup();
+  }, []);
   const search = useCallback(async (q) => {
     if (q) {
       const url = local.defaultEngine.url;
@@ -236,7 +243,7 @@ function App() {
   const deleteGroup = useCallback(async (id) => {
     const resp = await apis.deleteGroup(id);
     if (resp.status === 200 && resp.data.code === 0) {
-      await init()
+      await initAppGroup()
     } else if (resp.status !== 200) {
       toast({ content: '请求错误' })
     } else {
@@ -274,7 +281,7 @@ function App() {
       ? await apis.createApp(local.temp_app)
       : await apis.updateApp(local.temp_app.id, local.temp_app);
     if (resp.status === 200 && resp.data.code === 0) {
-      await init();
+      await initAppGroup();
       toast({ content: '操作成功' });
     } else if (resp.status !== 200) {
       toast({ content: '请求失败' });
@@ -337,7 +344,7 @@ function App() {
         </Group>
         <DialogConfig visible={local.showMenu} engines={local.engines} data={toJS(local.config)} onClose={() => local.showMenu = false} onSave={async (data) => {
           await apis.batchUpdateConfig(data);
-          await init();
+          await initConfig();
         }}>
           <FormItem>
             <FormLabel>搜索引擎管理</FormLabel>
@@ -403,7 +410,7 @@ function App() {
           onSave={onSaveApp}
         />
         <DialogApps visible={local.showEditApps} onClose={() => local.showEditApps = false} apps={local.apps} onSave={async () => {
-          await init();
+          await initAppGroup();
         }} />
         <DialogGroup visible={local.showEditGroup} data={local.temp_group} onClose={() => {
           local.showEditGroup = false;

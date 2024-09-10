@@ -4,7 +4,7 @@ import getDb from 'db';
 import { v4 } from 'uuid';
 import multer from 'multer';
 import { copyFile, rename, unlink } from "node:fs/promises";
-
+import mime from 'mime/lite';
 
 const router = express.Router();
 const upload = multer({ dest: 'data/.tmp' });
@@ -22,10 +22,11 @@ router.post('/', upload.single('image'), async (req, res) => {
   const data = {
     id,
     title: req.body.title || '',
-    filepath: `/uploads/${id}.jpg`,
+    filepath: `/uploads/${id}.`,
     created_time: new Date().toISOString(),
   }
   if (req.file) {
+    data.filepath += mime.getExtension(req.file.mimetype);
     await copyFile(req.file.path, "data" + data.filepath);
     try {
       await unlink(req.file.path);

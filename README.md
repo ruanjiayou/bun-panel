@@ -14,12 +14,12 @@
 
 ## docker
 - docker pull ruanjiayou/bun-panel
-- docker run ruanjiayou/bun-panel -p 5555:5555 -v ./db://usr/src/app/data -v ./uploads://usr/src/app/static/uploads --name bun-panel
+- docker run ruanjiayou/bun-panel -p 5555:5555 -v ./data://usr/src/app/data --name bun-panel
 
 ## TODO
-- [x] api设计
-- [x] api开发
-- [x] api测试
+- [x] api design
+- [x] api develope
+- [x] api test
 - [x] 添加修改分组和应用
 - [x] 删除应用
 - [x] 分组和应用排序
@@ -27,11 +27,9 @@
 - [x] push to docker
 - [x] 修改app cover界面没实时同步
 - [x] 分组按钮改为hover显示
-- [x] 折叠效果 
+- [x] group hover effect 
 - [x] logger日志
-- [ ] Dockfile里build ui
-
-This project was created using `bun init` in bun v1.1.26. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+- [ ] ~~Dockfile里build ui~~ (bun run build fail)
 
 ## design
 - groups: 分组表, id,nth,name,fold(是否折叠)

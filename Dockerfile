@@ -7,18 +7,17 @@ WORKDIR /user/app
 # this will cache them and speed up future builds
 FROM base AS install
 RUN mkdir -p /temp/dev
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --verbose --frozen-lockfile
+RUN mkdir -p /temp/dev/patches
+COPY package.json bunfig.toml /temp/dev/
+COPY patches/* /temp/dev/patches/
+RUN cd /temp/dev && bun install
 
 # install with --production (exclude devDependencies)
 RUN mkdir -p /temp/prod
-COPY package.json bun.lockb /temp/prod/
-RUN cd /temp/prod && bun install --frozen-lockfile --production
-
-RUN mkdir /temp/ui
-COPY ./ui /temp/ui
-RUN cd /temp/ui && bun install --verbose
-RUN cd /temp/ui && bun run build
+RUN mkdir -p /temp/dev/patches
+COPY package.json bunfig.toml /temp/prod/
+COPY patches/* /temp/prod/patches/
+RUN cd /temp/prod && bun install --production
 
 # copy node_modules from temp folder
 # then copy all (non-ignored) project files into the image
@@ -33,10 +32,9 @@ RUN cd /temp/ui && bun run build
 
 # copy production dependencies and source code into final image
 FROM base AS release
-RUN ls && mkdir -p public
 COPY --from=install /temp/prod/node_modules node_modules
 COPY . .
-COPY --from=install /temp/ui/build/* public/
+COPY ui/build public
 
 # run the app
 USER bun

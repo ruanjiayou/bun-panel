@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'engines');
   const data = req.body;
-  const engine = await sqliter.findOne(`name="${data.name}"`);
+  const engine = await sqliter.findOne(`name='${data.name}'`);
   if (!engine) {
     const doc = await sqliter.insertOne(data);
     res.success(doc);
@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:name', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'engines');
-  sqliter.update(`name="${req.params.name}"`, req.body);
+  sqliter.update(`name='${req.params.name}'`, req.body);
   sqliter.db.close(false);
   res.success();
 });
@@ -39,7 +39,7 @@ router.delete('/:name', async (req, res) => {
   const Sconfig = Sqlite(db, 'configs');
   const engine = await Sconfig.find(`name="engine"`);
   if (name !== engine) {
-    await Sengine.destroy(`name="${name}"`);
+    await Sengine.destroy(`name='${name}'`);
     res.success();
   } else {
     res.fail('不能删除正在使用的搜索');

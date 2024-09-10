@@ -16,7 +16,7 @@ router.put('/', async (req, res) => {
   const sqliter = Sqlite<{ title: string, name: string, value: number | string }>(getDb(), 'configs');
   for (let i = 0; i < configs.length; i++) {
     const { name, value } = configs[i];
-    await sqliter.update(`name="${name}"`, { value });
+    await sqliter.update(`name='${name}'`, { value });
   }
   sqliter.db.close(false);
   res.success();
@@ -24,12 +24,12 @@ router.put('/', async (req, res) => {
 
 router.put('/:name', async (req, res) => {
   const sqliter = Sqlite<{ title: string, name: string, value: number | string }>(getDb(), 'configs');
-  const count = await sqliter.count(`name="${req.params.name}"`);
+  const count = await sqliter.count(`name='${req.params.name}'`);
 
   if (count === 0) {
     await sqliter.insertOne({ name: req.params.name, value: req.body.value, title: req.body.title || '' })
   } else {
-    await sqliter.update(`name="${req.params.name}"`, { value: req.body.value })
+    await sqliter.update(`name='${req.params.name}'`, { value: req.body.value })
   }
   sqliter.db.close(false);
   res.success();
@@ -37,7 +37,7 @@ router.put('/:name', async (req, res) => {
 
 router.delete('/:name', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'configs');
-  await sqliter.destroy(`name="${req.params.name}"`);
+  await sqliter.destroy(`name='${req.params.name}'`);
   sqliter.db.close(false);
   res.success();
 });
