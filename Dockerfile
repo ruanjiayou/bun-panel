@@ -35,6 +35,7 @@ RUN cd /temp/ui && bun run build
 
 # copy production dependencies and source code into final image
 FROM base AS release
+RUN mkdir public
 COPY --from=install /temp/prod/node_modules node_modules
 COPY . .
 COPY --from=install ui/build public
