@@ -7,6 +7,7 @@ import { ReactComponent as menu } from '../../assets/menu.svg'
 import { ReactComponent as search } from '../../assets/search.svg'
 import { ReactComponent as view } from '../../assets/view.svg'
 import { ReactComponent as voff } from '../../assets/view-off.svg'
+import { ReactComponent as sort } from '../../assets/sort.svg'
 import { Observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { assign, omit } from 'lodash'
@@ -30,6 +31,7 @@ const types = {
   search,
   view,
   voff,
+  sort,
 }
 export default function Icon({ type, size = 20, cursor = 'pointer', color = 'white', ...props }) {
   const Image = types[type];

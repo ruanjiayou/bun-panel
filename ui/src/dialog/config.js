@@ -49,7 +49,7 @@ export default function DialogConfig({ visible, data, engines, onClose, onSave, 
         </FormItem>
         <FormItem>
           <FormLabel>自定义页脚</FormLabel>
-          <textarea onChange={e => {
+          <textarea value={local.footer || ''} onChange={e => {
             local.footer = e.target.value.trim();
           }}></textarea>
         </FormItem>

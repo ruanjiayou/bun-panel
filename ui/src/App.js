@@ -39,7 +39,6 @@ const Group = styled.div`
 `
 const GroupTitle = styled.div`
   color: white;
-  margin: 20px 0;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -58,6 +57,7 @@ const CardWrap = styled.div`
   // column-gap: 10px;
   // row-gap: 10px;
   // flex-flow: wrap;
+  padding: 10px 0;
   &::after {
     content: "";
     display: block;
@@ -108,9 +108,17 @@ const AppDesc = styled.div`
   font-size: 14px;
 `
 const AppItem = SortableElement(({ local, app }) => <Card key={app.id}
-  style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center' }}
+  style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center', backgroundColor: local.sort_gid === app.gid ? '#b0b9be82' : '', cursor: local.sort_gid === app.gid ? 'all-scroll' : '' }}
   target={app.open === 1 ? '_blank' : '_self'}
   href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
+  onMouseDown={e => {
+    if (local.sort_gid === app.gid) {
+      // sort
+    } else {
+      // click
+      e.stopPropagation();
+    }
+  }}
   onContextMenu={(e) => {
     e.stopPropagation();
     e.preventDefault();
@@ -123,10 +131,11 @@ const AppItem = SortableElement(({ local, app }) => <Card key={app.id}
     <AppTitle>{app.name}</AppTitle>
     <AppDesc title={app.desc}>{app.desc}</AppDesc>
   </div>
-</Card>)
+</Card>);
+
 const AppList = SortableContainer(({ local, items }) => {
   return <CardWrap>
-    {items.map((item, index) => <AppItem key={item.id} index={index} local={local} app={item} />)}
+    {items.map((item, index) => <AppItem key={item.id} disabled={local.sort_gid !== item.gid} index={index} local={local} app={item} />)}
   </CardWrap>
 });
 const GroupHandle = SortableHandle(({ local, group }) => (
@@ -142,18 +151,14 @@ const GroupItem = SortableElement(({ local, group }) => <div key={group.id} >
     <Fragment>
       <GroupTitle>
         <GroupHandle local={local} group={group} />
-        <div style={{ display: group.id ? 'flex' : 'none', cursor: 'pointer', }}>
-          <Icon type={group.fold === 1 ? 'voff' : 'view'} style={{ marginLeft: 20, fill: 'white' }} onClick={() => {
-            group.fold = group.fold ? 0 : 1;
-            apis.updateGroup(group.id, { fold: group.fold });
-          }} />
-          <Icon type={"add"} style={{ marginLeft: 10, fill: 'white' }} onClick={() => {
-            local.temp_app = { gid: group.id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
-            local.showEditApp = true
+        <div style={{ display: group.id ? 'flex' : 'none', cursor: 'pointer', visibility: local.sort_gid === group.id ? 'visible' : '' }}>
+          <Icon type={'sort'} size={28} style={{ marginLeft: 5, marginTop: -3, fill: local.sort_gid === group.id ? '#00aaff' : 'white' }} onClick={() => {
+            local.sort_gid = local.sort_gid === group.id ? null : group.id;
           }} />
         </div>
       </GroupTitle>
       {group.fold === 0 && <AppList axis="xy" local={local} items={group.apps} onSortEnd={({ oldIndex, newIndex }) => {
+        local.show_drag_over = false;
         if (oldIndex !== newIndex) {
           const [old] = group.apps.splice(oldIndex, 1);
           group.apps.splice(newIndex, 0, old);
@@ -176,6 +181,9 @@ function App() {
     showEditApps: false,
     showEditGroup: false,
     showEditEngine: false,
+    sort_gid: null,
+    show_engine_dialog: false,
+    show_drag_over: false,
     // temp
     temp_engine: {},
     temp_group: {},
@@ -199,6 +207,7 @@ function App() {
       local.configs.forEach(config => {
         local.config[config.name] = config.value;
       });
+      document.querySelector('title').innerText = local.config.title;
     }
   }, []);
   const initEngine = useCallback(async () => {
@@ -299,10 +308,10 @@ function App() {
     <Observer>{() => (
       <div className="App" style={{ backgroundImage: local.config.background_url ? `url(${local.config.background_url})` : '' }}>
         <div style={{ position: 'relative', width: '100%', height: '5vh' }}>
-          <MenuWrap onDropCapture={e => {
-            console.log(e)
-          }}>
-            <Icon type={'del'} size={24} onClick={() => local.showEditApps = true} />
+          <MenuWrap>
+            <Icon type={'del'} size={24} onClick={() => local.showEditApps = true} style={{ fill: local.show_drag_over ? 'red' : 'white' }} onDragOver={() => {
+              local.show_drag_over = true;
+            }} />
             <Icon type={local.config.network === 'LAN' ? 'lan' : 'wan'} size={20} onClick={async () => {
               local.config.network = local.config.network === 'LAN' ? 'WAN' : 'LAN';
               await apis.updateConfig('network', local.config.network);
@@ -314,7 +323,25 @@ function App() {
         </div>
         <div className='title'>{local.config.title}</div>
         {[1, "1"].includes(local.config.show_search) && <div className='search'>
-          <Center>{local.defaultEngine && <img src={local.defaultEngine.icon} style={{ marginLeft: 20, marginRight: 5, width: 24 }} alt="engine" />}</Center>
+          <Center style={{ position: 'relative' }}>
+            {
+              local.defaultEngine && <img src={local.defaultEngine.icon} style={{ marginLeft: 20, marginRight: 5, width: 24 }} alt="engine" onClick={() => local.show_engine_dialog = !local.show_engine_dialog} />
+            }
+            <div id="dialog_engine" style={{ display: local.show_engine_dialog ? 'block' : 'none', position: 'absolute', top: 40, left: 10, padding: '0 10px 10px', borderRadius: 5, backgroundColor: '#575757bf' }}>
+              {local.engines.map(engine => <img src={engine.icon} alt={engine.name} key={engine.name} style={{ width: 24, marginTop: 10 }} onClick={async () => {
+                local.defaultEngine = engine;
+                local.config.engine = engine.name;
+                local.show_engine_dialog = false;
+                await apis.updateConfig('engine', engine.name);
+                await initConfig();
+              }} />)}
+              <Center><Icon type={'add'} style={{ marginTop: 10 }} onClick={() => {
+                local.temp_engine = {};
+                local.showEditEngine = true;
+                local.show_engine_dialog = false;
+              }} /></Center>
+            </div>
+          </Center>
           <input id="search" autoComplete='off' placeholder='搜索答案' onCompositionStart={() => {
             setInputing(true);
           }} onCompositionEnd={() => {
@@ -412,7 +439,10 @@ function App() {
         <DialogApps visible={local.showEditApps} onClose={() => local.showEditApps = false} apps={local.apps} onSave={async () => {
           await initAppGroup();
         }} />
-        <DialogGroup visible={local.showEditGroup} data={local.temp_group} onClose={() => {
+        <DialogGroup visible={local.showEditGroup} data={local.temp_group} onAdd={(id) => {
+          local.temp_app = { gid: id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
+          local.showEditApp = true
+        }} onClose={() => {
           local.showEditGroup = false;
         }} onSave={onSaveGroup} />
         <DialogEngine visible={local.showEditEngine} data={local.temp_engine} onClose={() => {
