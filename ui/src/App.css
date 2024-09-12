@@ -1,3 +1,52 @@
+/* 当屏幕宽度大于 768px 时，应用以下样式 */
+@media (min-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
+  .title {
+    color: white;
+    font-size: 5rem;
+  }
+
+  .search {
+    max-width: 40%;
+    min-width: 600px;
+    text-align: center;
+    margin: 3.3rem auto 1.6rem auto;
+    border: 1px solid #fff;
+    border-radius: 1.3rem;
+    align-items: center;
+    display: flex;
+    padding-right: 3px;
+    background-color: #00000080;
+  }
+}
+
+/* 当屏幕宽度小于 768px 时，应用以下样式，这通常适用于手机 */
+@media (max-width: 767px) {
+  html {
+    font-size: 12px;
+  }
+
+  .title {
+    color: white;
+    font-size: 3rem;
+  }
+
+  .search {
+    min-width: 40%;
+    text-align: left;
+    margin: 2rem auto 2rem auto;
+    border: 1px solid #fff;
+    border-radius: 20px;
+    align-items: center;
+    display: flex;
+    padding-right: 3px;
+    background-color: #00000080;
+  }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -56,24 +105,6 @@ textarea:focus {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
-
-.title {
-  color: white;
-  font-size: 70px;
-}
-
-.search {
-  width: 40%;
-  max-width: 500px;
-  text-align: center;
-  margin: 50px auto 40px auto;
-  border: 1px solid #fff;
-  border-radius: 20px;
-  align-items: center;
-  display: flex;
-  padding-right: 3px;
-  background-color: #00000080;
 }
 
 .search input {

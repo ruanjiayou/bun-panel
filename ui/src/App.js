@@ -17,8 +17,8 @@ import { SortableContainer, SortableElement, SortableHandle } from 'react-sortab
 
 const MenuWrap = styled.div`
   position: absolute;
-  right: 20px;
-  top: 20px;
+  right: 1rem;
+  top: 1rem;
   display: flex;
   flex-direction: row;
   column-gap: 10px;
@@ -27,11 +27,11 @@ const MenuWrap = styled.div`
   border-radius: 5px;
 `
 const Group = styled.div`
-  width: 80%;
+  width: 90%;
   max-width: 960px;
   margin: 0 auto;
   flex: 1;
-  padding: 0 20px;
+  padding: 0 1rem;
   overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
@@ -52,11 +52,11 @@ const GroupTitle = styled.div`
 `
 const CardWrap = styled.div`
   display: block;
-  // display: flex;
-  // flex-direction: row;
-  // column-gap: 10px;
-  // row-gap: 10px;
-  // flex-flow: wrap;
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+  row-gap: 10px;
+  flex-flow: wrap;
   padding: 10px 0;
   &::after {
     content: "";
@@ -65,16 +65,14 @@ const CardWrap = styled.div`
   }
 `
 const Card = styled.a`
-  float: left;
-  margin-right: 10px;
-  margin-bottom: 10px;
   background-color: #3333338a;
   display: flex;
   flex-direction: row;
   align-items: center;
-  min-height: 50px;
+  min-height: 4rem;
   min-width: 210px;
   color: white;
+  box-sizing: border-box;
   border-radius: 10px;
   padding: 10px;
   text-decoration: none;
@@ -96,10 +94,10 @@ const HoverItem = styled.div`
   }
 `
 const AppIcon = styled.img`
-  width: 40px;
-  height: 40px;
-  margin: 0 15px 0 10px;
-  border-radius:10px;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin: 0 1rem 0 10px;
+  border-radius: 1rem;
 `
 const AppTitle = styled.div`
   font-size: 16px;
