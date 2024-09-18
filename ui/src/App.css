@@ -7,6 +7,9 @@
   .title {
     color: white;
     font-size: 5rem;
+    background-size: cover;
+    background-clip: text;
+    -webkit-background-clip: text;
   }
 
   .search {
@@ -152,4 +155,40 @@ textarea:focus {
 
 .pointer {
   cursor: pointer;
+}
+
+@property --a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes color-rotating {
+  0% {
+    --a: 0deg;
+  }
+
+  100% {
+    --a: 360deg;
+  }
+}
+
+.spin-colorful:hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(from var(--a), #0f0, #ff0, #0ff, #ff6f00, #0ff);
+  border-radius: 10px;
+  animation: color-rotating 3s linear infinite;
+}
+
+.spin-colorful:hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(from var(--a), #0f0, #ff0, #0ff, #ff6f00, #0ff);
+  border-radius: 10px;
+  animation: color-rotating 3s linear infinite;
+  filter: blur(10px);
+  opacity: 0.75;
 }

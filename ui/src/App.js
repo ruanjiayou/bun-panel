@@ -28,10 +28,10 @@ const MenuWrap = styled.div`
 `
 const Group = styled.div`
   width: 90%;
-  max-width: 960px;
+  max-width: 1000px;
   margin: 0 auto;
   flex: 1;
-  padding: 0 1rem;
+  padding: 0 3rem;
   overflow-y: auto;
   &::-webkit-scrollbar {
     display: none;
@@ -54,8 +54,8 @@ const CardWrap = styled.div`
   display: block;
   display: flex;
   flex-direction: row;
-  column-gap: 10px;
-  row-gap: 10px;
+  column-gap: 15px;
+  row-gap: 15px;
   flex-flow: wrap;
   padding: 10px 0;
   &::after {
@@ -64,21 +64,29 @@ const CardWrap = styled.div`
     clear: both;
   }
 `
+const Cell = styled.div`
+  position: relative;
+  min-width: 210px;
+  min-height: 4rem;
+  &:hover > a {
+    background-color: #333;
+  }
+`
 const Card = styled.a`
   background-color: #3333338a;
   display: flex;
   flex-direction: row;
   align-items: center;
-  min-height: 4rem;
-  min-width: 210px;
+  position: absolute;
+  inset: 1px;
   color: white;
+  z-index: 1;
   box-sizing: border-box;
-  border-radius: 10px;
+  border-radius: 9px;
   padding: 10px;
   text-decoration: none;
   &:hover {
-    color: white;
-    box-shadow: #666 0px 0px 15px 3px;
+    background-color: #333;
     cursor: pointer;
   }
 `
@@ -105,10 +113,8 @@ const AppTitle = styled.div`
 const AppDesc = styled.div`
   font-size: 14px;
 `
-const AppItem = SortableElement(({ local, app }) => <Card key={app.id}
-  style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center', backgroundColor: local.sort_gid === app.gid ? '#b0b9be82' : '', cursor: local.sort_gid === app.gid ? 'all-scroll' : '' }}
-  target={app.open === 1 ? '_blank' : '_self'}
-  href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
+const AppItem = SortableElement(({ local, app }) => <Cell key={app.id}
+  className={local.sort_gid === app.gid ? '' : 'spin-colorful'}
   onMouseDown={e => {
     if (local.sort_gid === app.gid) {
       // sort
@@ -124,12 +130,19 @@ const AppItem = SortableElement(({ local, app }) => <Card key={app.id}
     local.showEditApp = true;
   }}
 >
-  {app.cover && <AppIcon src={app.cover} />}
-  <div key={app.cover} style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
-    <AppTitle>{app.name}</AppTitle>
-    <AppDesc title={app.desc}>{app.desc}</AppDesc>
-  </div>
-</Card>);
+  <Card
+    style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center', backgroundColor: local.sort_gid === app.gid ? '#b0b9be82' : '', cursor: local.sort_gid === app.gid ? 'all-scroll' : '' }}
+    target={app.open === 1 ? '_blank' : '_self'}
+    href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
+
+  >
+    {app.cover && <AppIcon src={app.cover} />}
+    <div key={app.cover} style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
+      <AppTitle>{app.name}</AppTitle>
+      <AppDesc title={app.desc}>{app.desc}</AppDesc>
+    </div>
+  </Card>
+</Cell>);
 
 const AppList = SortableContainer(({ local, items }) => {
   return <CardWrap>
@@ -319,7 +332,7 @@ function App() {
             }} />
           </MenuWrap>
         </div>
-        <div className='title'>{local.config.title}</div>
+        <div className='title' style={{ backgroundImage: `url("/uploads/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")`, color: "transparent" }}>{local.config.title}</div>
         {[1, "1"].includes(local.config.show_search) && <div className='search'>
           <Center style={{ position: 'relative' }}>
             {
@@ -347,12 +360,14 @@ function App() {
           }} onKeyDown={e => {
             if (!inputing && e.key === 'Enter') {
               const q = e.target.value.trim();
+              e.target.value = '';
               search(q);
             }
           }} />
-          <div style={{ padding: 8, marginRight: 5, cursor: 'pointer' }} onClick={() => {
+          <div style={{ padding: 8, marginRight: 5, cursor: 'pointer' }} onClick={(e) => {
             const elem = document.getElementById('search');
             search(elem.value.trim())
+            e.target.value = '';
             elem.value = '';
           }}>
             <Icon type="search" size={20} />
