@@ -14,6 +14,7 @@ import DialogApps from './dialog/apps.js';
 import DialogConfig from './dialog/config.js';
 import { toJS } from 'mobx';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
+import getRealUrl from './utils/realImageUrl.js';
 
 const MenuWrap = styled.div`
   position: absolute;
@@ -124,7 +125,7 @@ const AppItem = SortableElement(({ local, app }) => <Cell key={app.id}
     href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
 
   >
-    {app.cover && <AppIcon src={app.cover} />}
+    {app.cover && <AppIcon src={getRealUrl(app.cover)} />}
     <div key={app.cover} className='txt-omit' style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: 'center' }}>
       <AppTitle className='txt-omit'>{app.name}</AppTitle>
       <AppDesc title={app.desc}>{app.desc}</AppDesc>
@@ -320,14 +321,14 @@ function App() {
             }} />
           </MenuWrap>
         </div>
-        <div className='title' style={{ backgroundImage: `url("/uploads/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")`, color: "transparent" }}>{local.config.title}</div>
+        <div className='title' style={{ backgroundImage: `url("${getRealUrl("/uploads/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")}")`, color: "transparent" }}>{local.config.title}</div>
         {[1, "1"].includes(local.config.show_search) && <div className='search'>
           <Center style={{ position: 'relative' }}>
             {
-              local.defaultEngine && <img src={local.defaultEngine.icon} style={{ marginLeft: 20, marginRight: 5, width: 24 }} alt="engine" onClick={() => local.show_engine_dialog = !local.show_engine_dialog} />
+              local.defaultEngine && <img src={process.env.PUBLIC_URL + local.defaultEngine.icon} style={{ marginLeft: 20, marginRight: 5, width: 24 }} alt="engine" onClick={() => local.show_engine_dialog = !local.show_engine_dialog} />
             }
             <div id="dialog_engine" style={{ display: local.show_engine_dialog ? 'block' : 'none', position: 'absolute', top: 40, left: 10, padding: '0 10px 10px', borderRadius: 5, backgroundColor: '#575757bf', zIndex: 2 }}>
-              {local.engines.map(engine => <img src={engine.icon} alt={engine.name} key={engine.name} style={{ width: 24, marginTop: 10 }} onClick={async () => {
+              {local.engines.map(engine => <img src={process.env.PUBLIC_URL + engine.icon} alt={engine.name} key={engine.name} style={{ width: 24, marginTop: 10 }} onClick={async () => {
                 local.defaultEngine = engine;
                 local.config.engine = engine.name;
                 local.show_engine_dialog = false;
@@ -380,7 +381,7 @@ function App() {
               {local.engines.map(engine => (
                 <HoverItem key={engine.name}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <img src={engine.icon} style={{ width: 20, marginRight: 5 }} alt="engine" />
+                    <img src={getRealUrl(engine.icon)} style={{ width: 20, marginRight: 5 }} alt="engine" />
                     {engine.name}
                   </div>
                   <Icon type="del" size={16} color='#000' onClick={async () => {

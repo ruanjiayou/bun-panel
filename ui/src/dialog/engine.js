@@ -1,6 +1,7 @@
 import { Observer } from "mobx-react-lite";
 import { Modal, Uploader } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
+import getRealUrl from "../utils/realImageUrl.js";
 
 export default function DialogEngine({ visible, data, onClose, onSave }) {
   return <Observer>{() => (
@@ -21,7 +22,7 @@ export default function DialogEngine({ visible, data, onClose, onSave }) {
         <FormItem>
           <FormLabel>图标</FormLabel>
           <div>
-            <Uploader id="engine" value={data.icon} onUpload={resp => {
+            <Uploader id="engine" value={getRealUrl(data.icon)} onUpload={resp => {
               if (resp.status === 200 && resp.data.code === 0) {
                 data.icon = resp.data.data.filepath;
               }

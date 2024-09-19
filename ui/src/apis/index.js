@@ -1,5 +1,7 @@
 import request from 'axios';
 
+request.defaults.baseURL = process.env.PUBLIC_URL || '';
+
 async function getConfigs() {
   return await request.get('/api/config');
 }

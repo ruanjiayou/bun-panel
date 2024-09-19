@@ -1,6 +1,7 @@
 import { Observer } from "mobx-react-lite";
 import { Modal, Uploader, Select } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
+import getRealUrl from "../utils/realImageUrl.js";
 
 export default function DialogApp({ visible, groups, data, onClose, onSave }) {
   return <Observer>{() => (
@@ -21,7 +22,7 @@ export default function DialogApp({ visible, groups, data, onClose, onSave }) {
         <FormItem>
           <FormLabel>图标</FormLabel>
           <div>
-            <Uploader id="app" value={data.cover} onUpload={resp => {
+            <Uploader id="app" value={getRealUrl(data.cover)} onUpload={resp => {
               if (resp.status === 200 && resp.data.code === 0) {
                 data.cover = resp.data.data.filepath;
               }

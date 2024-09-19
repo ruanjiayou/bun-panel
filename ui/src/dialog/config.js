@@ -3,6 +3,7 @@ import { Modal, Uploader, Switch, Select } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
 import { toJS } from "mobx";
 import { useEffect } from "react";
+import getRealUrl from "../utils/realImageUrl.js";
 
 export default function DialogConfig({ visible, data, engines, onClose, onSave, children }) {
   const local = useLocalStore(() => ({}));
@@ -56,7 +57,7 @@ export default function DialogConfig({ visible, data, engines, onClose, onSave, 
         <FormItem>
           <FormLabel>壁纸设置</FormLabel>
           <div>
-            <Uploader id="bg" value={local.background_url} onUpload={(resp) => {
+            <Uploader id="bg" value={getRealUrl(local.background_url)} onUpload={(resp) => {
               if (resp.status === 200 && resp.data.code === 0) {
                 local.background_url = resp.data.data.filepath;
               }
