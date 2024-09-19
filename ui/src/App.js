@@ -27,15 +27,7 @@ const MenuWrap = styled.div`
   border-radius: 5px;
 `
 const Group = styled.div`
-  width: 90%;
-  max-width: 1000px;
-  margin: 0 auto;
-  flex: 1;
-  padding: 0 3rem;
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+
 `
 const GroupTitle = styled.div`
   color: white;
@@ -54,8 +46,8 @@ const CardWrap = styled.div`
   display: block;
   display: flex;
   flex-direction: row;
-  column-gap: 15px;
-  row-gap: 15px;
+  column-gap: 10px;
+  row-gap: 10px;
   flex-flow: wrap;
   padding: 10px 0;
   &::after {
@@ -65,12 +57,7 @@ const CardWrap = styled.div`
   }
 `
 const Cell = styled.div`
-  position: relative;
-  min-width: 210px;
-  min-height: 4rem;
-  &:hover > a {
-    background-color: #333;
-  }
+
 `
 const Card = styled.a`
   background-color: #3333338a;
@@ -83,7 +70,7 @@ const Card = styled.a`
   z-index: 1;
   box-sizing: border-box;
   border-radius: 9px;
-  padding: 10px;
+  padding-right: 10px;
   text-decoration: none;
   &:hover {
     background-color: #333;
@@ -112,9 +99,10 @@ const AppTitle = styled.div`
 `
 const AppDesc = styled.div`
   font-size: 14px;
+  color: #888;
 `
 const AppItem = SortableElement(({ local, app }) => <Cell key={app.id}
-  className={local.sort_gid === app.gid ? '' : 'spin-colorful'}
+  className={"cell " + (local.sort_gid === app.gid ? '' : 'spin-colorful')}
   onMouseDown={e => {
     if (local.sort_gid === app.gid) {
       // sort
@@ -137,8 +125,8 @@ const AppItem = SortableElement(({ local, app }) => <Cell key={app.id}
 
   >
     {app.cover && <AppIcon src={app.cover} />}
-    <div key={app.cover} style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: app.desc ? 'space-around' : 'center' }}>
-      <AppTitle>{app.name}</AppTitle>
+    <div key={app.cover} className='txt-omit' style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: 'center' }}>
+      <AppTitle className='txt-omit'>{app.name}</AppTitle>
       <AppDesc title={app.desc}>{app.desc}</AppDesc>
     </div>
   </Card>
@@ -163,7 +151,7 @@ const GroupItem = SortableElement(({ local, group }) => <div key={group.id} >
       <GroupTitle>
         <GroupHandle local={local} group={group} />
         <div style={{ display: group.id ? 'flex' : 'none', cursor: 'pointer', visibility: local.sort_gid === group.id ? 'visible' : '' }}>
-          <Icon type={'sort'} size={28} style={{ marginLeft: 5, marginTop: -3, fill: local.sort_gid === group.id ? '#00aaff' : 'white' }} onClick={() => {
+          <Icon type={'sort'} size={24} style={{ marginLeft: 5, marginTop: -2, fill: local.sort_gid === group.id ? '#00aaff' : 'white' }} onClick={() => {
             local.sort_gid = local.sort_gid === group.id ? null : group.id;
           }} />
         </div>
@@ -338,7 +326,7 @@ function App() {
             {
               local.defaultEngine && <img src={local.defaultEngine.icon} style={{ marginLeft: 20, marginRight: 5, width: 24 }} alt="engine" onClick={() => local.show_engine_dialog = !local.show_engine_dialog} />
             }
-            <div id="dialog_engine" style={{ display: local.show_engine_dialog ? 'block' : 'none', position: 'absolute', top: 40, left: 10, padding: '0 10px 10px', borderRadius: 5, backgroundColor: '#575757bf' }}>
+            <div id="dialog_engine" style={{ display: local.show_engine_dialog ? 'block' : 'none', position: 'absolute', top: 40, left: 10, padding: '0 10px 10px', borderRadius: 5, backgroundColor: '#575757bf', zIndex: 2 }}>
               {local.engines.map(engine => <img src={engine.icon} alt={engine.name} key={engine.name} style={{ width: 24, marginTop: 10 }} onClick={async () => {
                 local.defaultEngine = engine;
                 local.config.engine = engine.name;
@@ -373,7 +361,7 @@ function App() {
             <Icon type="search" size={20} />
           </div>
         </div>}
-        <Group>
+        <Group className='group'>
           <GroupList axis="y" lockAxis='y' useDragHandle={true} local={local} items={local.groups} onSortEnd={({ oldIndex, newIndex }) => {
             if (oldIndex !== newIndex && local.groups[oldIndex].id && local.groups[newIndex].id) {
               const [old] = local.groups.splice(oldIndex, 1);

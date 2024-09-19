@@ -34,9 +34,14 @@ const Main = styled.div`
 `
 const Body = styled.div`
   overflow-y: auto;
-  width: 500px;
   min-height: 200px;
   display: flex;
+  @media (min-width: 768px) {
+    width: 500px;
+  }
+  @media (max-width: 767px) {
+    width: 350px;
+  }
 `
 const Footer = styled.div`
   margin: 10px;

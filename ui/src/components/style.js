@@ -79,11 +79,16 @@ export const FormItem = styled.div`
   flex-direction: row;
 `
 export const FormLabel = styled.div`
-  width: 150px;
   text-align: right;
   padding-right: 10px;
   display: flex;
   align-items: flex-start;
   justify-content: end;
   font-size: 14px;
+  @media (min-width: 768px) {
+    width: 150px;
+  }
+  @media (max-width: 767px) {
+    width: 80px;
+  }
 `

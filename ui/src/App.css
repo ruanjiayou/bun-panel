@@ -5,11 +5,7 @@
   }
 
   .title {
-    color: white;
     font-size: 5rem;
-    background-size: cover;
-    background-clip: text;
-    -webkit-background-clip: text;
   }
 
   .search {
@@ -23,6 +19,37 @@
     display: flex;
     padding-right: 3px;
     background-color: #00000080;
+  }
+
+  .group {
+    width: 90%;
+    max-width: 1000px;
+  }
+
+  .cell {
+    min-width: 210px;
+  }
+}
+
+.group {
+  margin: 0 auto;
+  flex: 1;
+  padding: 0 3rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.cell {
+  position: relative;
+  min-height: 4rem;
+
+  &:hover>a {
+    background-color: #333;
   }
 }
 
@@ -47,6 +74,15 @@
     display: flex;
     padding-right: 3px;
     background-color: #00000080;
+  }
+
+  .group {
+    padding: 0 10px;
+  }
+
+  .cell {
+    min-width: 48%;
+    min-height: 4.5rem;
   }
 }
 
@@ -100,6 +136,12 @@ textarea:focus {
   border-color: rgb(0, 191, 255);
 }
 
+.txt-omit {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .App {
   background: url("./assets/background.jpg") center center /cover no-repeat;
   width: 100%;
@@ -133,6 +175,13 @@ textarea:focus {
   flex: 1;
   width: 100%;
   user-select: none;
+}
+
+.title {
+  color: white;
+  background-size: cover;
+  background-clip: text;
+  -webkit-background-clip: text;
 }
 
 .footer {
