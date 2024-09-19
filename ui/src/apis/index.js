@@ -1,6 +1,6 @@
 import request from 'axios';
 
-request.defaults.baseURL = process.env.PUBLIC_URL || '';
+request.defaults.baseURL = '/gw/panel';
 
 async function getConfigs() {
   return await request.get('/api/config');
