@@ -228,6 +228,8 @@ textarea:focus {
   inset: 0;
   background: repeating-conic-gradient(from var(--a), #0f0, #ff0, #0ff, #ff6f00, #0ff);
   border-radius: 10px;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
   animation: color-rotating 3s linear infinite;
 }
 
@@ -235,9 +237,11 @@ textarea:focus {
   content: '';
   position: absolute;
   inset: 0;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
   background: repeating-conic-gradient(from var(--a), #0f0, #ff0, #0ff, #ff6f00, #0ff);
   border-radius: 10px;
   animation: color-rotating 3s linear infinite;
-  filter: blur(10px);
-  opacity: 0.75;
+  filter: blur(6px);
+  opacity: 0.7;
 }
