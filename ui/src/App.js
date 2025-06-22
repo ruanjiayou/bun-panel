@@ -431,6 +431,16 @@ function App() {
             </div>
           </FormItem>
         </DialogConfig>
+        <DialogApps visible={local.showEditApps} onClose={() => local.showEditApps = false} apps={local.apps} onSave={async () => {
+          await initAppGroup();
+        }} />
+        <DialogGroup visible={local.showEditGroup} data={local.temp_group} onAdd={(id) => {
+          local.temp_app = { gid: id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
+          local.showEditApp = true
+          local.showEditGroup = false;
+        }} onClose={() => {
+          local.showEditGroup = false;
+        }} onSave={onSaveGroup} />
         <DialogApp
           visible={local.showEditApp}
           data={local.temp_app}
@@ -438,15 +448,6 @@ function App() {
           onClose={() => local.showEditApp = false}
           onSave={onSaveApp}
         />
-        <DialogApps visible={local.showEditApps} onClose={() => local.showEditApps = false} apps={local.apps} onSave={async () => {
-          await initAppGroup();
-        }} />
-        <DialogGroup visible={local.showEditGroup} data={local.temp_group} onAdd={(id) => {
-          local.temp_app = { gid: id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
-          local.showEditApp = true
-        }} onClose={() => {
-          local.showEditGroup = false;
-        }} onSave={onSaveGroup} />
         <DialogEngine visible={local.showEditEngine} data={local.temp_engine} onClose={() => {
           local.showEditEngine = false;
         }} onSave={onSaveEngine} />

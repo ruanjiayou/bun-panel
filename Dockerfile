@@ -37,6 +37,7 @@ COPY --from=install /temp/prod/node_modules node_modules
 COPY . .
 
 # run the app
+VOLUME ["/user/app/data", "/user/app/public"]
 USER bun
 EXPOSE 5555/tcp
 CMD ["bun", "run", "start"]
