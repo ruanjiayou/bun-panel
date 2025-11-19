@@ -1,4 +1,4 @@
-import { Observer, useLocalStore } from "mobx-react-lite";
+import { Observer, useLocalObservable } from "mobx-react-lite";
 import { useEffect } from "react";
 import styled from "styled-components";
 
@@ -33,7 +33,7 @@ const Option = styled.div`
 `
 
 export default function Select({ value, items, onChange }) {
-  const local = useLocalStore(() => ({
+  const local = useLocalObservable(() => ({
     open: false,
     title: '无'
   }));

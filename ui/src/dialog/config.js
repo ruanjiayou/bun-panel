@@ -1,4 +1,4 @@
-import { Observer, useLocalStore } from "mobx-react-lite";
+import { Observer, useLocalObservable } from "mobx-react-lite";
 import { Modal, Uploader, Switch, Select } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
 import { toJS } from "mobx";
@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import getRealUrl from "../utils/realImageUrl.js";
 
 export default function DialogConfig({ visible, data, engines, onClose, onSave, children }) {
-  const local = useLocalStore(() => ({}));
+  const local = useLocalObservable(() => ({}));
   useEffect(() => {
     Object.keys(data).forEach(k => {
       local[k] = data[k];

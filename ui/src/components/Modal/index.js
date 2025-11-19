@@ -1,4 +1,4 @@
-import { useLocalStore, Observer } from "mobx-react-lite"
+import { Observer, useLocalObservable } from "mobx-react-lite"
 import { useEffectOnce } from "react-use"
 import styled from "styled-components"
 
@@ -67,7 +67,7 @@ const local = {
   current: 1000,
 }
 export default function Modal({ title, style, children, visible, onSave, onClose }) {
-  const store = useLocalStore(() => ({
+  const store = useLocalObservable(() => ({
     index: local.current + 1,
     loading: false,
   }))

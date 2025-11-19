@@ -2,136 +2,68 @@
 import './App.css';
 import { Fragment, useCallback, useState } from 'react';
 import { useEffectOnce } from 'react-use';
-import { useLocalStore, Observer } from "mobx-react-lite"
+import { useLocalObservable, Observer } from "mobx-react-lite"
 import apis from './apis'
-import styled from 'styled-components';
 import DialogGroup from './dialog/group.js';
 import DialogEngine from './dialog/engine.js';
 import { Icon, toast } from './components/index.js'
 import { FormItem, FormLabel, Center } from './components/style.js';
 import DialogApp from './dialog/app.js';
-import DialogApps from './dialog/apps.js';
 import DialogConfig from './dialog/config.js';
 import { toJS } from 'mobx';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import getRealUrl from './utils/realImageUrl.js';
+import {
+  Group,
+  GroupTitle,
+  CardWrap,
+  Card,
+  Cell,
+  MenuWrap,
+  HoverItem,
+  AppDesc,
+  AppIcon,
+  AppTitle,
+} from './style.js'
 
-const MenuWrap = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  display: flex;
-  flex-direction: row;
-  column-gap: 10px;
-  background-color: #3333337d;
-  padding: 8px;
-  border-radius: 5px;
-`
-const Group = styled.div`
-
-`
-const GroupTitle = styled.div`
-  color: white;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: 20px;
-  & > div {
-    visibility: hidden;
-  }
-  &:hover > div{
-    visibility: visible;
-  }
-`
-const CardWrap = styled.div`
-  display: block;
-  display: flex;
-  flex-direction: row;
-  column-gap: 10px;
-  row-gap: 10px;
-  flex-flow: wrap;
-  padding: 10px 0;
-  &::after {
-    content: "";
-    display: block;
-    clear: both;
-  }
-`
-const Cell = styled.div`
-
-`
-const Card = styled.a`
-  background-color: #3333338a;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: absolute;
-  inset: 1px;
-  color: white;
-  z-index: 1;
-  box-sizing: border-box;
-  border-radius: 9px;
-  padding-right: 10px;
-  text-decoration: none;
-  &:hover {
-    background-color: #333;
-    cursor: pointer;
-  }
-`
-const HoverItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 10px;
-  border-radius: 3px;
-  margin-bottom: 10px;
-  &:hover {
-    background-color: #eee;
-  }
-`
-const AppIcon = styled.img`
-  width: 2.6rem;
-  height: 2.6rem;
-  margin: 0 1rem 0 10px;
-  border-radius: 1rem;
-`
-const AppTitle = styled.div`
-  font-size: 16px;
-`
-const AppDesc = styled.div`
-  font-size: 14px;
-  color: #888;
-`
-const AppItem = SortableElement(({ local, app }) => <Cell key={app.id}
-  className={"cell " + (local.sort_gid === app.gid ? '' : 'spin-colorful')}
-  onMouseDown={e => {
-    if (local.sort_gid === app.gid) {
-      // sort
-    } else {
-      // click
+const AppItem = SortableElement(({ local, app }) => {
+  const url = local.allow_mix ? (local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan || app.url_lan) : (local.config.network === 'LAN' ? app.url_lan : app.url_wan);
+  return <Cell key={app.id}
+    className={`cell ${(local.sort_gid === app.gid || !url) ? '' : 'spin-colorful'} ${!url ? ' disabled' : ''}`}
+    onMouseDown={e => {
+      if (local.sort_gid === app.gid) {
+        // sort
+      } else {
+        // click
+        e.stopPropagation();
+      }
+    }}
+    onContextMenu={(e) => {
       e.stopPropagation();
-    }
-  }}
-  onContextMenu={(e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    local.temp_app = app;
-    local.showEditApp = true;
-  }}
->
-  <Card
-    style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center', backgroundColor: local.sort_gid === app.gid ? '#b0b9be82' : '', cursor: local.sort_gid === app.gid ? 'all-scroll' : '' }}
-    target={app.open === 1 ? '_blank' : '_self'}
-    href={local.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan}
-
+      e.preventDefault();
+      local.temp_app = app;
+      local.showEditApp = true;
+    }}
   >
-    {app.cover && <AppIcon src={getRealUrl(app.cover)} />}
-    <div key={app.cover} className='txt-omit' style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: 'center' }}>
-      <AppTitle className='txt-omit'>{app.name}</AppTitle>
-      <AppDesc title={app.desc}>{app.desc}</AppDesc>
-    </div>
-  </Card>
-</Cell>);
+    <Card
+      style={{ alignItems: app.cover ? 'left' : 'center', justifyContent: app.cover ? 'left' : 'center', backgroundColor: local.sort_gid === app.gid ? '#b0b9be82' : '', cursor: local.sort_gid === app.gid ? 'all-scroll' : '' }}
+      target={app.open === 1 ? '_blank' : '_self'}
+      href={url}
+      onClick={(e) => {
+        if (!url) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      }}
+    >
+      {app.cover && <AppIcon src={getRealUrl(app.cover)} />}
+      <div key={app.cover} className='txt-omit' style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: 'center' }}>
+        <AppTitle className='txt-omit'>{app.name}</AppTitle>
+        <AppDesc title={app.desc}>{app.desc}</AppDesc>
+      </div>
+    </Card>
+  </Cell>
+});
 
 const AppList = SortableContainer(({ local, items }) => {
   return <CardWrap>
@@ -158,7 +90,6 @@ const GroupItem = SortableElement(({ local, group }) => <div key={group.id} >
         </div>
       </GroupTitle>
       {group.fold === 0 && <AppList axis="xy" local={local} items={group.apps} onSortEnd={({ oldIndex, newIndex }) => {
-        local.show_drag_over = false;
         if (oldIndex !== newIndex) {
           const [old] = group.apps.splice(oldIndex, 1);
           group.apps.splice(newIndex, 0, old);
@@ -175,21 +106,18 @@ const GroupList = SortableContainer(({ local, items }) => {
 });
 
 function App() {
-  const local = useLocalStore(() => ({
+  const local = useLocalObservable(() => ({
     showMenu: false,
     showEditApp: false,
-    showEditApps: false,
     showEditGroup: false,
     showEditEngine: false,
     sort_gid: null,
     show_engine_dialog: false,
-    show_drag_over: false,
+    allow_mix: true,
     // temp
     temp_engine: {},
     temp_group: {},
     temp_app: {},
-
-    drag_id: '',
 
     booted: false,
     defaultEngine: null,
@@ -301,6 +229,7 @@ function App() {
   useEffectOnce(() => {
     if (!local.booted) {
       local.booted = true;
+      local.allow_mix = localStorage.getItem('__panel_allow_mix') ? true : false;
       init();
     }
   });
@@ -309,14 +238,15 @@ function App() {
       <div className="App" style={{ backgroundImage: local.config.background_url ? `url(${local.config.background_url})` : '' }}>
         <div style={{ position: 'relative', width: '100%', height: '5vh' }}>
           <MenuWrap>
-            <Icon type={'del'} size={24} onClick={() => local.showEditApps = true} style={{ fill: local.show_drag_over ? 'red' : 'white' }} onDragOver={() => {
-              local.show_drag_over = true;
+            <Icon title="混合url" type={local.allow_mix ? 'allow_mix' : 'not_allow_mix'} onClick={() => {
+              local.allow_mix = !local.allow_mix;
+              localStorage.setItem('__panel_allow_mix', local.allow_mix)
             }} />
-            <Icon type={local.config.network === 'LAN' ? 'lan' : 'wan'} size={20} onClick={async () => {
+            <Icon title="网络模式" type={local.config.network === 'LAN' ? 'local' : 'network'} size={20} onClick={async () => {
               local.config.network = local.config.network === 'LAN' ? 'WAN' : 'LAN';
               await apis.updateConfig('network', local.config.network);
             }} />
-            <Icon type={'menu'} size={20} onClick={() => {
+            <Icon title="配置" type={'setting'} size={20} onClick={() => {
               local.showMenu = !local.showMenu;
             }} />
           </MenuWrap>
@@ -438,9 +368,6 @@ function App() {
           onClose={() => local.showEditApp = false}
           onSave={onSaveApp}
         />
-        <DialogApps visible={local.showEditApps} onClose={() => local.showEditApps = false} apps={local.apps} onSave={async () => {
-          await initAppGroup();
-        }} />
         <DialogGroup visible={local.showEditGroup} data={local.temp_group} onAdd={(id) => {
           local.temp_app = { gid: id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
           local.showEditApp = true
