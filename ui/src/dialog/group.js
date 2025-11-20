@@ -23,6 +23,7 @@ export default function DialogGroup({ visible, data, onAdd, onClose, onSave }) {
           <div style={{ border: '1px dashed grey', borderRadius: 5, padding: '5px 15px' }} onClick={() => {
             if (onAdd) {
               onAdd(data.id);
+              onClose && onClose()
             }
           }}>
             <Icon type={'add'} style={{ fill: 'grey', }} size={16} title="添加应用" />

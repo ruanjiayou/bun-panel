@@ -66,7 +66,7 @@ const local = {
   total: 0,
   current: 1000,
 }
-export default function Modal({ title, style, children, visible, onSave, onClose }) {
+export default function Modal({ title, style, children, visible, onDelete, onSave, onClose }) {
   const store = useLocalObservable(() => ({
     index: local.current + 1,
     loading: false,
@@ -97,6 +97,18 @@ export default function Modal({ title, style, children, visible, onSave, onClose
           {children}
         </Body>
         <Footer>
+          {onDelete && <Button style={{ backgroundColor: '#d9d9d9', color: '#444', marginRight: 10 }} onClick={async () => {
+            try {
+              local.loading = true;
+              await onDelete();
+            } catch (e) {
+
+            } finally {
+              local.loading = false;
+            }
+          }}>
+            删除
+          </Button>}
           <Button onClick={async () => {
             if (local.loading) {
               return;

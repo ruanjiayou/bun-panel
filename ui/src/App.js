@@ -126,6 +126,16 @@ function App() {
     groups: [],
     apps: [],
     engines: [],
+    remAppById(id) {
+      const app = local.apps.find(app => app.id === id);
+      if (app) {
+        const group = local.groups.find(group => group.id === app.gid);
+        if (group) {
+          group.apps = group.apps.filter(app => app.id !== id);
+        }
+      }
+      local.apps = local.apps.filter(app => app.id !== id)
+    }
   }));
   const [inputing, setInputing] = useState(false);
   const initConfig = useCallback(async () => {
@@ -361,19 +371,22 @@ function App() {
             </div>
           </FormItem>
         </DialogConfig>
-        <DialogApp
-          visible={local.showEditApp}
-          data={local.temp_app}
-          groups={local.groups}
-          onClose={() => local.showEditApp = false}
-          onSave={onSaveApp}
-        />
         <DialogGroup visible={local.showEditGroup} data={local.temp_group} onAdd={(id) => {
           local.temp_app = { gid: id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
           local.showEditApp = true
         }} onClose={() => {
           local.showEditGroup = false;
         }} onSave={onSaveGroup} />
+        <DialogApp
+          visible={local.showEditApp}
+          data={local.temp_app}
+          groups={local.groups}
+          onClose={() => local.showEditApp = false}
+          onSave={onSaveApp}
+          afterDelete={() => {
+            local.remAppById(local.temp_app.id)
+          }}
+        />
         <DialogEngine visible={local.showEditEngine} data={local.temp_engine} onClose={() => {
           local.showEditEngine = false;
         }} onSave={onSaveEngine} />
