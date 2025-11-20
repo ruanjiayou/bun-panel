@@ -4,6 +4,11 @@ import { ReactComponent as edit } from '../../assets/edit.svg'
 import { ReactComponent as wan } from '../../assets/wan.svg'
 import { ReactComponent as lan } from '../../assets/lan.svg'
 import { ReactComponent as menu } from '../../assets/menu.svg'
+import { ReactComponent as setting } from '../../assets/setting.svg'
+import { ReactComponent as local } from '../../assets/local.svg'
+import { ReactComponent as network } from '../../assets/network.svg'
+import { ReactComponent as allow_mix } from '../../assets/allow-mix.svg'
+import { ReactComponent as not_allow_mix } from '../../assets/not-allow-mix.svg'
 import { ReactComponent as search } from '../../assets/search.svg'
 import { ReactComponent as view } from '../../assets/view.svg'
 import { ReactComponent as voff } from '../../assets/view-off.svg'
@@ -32,6 +37,11 @@ const types = {
   view,
   voff,
   sort,
+  setting,
+  local,
+  network,
+  allow_mix,
+  not_allow_mix
 }
 export default function Icon({ type, size = 20, cursor = 'pointer', color = 'white', ...props }) {
   const Image = types[type];

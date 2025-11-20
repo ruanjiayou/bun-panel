@@ -2,10 +2,21 @@ import { Observer } from "mobx-react-lite";
 import { Modal, Uploader, Select } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
 import getRealUrl from "../utils/realImageUrl.js";
+import { useCallback } from "react";
+import apis from "../apis/index.js";
 
-export default function DialogApp({ visible, groups, data, onClose, onSave }) {
+export default function DialogApp({ visible, groups, data, onClose, onSave, afterDelete }) {
+  const OnDelete = useCallback(async () => {
+    try {
+      await apis.deleteApp(data.id)
+      onClose();
+      afterDelete && afterDelete()
+    } catch (e) {
+
+    }
+  })
   return <Observer>{() => (
-    <Modal title={data.id ? "修改" : "添加"} style={{ alignItems: 'center' }} visible={visible} onClose={onClose} onSave={onSave}>
+    <Modal title={data.id ? "修改" : "添加"} style={{ alignItems: 'center' }} visible={visible} onDelete={data.id ? OnDelete : null} onClose={onClose} onSave={onSave}>
       <div style={{ marginLeft: 20 }}>
         <FormItem>
           <FormLabel>名称</FormLabel>

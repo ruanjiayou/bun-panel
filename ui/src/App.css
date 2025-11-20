@@ -21,11 +21,6 @@
     background-color: #00000080;
   }
 
-  .group {
-    width: 90%;
-    max-width: 1000px;
-  }
-
   .cell {
     min-width: 210px;
   }
@@ -51,6 +46,10 @@
   &:hover>a {
     background-color: #333;
   }
+}
+
+.cell.disabled a:hover{
+  cursor: not-allowed;
 }
 
 /* 当屏幕宽度小于 768px 时，应用以下样式，这通常适用于手机 */
@@ -173,7 +172,8 @@ textarea:focus {
 
 .application {
   flex: 1;
-  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
   user-select: none;
 }
 

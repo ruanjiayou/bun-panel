@@ -25,7 +25,7 @@ function Uploader({ value, id, field = "image", onUpload }) {
 
   return <Observer>{() => (
     <div style={{ marginBottom: 10 }}>
-      <div style={{ width: 150, marginBottom: 10 }}>
+      <div style={{ width: 150, marginBottom: 5 }}>
         {value && <img src={value} style={{ width: '100%' }} alt="preview" />}
       </div>
       <input
