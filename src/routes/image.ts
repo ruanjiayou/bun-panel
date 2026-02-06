@@ -5,9 +5,11 @@ import { v4 } from 'uuid';
 import multer from 'multer';
 import { copyFile, rename, unlink } from "node:fs/promises";
 import mime from 'mime/lite';
+import path from 'node:path';
+import config from '../config';
 
 const router = express.Router();
-const upload = multer({ dest: 'data/.tmp' });
+const upload = multer({ dest: path.join(config.root_dir, '/data/.tmp') });
 
 router.get('/', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'images');
@@ -27,7 +29,7 @@ router.post('/', upload.single('image'), async (req, res) => {
   }
   if (req.file) {
     data.filepath += mime.getExtension(req.file.mimetype);
-    await copyFile(req.file.path, "data" + data.filepath);
+    await copyFile(req.file.path, path.join(config.root_dir, 'public', data.filepath));
     try {
       await unlink(req.file.path);
     } catch (e) {
@@ -43,8 +45,9 @@ router.delete('/:id', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'images');
   const doc = await sqliter.findOne(`id="${req.params.id}"`);
   if (doc) {
-    if (await Bun.file(doc.filepath).exists()) {
-      await unlink(doc.filepath);
+    const fullpath = path.join(config.root_dir, 'public', doc.filepath);
+    if (await Bun.file(fullpath).exists()) {
+      await unlink(fullpath);
     }
     await sqliter.destroy(`id="${req.params.id}"`);
   }

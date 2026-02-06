@@ -10,9 +10,11 @@ import configs from './routes/config';
 import engines from './routes/engine';
 import images from './routes/image';
 import getLogger from "utils/logger";
+import config from './config'
 
 const app = express();
 const logger = getLogger('access');
+app.set('root_dir', config.root_dir);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -20,8 +22,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static('public'));
-app.use('/uploads', express.static('data/uploads'));
+// static 是相对 process.cwd()的,use 必须/开头
+app.use(express.static(config.root_dir + '/public'));
 app.use(compression());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, parameterLimit: 100 }));

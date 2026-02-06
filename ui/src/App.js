@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
-import { Fragment, useCallback, useState } from 'react';
+import { Fragment, useCallback, useMemo, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import { useLocalObservable, Observer } from "mobx-react-lite"
 import apis from './apis'
@@ -13,6 +13,7 @@ import DialogConfig from './dialog/config.js';
 import { toJS } from 'mobx';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
 import getRealUrl from './utils/realImageUrl.js';
+import { omit, throttle } from 'lodash';
 import {
   Group,
   GroupTitle,
@@ -104,7 +105,6 @@ const GroupList = SortableContainer(({ local, items }) => {
     {items.map((group, index) => <GroupItem key={group.id} local={local} group={group} index={index} />)}
   </div>
 });
-
 function App() {
   const local = useLocalObservable(() => ({
     showMenu: false,
@@ -152,6 +152,7 @@ function App() {
     const resp4 = await apis.getEngines();
     if (resp4.status === 200 && resp4.data.code === 0) {
       local.engines = resp4.data.data;
+      local.engines.forEach((v, idx) => v.id = idx)
       local.defaultEngine = local.engines.find(it => it.name === local.config.engine)
     }
   }, []);
@@ -212,7 +213,7 @@ function App() {
   const onSaveEngine = useCallback(async () => {
     const resp = !local.temp_engine.id
       ? await apis.createEngine(local.temp_engine)
-      : await apis.updateEngine(local.temp_engine.id, local.temp_engine);
+      : await apis.updateEngine(local.temp_engine.name, omit(local.temp_engine, ['id']));
     if (resp.status === 200 && resp.data.code === 0) {
       local.showEditEngine = false;
       await initEngine();
@@ -236,6 +237,24 @@ function App() {
       toast({ content: resp.data.message });
     }
   }, []);
+  const onWheel = useMemo(() => {
+    return throttle(offset => {
+      let index = -1;
+      if (local.defaultEngine) {
+        index = local.engines.findIndex(v => v.name === local.defaultEngine.name);
+      }
+      if (index !== -1 && local.engines.length !== 0) {
+        index += offset > 0 ? 1 : -1;
+        if (local.engines[index]) {
+          local.defaultEngine = local.engines[index]
+        } else if (index === -1) {
+          local.defaultEngine = local.engines[local.engines.length - 1]
+        } else if (index === local.engines.length) {
+          local.defaultEngine = local.engines[0]
+        }
+      }
+    }, 100)
+  }, [])
   useEffectOnce(() => {
     if (!local.booted) {
       local.booted = true;
@@ -245,7 +264,7 @@ function App() {
   });
   return (
     <Observer>{() => (
-      <div className="App" style={{ backgroundImage: local.config.background_url ? `url(${local.config.background_url})` : '' }}>
+      <div className="App" style={{ backgroundImage: local.config.background_url ? `url(${getRealUrl(local.config.background_url)})` : '' }}>
         <div style={{ position: 'relative', width: '100%', height: '5vh' }}>
           <MenuWrap>
             <Icon title="混合url" type={local.allow_mix ? 'allow_mix' : 'not_allow_mix'} onClick={() => {
@@ -263,7 +282,9 @@ function App() {
         </div>
         <div className='title' style={{ backgroundImage: `url("${getRealUrl("/uploads/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")}")`, color: "transparent" }}>{local.config.title}</div>
         {[1, "1"].includes(local.config.show_search) && <div className='search'>
-          <Center style={{ position: 'relative' }}>
+          <Center style={{ position: 'relative' }} onWheel={(e) => {
+            onWheel(e.nativeEvent.deltaY)
+          }}>
             {
               local.defaultEngine && <img src={process.env.PUBLIC_URL + local.defaultEngine.icon} style={{ marginLeft: 20, marginRight: 5, width: 24 }} alt="engine" onClick={() => local.show_engine_dialog = !local.show_engine_dialog} />
             }
@@ -320,10 +341,11 @@ function App() {
             <div style={{ width: 150 }}>
               {local.engines.map(engine => (
                 <HoverItem key={engine.name}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
                     <img src={getRealUrl(engine.icon)} style={{ width: 20, marginRight: 5 }} alt="engine" />
                     {engine.name}
                   </div>
+                  <Icon type="edit" size={18} onClick={() => { local.temp_engine = engine; local.showEditEngine = true; }} />
                   <Icon type="del" size={16} color='#000' onClick={async () => {
                     const resp = await apis.deleteEngine(engine.name);
                     if (resp.status === 200 && resp.data.code === 0) {

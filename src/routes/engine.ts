@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:name', async (req, res) => {
   const sqliter = Sqlite(getDb(), 'engines');
-  sqliter.update(`name='${req.params.name}'`, req.body);
+  await sqliter.update(`name='${req.params.name}'`, req.body);
   sqliter.db.close(false);
   res.success();
 });

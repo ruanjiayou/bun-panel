@@ -99,31 +99,31 @@ export default function Modal({ title, style, children, visible, onDelete, onSav
         <Footer>
           {onDelete && <Button style={{ backgroundColor: '#d9d9d9', color: '#444', marginRight: 10 }} onClick={async () => {
             try {
-              local.loading = true;
+              store.loading = true;
               await onDelete();
             } catch (e) {
 
             } finally {
-              local.loading = false;
+              store.loading = false;
             }
           }}>
             删除
           </Button>}
           <Button onClick={async () => {
-            if (local.loading) {
+            if (store.loading) {
               return;
             }
             if (onSave) {
               try {
-                local.loading = true;
+                store.loading = true;
                 await onSave();
                 onClose();
               } finally {
-                local.loading = false;
+                store.loading = false;
               }
 
             }
-          }}>{local.loading && <span className="spin" style={{ display: 'flex', alignItems: 'center', width: 18, marginRight: 10 }}>
+          }}>{store.loading && <span className="spin" style={{ display: 'flex', alignItems: 'center', width: 18, marginRight: 10 }}>
             <svg t="1725517327429" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="68147" width="32" height="32"><path fill="#fff" d="M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l0.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-0.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8z m756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-0.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8 0.1-4.5-3.5-8.2-8-8.2z" p-id="68148"></path></svg>
           </span>}保存</Button>
         </Footer>
