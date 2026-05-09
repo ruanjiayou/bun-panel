@@ -1,0 +1,8 @@
+body {
+    /* 防止 iOS 侧滑返回上一页干扰菜单手势 (可选) */
+    overscroll-behavior-x: none;
+    /* 禁止长按弹出菜单，增加 App 感 */
+    -webkit-touch-callout: none;
+    user-select: none;
+    overflow: hidden;
+}
