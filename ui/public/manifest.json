@@ -8,8 +8,10 @@
       "type": "image/x-icon"
     }
   ],
-  "start_url": ".",
-  "display": "standalone",
+  "id": "panel",
+  "scope": "/",
+  "start_url": "/panel",
+  "display": "fullscreen",
   "theme_color": "#000000",
   "background_color": "#ffffff"
 }

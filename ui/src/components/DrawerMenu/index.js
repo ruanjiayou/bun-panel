@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import "./index.css"
 
-const DrawerMenu = () => {
+const DrawerMenu = ({ isMain = false}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [apps, setApps] = useState([
@@ -118,9 +118,9 @@ const DrawerMenu = () => {
   return (
     <Fragment>
       {/* 触发按钮 */}
-      <button style={styles.menuButton} onClick={() => setIsOpen(true)}>
+      {isMain && <button style={styles.menuButton} onClick={() => setIsOpen(true)}>
         ☰
-      </button>
+      </button>}
 
       {/* 遮罩 */}
       <div style={styles.overlay} onClick={() => setIsOpen(false)} onTouchEnd={() => setIsOpen(false)} />
@@ -141,7 +141,6 @@ const DrawerMenu = () => {
                 onClick={() => {
                   setIsOpen(false)
                   window.location.replace(window.location.origin + app.path)
-                  // window.location.href = app.path
                 }}
               >
                 <span style={styles.icon}>{app.icon}</span>
