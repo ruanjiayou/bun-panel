@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "types": [
+      "node",
+      "bun"
+    ],
     // Enable latest features
     "lib": [
       "ESNext",
@@ -20,18 +25,15 @@
     "strict": true,
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
-    "rootDir": "src",
     "baseUrl": "./src",
-    "typeRoots": [
-      "./@types",
-      "./node_modules/@types"
-    ],
+    "rootDir": "src",
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
   "include": [
-    "src"
+    "src",
+    "env.d.ts"
   ],
 }

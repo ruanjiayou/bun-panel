@@ -1,6 +1,5 @@
 import Logger from 'log4js';
 const root = process.cwd();
-console.log(root);
 
 Logger.configure({
   appenders: {

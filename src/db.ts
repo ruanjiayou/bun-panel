@@ -1,10 +1,13 @@
 import { Database } from "bun:sqlite";
 import Sqlite from "./utils/sqliter";
 import { v4 } from "uuid";
+import path from 'path'
 
-const isExists = Bun.file('data/panel.db').size !== 0;
+const filepath = path.join(process.env.DATABASE_DIR, 'panel.db');
 
-const db = new Database("data/panel.db", { create: true });
+const isExists = Bun.file(filepath).size !== 0;
+
+const db = new Database(filepath, { create: true });
 Sqlite(db, 'groups').create({
   id: 'CHAR(40) PRIMARY KEY',
   nth: 'INTEGER',
@@ -66,5 +69,5 @@ if (!isExists) {
 db.close(false);
 
 export default function getDb() {
-  return new Database("data/panel.db", { create: true });
+  return new Database(filepath, { create: true });
 };
