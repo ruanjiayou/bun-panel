@@ -1,50 +1,37 @@
 import express from 'express';
-import getDb from 'db';
-import Sqlite from 'utils/sqliter';
+import db from '../db'
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const sqliter = Sqlite(getDb(), 'engines');
-  const docs = await sqliter.find();
-  sqliter.db.close(false);
+  const docs = await db.engine.findMany({});
   res.success(docs);
 });
 
 router.post('/', async (req, res) => {
-  const sqliter = Sqlite(getDb(), 'engines');
   const data = req.body;
-  const engine = await sqliter.findOne(`name='${data.name}'`);
+  const engine = await db.engine.count({ where: { name: data.name } })
   if (!engine) {
-    const doc = await sqliter.insertOne(data);
+    const doc = await db.engine.create({ data })
     res.success(doc);
   } else {
     res.fail('已存在');
   }
-  sqliter.db.close(false);
-
 });
 
 router.put('/:name', async (req, res) => {
-  const sqliter = Sqlite(getDb(), 'engines');
-  await sqliter.update(`name='${req.params.name}'`, req.body);
-  sqliter.db.close(false);
+  await db.engine.update({ where: { name: req.params.name }, data: req.body })
   res.success();
 });
 
 router.delete('/:name', async (req, res) => {
   const name = req.params.name;
-  const db = getDb();
-  const Sengine = Sqlite(db, 'engines');
-  const Sconfig = Sqlite(db, 'configs');
-  const engine = await Sconfig.find(`name="engine"`);
-  if (name !== engine) {
-    await Sengine.destroy(`name='${name}'`);
+  if (name !== "engine") {
+    await db.engine.delete({ where: { name } })
     res.success();
   } else {
     res.fail('不能删除正在使用的搜索');
   }
-  db.close(false);
 });
 
 export default router;

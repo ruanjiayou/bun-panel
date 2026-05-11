@@ -1,7 +1,6 @@
 import express from 'express';
-import Sqlite from 'utils/sqliter';
-import getDb from 'db';
-import { v4 } from 'uuid';
+import db from '../db'
+import { v7 } from 'uuid';
 import multer from 'multer';
 import { copyFile, rename, unlink } from "node:fs/promises";
 import mime from 'mime/lite';
@@ -12,15 +11,16 @@ const router = express.Router();
 const upload = multer({ dest: path.join(config.root_dir, '/data/.tmp') });
 
 router.get('/', async (req, res) => {
-  const sqliter = Sqlite(getDb(), 'images');
-  const docs = await sqliter.find().paging(req.paging());
-  sqliter.db.close(false);
+  const pagination = req.paging();
+  const docs = await db.image.findMany({
+    skip: (pagination.page - 1) * pagination.limit,
+    take: pagination.limit,
+  });
   res.success(docs);
 });
 
 router.post('/', upload.single('image'), async (req, res) => {
-  const sqliter = Sqlite(getDb(), 'images');
-  const id = v4();
+  const id = v7();
   const data = {
     id,
     title: req.body.title || '',
@@ -36,22 +36,19 @@ router.post('/', upload.single('image'), async (req, res) => {
       console.log(e);
     }
   }
-  const doc = sqliter.insertOne(data);
-  sqliter.db.close(false);
+  const doc = await db.image.create({ data })
   res.success(doc);
 });
 
 router.delete('/:id', async (req, res) => {
-  const sqliter = Sqlite(getDb(), 'images');
-  const doc = await sqliter.findOne(`id="${req.params.id}"`);
+  const doc = await db.image.findFirst({ where: { id: req.params.id } })
   if (doc) {
     const fullpath = path.join(config.root_dir, 'public', doc.filepath);
     if (await Bun.file(fullpath).exists()) {
       await unlink(fullpath);
     }
-    await sqliter.destroy(`id="${req.params.id}"`);
+    await db.image.delete({ where: { id: req.params.id } })
   }
-  sqliter.db.close(false);
   res.success();
 });
 

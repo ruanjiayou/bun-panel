@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/db"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Group {
+  id   String @id @default(uuid())
+  nth  Int
+  name String
+  fold Int
+
+  @@map("groups")
+}
+
+model App {
+  id      String @id @default(uuid())
+  gid     String
+  name    String
+  desc    String
+  cover   String
+  url_lan String
+  url_wan String
+  type    Int
+  open    Int
+  nth     Int
+
+  @@map("apps")
+}
+
+model Image {
+  id           String @id @default(uuid())
+  title        String
+  filepath     String
+  created_time String
+  
+  @@map("images")
+}
+
+model Engine {
+  name  String @id
+  title String
+  icon  String
+  url   String
+  
+  @@map("engines")
+}
+
+model Config {
+  name  String @id
+  title String
+  value String
+  
+  @@map("configs")
+}
