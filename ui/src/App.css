@@ -197,6 +197,7 @@ textarea:focus {
 
 .title {
   width: 100%;
+  box-sizing: border-box;
 }
 
 .title>div {

@@ -45,6 +45,7 @@ export function useLocalProxy<T extends object>(initialState: T) {
 
 export const store = proxy({
   baseURL: '/gw/panel',
+  isRefresh: false,
   access_token: '',
   refresh_token: '',
   showMenu: false,
