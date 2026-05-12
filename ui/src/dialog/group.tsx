@@ -1,21 +1,24 @@
-import { Observer } from "mobx-react-lite";
 import { Icon, Modal, Switch } from '../components/index.js'
 import { FormItem, FormLabel } from "../components/style.js";
+import { useSnapshot } from 'valtio'
+import { store } from "@/store.js";
 
-export default function DialogGroup({ visible, data, onAdd, onClose, onSave }) {
-  return <Observer>{() => (
+export default function DialogGroup({ visible, onAdd, onClose, onSave }: any) {
+  const state = useSnapshot(store)
+  const data = state.temp_group;
+  return (
     <Modal title={data.id ? "修改" : "添加分组"} style={{ height: 150, alignItems: 'center' }} visible={visible} onClose={() => onClose()} onSave={onSave}>
       <div style={{ marginLeft: 20 }}>
         <FormItem>
           <FormLabel>分组名称</FormLabel>
           <input id="group_name" value={data.name} onChange={e => {
-            data.name = e.target.value.trim();
+            store.temp_group.name = e.target.value.trim();
           }} />
         </FormItem>
         <FormItem>
           <FormLabel>是否折叠</FormLabel>
           <div>
-            <Switch checked={data.fold} onSwitch={checked => data.fold = checked ? 1 : 0}>{data.fold ? '是' : '否'}</Switch>
+            <Switch checked={data.fold} onSwitch={checked => store.temp_group.fold = checked ? 1 : 0}>{data.fold ? '是' : '否'}</Switch>
           </div>
         </FormItem>
         <FormItem>
@@ -31,5 +34,5 @@ export default function DialogGroup({ visible, data, onAdd, onClose, onSave }) {
         </FormItem>
       </div>
     </Modal>
-  )}</Observer>
+  )
 }

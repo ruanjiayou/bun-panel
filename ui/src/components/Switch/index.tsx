@@ -1,5 +1,4 @@
-import { Observer } from "mobx-react-lite";
-import styled from "styled-components";
+import { styled } from '@linaria/react'
 import { FullWidth } from "../style.js";
 
 const Container = styled.span`
@@ -22,8 +21,8 @@ const Handler = styled.span`
   background-color: #ddd;
 `
 
-export default function Switch({ checked, onSwitch, children }) {
-  return <Observer>{() => (
+export default function Switch({ checked, onSwitch, children }: { checked: any, onSwitch: (checked: boolean) => void, children: any }) {
+  return (
     <Container>
       <FullWidth>
         <Wrap style={{ backgroundColor: checked ? '#39c' : '#fff', borderColor: checked ? '#39c' : '#bbb', justifyContent: checked ? 'flex-start' : 'flex-end' }} onClick={() => {
@@ -36,5 +35,5 @@ export default function Switch({ checked, onSwitch, children }) {
         {children}
       </FullWidth>
     </Container>
-  )}</Observer>
+  )
 }

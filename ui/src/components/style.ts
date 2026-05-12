@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import { styled } from '@linaria/react'
 
 export const Right = styled.div`
   text-align: right;

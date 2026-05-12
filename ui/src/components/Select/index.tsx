@@ -1,6 +1,6 @@
-import { Observer, useLocalObservable } from "mobx-react-lite";
 import { useEffect } from "react";
-import styled from "styled-components";
+import { styled } from '@linaria/react'
+import { useLocalProxy } from "@/store";
 
 const Title = styled.div`
   padding: 3px 6px;
@@ -10,13 +10,13 @@ const Title = styled.div`
   flex-direction: row;
   align-items: center;
 `
-const Caret = styled.div`
+const Caret = styled.div<{ $open: boolean }>`
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-top: 7px solid #ccc;
   width: 0px;
   margin-left: 10px;
-  transform: rotate(${props => props.open ? 0 : '90deg'})
+  transform: rotate(${props => props.$open ? 0 : '90deg'})
 `
 const Panel = styled.div`
     position: absolute;
@@ -32,33 +32,33 @@ const Option = styled.div`
   font-size: 14px;
 `
 
-export default function Select({ value, items, onChange }) {
-  const local = useLocalObservable(() => ({
+export default function Select({ value, items, onChange }: any) {
+  const [localState, localStore] = useLocalProxy({
     open: false,
     title: '无'
-  }));
+  });
   useEffect(() => {
-    const item = items.find(it => it.value === value);
+    const item = items.find((it: any) => it.value === value);
     if (item) {
-      local.title = item.title;
+      localStore.title = item.title;
     }
-  }, [items, value, local])
-  return <Observer>{() => (
+  }, [items, value])
+  return (
     <div style={{ position: 'relative', fontSize: 14 }}>
       <Title onClick={() => {
-        local.open = !local.open;
+        localStore.open = !localStore.open;
       }}>
-        {local.title}
-        <Caret open={local.open} />
+        {localState.title}
+        <Caret $open={localState.open} />
       </Title>
-      {local.open && <Panel>
-        {items.map(it => (<Option onClick={() => {
+      {localState.open && <Panel>
+        {items.map((it: any) => (<Option onClick={() => {
           if (onChange) {
             onChange(it.value)
           }
-          local.open = false;
+          localStore.open = false;
         }}>{it.title}</Option>))}
       </Panel>}
     </div>
-  )}</Observer>
+  )
 }

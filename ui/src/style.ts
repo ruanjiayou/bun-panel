@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-
+import { styled } from '@linaria/react'
 
 export const MenuWrap = styled.div`
   position: absolute;
@@ -7,9 +6,9 @@ export const MenuWrap = styled.div`
   top: 1rem;
   display: flex;
   flex-direction: row;
-  column-gap: 10px;
+  column-gap: 0.5rem;
   background-color: #3333337d;
-  padding: 8px;
+  padding: 0.5rem;
   border-radius: 5px;
 `
 export const Group = styled.div`
