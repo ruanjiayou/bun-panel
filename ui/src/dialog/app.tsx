@@ -1,6 +1,5 @@
 import { Modal, Uploader, Select } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
-import getRealUrl from "../utils/realImageUrl.js";
 import { useCallback } from "react";
 import apis from "../apis/index.js";
 import { useSnapshot } from 'valtio'
@@ -36,9 +35,9 @@ export default function DialogApp({ visible, onClose, onSave, afterDelete }: any
         <FormItem>
           <FormLabel>图标</FormLabel>
           <div>
-            <Uploader id="app" value={getRealUrl(data.cover!)} onUpload={(resp: any) => {
+            <Uploader id="app" value={data.cover} onUpload={(resp: any) => {
               if (resp.code === 0) {
-                store.temp_app.cover = resp.data.data.filepath;
+                store.temp_app.cover = resp.data.filepath;
               }
             }} />
             <input value={data.cover} onChange={e => {

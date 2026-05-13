@@ -28,9 +28,6 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     base: env.APP_SCOPE,
-    define: {
-      'process.env': { "PUBLIC_URL": '/panel' }
-    },
     plugins: [
       wyw({
         preserveCssPaths: true,
@@ -85,18 +82,15 @@ export default defineConfig(({ command, mode }) => {
       port: 3060,
       allowedHosts: ['max.local', 'jiayou.work'],
       proxy: {
-        '/gw/panel/': {
-          target: 'http://jiayou.work/',
+        '/images': {
+          target: 'http://localhost:5555',
           changeOrigin: true,
-          // pathRewrite: { '^/api': '/gw/panel/api' }
         },
-        '/panel/uploads/': {
-          target: 'http://jiayou.work',
+        '/gw/panel': {
+          target: 'http://localhost:5555',
           changeOrigin: true,
-          "headers": {
-            "Content-Type": "image/*"
-          }
-        }
+          rewrite: (path) => path.replace(/^\/gw\/panel/, '')
+        },
       }
     }
   }

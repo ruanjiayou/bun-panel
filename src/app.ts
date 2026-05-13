@@ -11,6 +11,7 @@ import engines from './routes/engine';
 import images from './routes/image';
 import getLogger from "utils/logger";
 import config from './config'
+import path from "path";
 
 const app = express();
 const logger = getLogger('access');
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
 });
 
 // static 是相对 process.cwd()的,use 必须/开头
-app.use(express.static(config.root_dir + '/public'));
+app.use(express.static(path.normalize(config.static_dir)));
 app.use(compression());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, parameterLimit: 100 }));

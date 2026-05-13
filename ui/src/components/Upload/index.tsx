@@ -25,7 +25,7 @@ function Uploader({ value, id, field = "image", onUpload }: any) {
   return (
     <div style={{ marginBottom: 10 }}>
       <div style={{ width: 150, marginBottom: 5 }}>
-        {value && <img src={value} style={{ width: '100%' }} alt="preview" />}
+        {value && <img src={value} style={{ width: '100%', maxWidth: 100 }} alt="preview" />}
       </div>
       <input
         id={id}

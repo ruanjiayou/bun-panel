@@ -1,24 +1,21 @@
 import { Modal, Uploader, Switch, Select } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
-import React, { useEffect } from "react";
-import getRealUrl from "../utils/realImageUrl.js";
+import React, { useEffect, useRef } from "react";
 import { useSnapshot } from 'valtio'
 import { store, useLocalProxy, type IEngine } from "@/store.js";
 import { cloneDeep } from "lodash";
 
 export default function DialogConfig({ visible, engines, onClose, onSave, children }: any) {
   const state = useSnapshot(store)
-  const data = cloneDeep(state.config);
+  const data = useRef<any>({});
   useEffect(() => {
-    Object.keys(data).forEach(k => {
-      store.config[k] = data[k];
-    })
-  }, [data])
+    data.current = cloneDeep(state.config)
+  }, [])
   return (
     <Modal title={"修改"} style={{ height: 400, alignItems: 'center' }} visible={visible} onClose={onClose} onSave={async () => {
       const diff: any = [];
-      Object.keys(data).forEach(k => {
-        if (store.config[k] !== data[k]) {
+      Object.keys(data.current).forEach(k => {
+        if (store.config[k] !== data.current[k]) {
           diff.push({ name: k, value: store.config[k] });
         }
       });
@@ -58,7 +55,7 @@ export default function DialogConfig({ visible, engines, onClose, onSave, childr
         <FormItem>
           <FormLabel>壁纸设置</FormLabel>
           <div>
-            <Uploader id="bg" value={getRealUrl(state.config.background_url)} onUpload={(resp: any) => {
+            <Uploader id="bg" value={state.config.background_url} onUpload={(resp: any) => {
               if (resp.code === 0) {
                 store.config.background_url = resp.data.filepath;
               }

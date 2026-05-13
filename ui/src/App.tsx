@@ -11,7 +11,6 @@ import { FormItem, FormLabel, Center } from './components/style.js';
 import DialogApp from './dialog/app.js';
 import DialogConfig from './dialog/config.js';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
-import getRealUrl from './utils/realImageUrl.js';
 import { omit, throttle } from 'lodash';
 import UserInfo, { User } from 'user-info';
 import { proxy, useSnapshot } from 'valtio'
@@ -60,7 +59,7 @@ const AppItem = SortableElement<{ app: IApp }>(({ app }: { app: IApp }) => {
         }
       }}
     >
-      {app.cover && <AppIcon src={getRealUrl(app.cover)} />}
+      {app.cover && <AppIcon src={app.cover} />}
       <div key={app.cover} className='txt-omit' style={{ display: 'flex', width: 120, height: '100%', flexDirection: 'column', alignItems: app.cover ? 'left' : 'center', justifyContent: 'center' }}>
         <AppTitle className='txt-omit'>{app.name}</AppTitle>
         <AppDesc title={app.desc}>{app.desc}</AppDesc>
@@ -129,7 +128,6 @@ function App() {
     const resp4 = await apis.getEngines();
     if (resp4.code === 0) {
       store.engines = resp4.data;
-      store.engines.forEach((v, idx) => v.id = idx)
       store.defaultEngine = store.engines.find(it => it.name === store.config.engine)
     }
   }, []);
@@ -190,7 +188,7 @@ function App() {
     }
   }, []);
   const onSaveEngine = useCallback(async () => {
-    const resp = !state.temp_engine.id
+    const resp = !state.temp_engine.name
       ? await apis.createEngine(state.temp_engine)
       : await apis.updateEngine(state.temp_engine.name!, omit(state.temp_engine, ['id']));
     if (resp.status === 200 && resp.data.code === 0) {
@@ -204,9 +202,9 @@ function App() {
     }
   }, []);
   const onSaveApp = useCallback(async () => {
-    const resp = !state.temp_app.id
-      ? await apis.createApp(state.temp_app)
-      : await apis.updateApp(state.temp_app.id, state.temp_app);
+    const resp = !store.temp_app.id
+      ? await apis.createApp(store.temp_app)
+      : await apis.updateApp(store.temp_app.id, store.temp_app);
     if (resp.status === 200 && resp.data.code === 0) {
       await initAppGroup();
       toast({ content: '操作成功' });
@@ -256,7 +254,7 @@ function App() {
     }
   }, [])
   return (
-    <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${getRealUrl(state.config.background_url)})` : '' }}>
+    <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
         <MenuWrap>
           <Icon title="混合url" type={state.allow_mix ? 'allow_mix' : 'not_allow_mix'} onClick={() => {
@@ -282,17 +280,17 @@ function App() {
         </span>
       </div>}
       <div className='title'>
-        <div style={{ backgroundImage: `url("${getRealUrl("/uploads/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")}")`, color: "transparent" }}>{state.config.title}</div>
+        <div style={{ backgroundImage: `url("/images/panel/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")`, color: "transparent" }}>{state.config.title}</div>
       </div>
       {[1, "1"].includes(state.config.show_search) && <div className='search'>
         <Center style={{ position: 'relative' }} onWheel={(e) => {
           onWheel(e.nativeEvent.deltaY)
         }}>
           {
-            state.defaultEngine && <img src={process.env.PUBLIC_URL + state.defaultEngine.icon} style={{ marginRight: 5, width: 24 }} alt="engine" onClick={() => store.show_engine_dialog = !state.show_engine_dialog} />
+            state.defaultEngine && <img src={state.defaultEngine.icon} style={{ marginRight: 5, width: 24 }} alt="engine" onClick={() => store.show_engine_dialog = !state.show_engine_dialog} />
           }
           <div id="dialog_engine" style={{ display: state.show_engine_dialog ? 'block' : 'none', position: 'absolute', top: 40, left: 10, padding: '0 10px 10px', borderRadius: 5, backgroundColor: '#575757bf', zIndex: 2 }}>
-            {state.engines.map(engine => <img src={process.env.PUBLIC_URL + engine.icon} alt={engine.name} key={engine.name} style={{ width: 24, marginTop: 10 }} onClick={async () => {
+            {state.engines.map(engine => <img src={engine.icon} alt={engine.name} key={engine.name} style={{ width: 24, marginTop: 10 }} onClick={async () => {
               store.defaultEngine = engine;
               store.config.engine = engine.name;
               store.show_engine_dialog = false;
@@ -344,7 +342,7 @@ function App() {
             {state.engines.map(engine => (
               <HoverItem key={engine.name}>
                 <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                  <img src={getRealUrl(engine.icon)} style={{ width: 20, marginRight: 5 }} alt="engine" />
+                  <img src={engine.icon} style={{ width: 20, marginRight: 5 }} alt="engine" />
                   {engine.name}
                 </div>
                 <Icon type="edit" size={18} onClick={() => { store.temp_engine = engine; store.showEditEngine = true; }} />
@@ -409,7 +407,7 @@ function App() {
           store.remAppById(state.temp_app.id!)
         }}
       />
-      <DialogEngine visible={state.showEditEngine} data={state.temp_engine} onClose={() => {
+      <DialogEngine visible={state.showEditEngine} onClose={() => {
         store.showEditEngine = false;
       }} onSave={onSaveEngine} />
       <div className='footer' dangerouslySetInnerHTML={{ __html: state.config.footer || '' }}></div>
