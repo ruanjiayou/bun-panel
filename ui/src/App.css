@@ -28,9 +28,6 @@
     background-color: #00000080;
   }
 
-  .cell {
-    min-width: 210px;
-  }
 }
 
 .group {
@@ -97,7 +94,6 @@
   }
 
   .cell {
-    min-width: 48%;
     min-height: 4.5rem;
   }
 }
@@ -167,9 +163,11 @@ textarea:focus {
   align-items: center;
   justify-content: center;
 }
+
 .search {
   padding-left: 20px;
 }
+
 .search input {
   background-color: transparent;
   border: none;

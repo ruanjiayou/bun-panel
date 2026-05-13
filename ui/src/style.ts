@@ -28,17 +28,20 @@ export const GroupTitle = styled.div`
   }
 `
 export const CardWrap = styled.div`
-  display: block;
-  display: flex;
-  flex-direction: row;
-  column-gap: 10px;
-  row-gap: 10px;
-  flex-flow: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(150px, 1fr));
+  gap: 10px;
+  display: grid;
   padding: 10px 0;
+
   &::after {
     content: "";
     display: block;
     clear: both;
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
   }
 `
 export const Cell = styled.div`
