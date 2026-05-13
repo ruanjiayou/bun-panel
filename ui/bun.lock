@@ -10,13 +10,13 @@
         "@wyw-in-js/vite": "^1.1.0",
         "axios": "^1.7.7",
         "customize-cra": "^1.0.0",
+        "user-info": "https://github.com/CMS-003/UserInfo.git",
         "lodash": "4.17.23",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-scripts": "5.0.1",
         "react-sortable-hoc": "^2.0.0",
         "react-use": "^17.5.1",
-        "user-info": "https://github.com/CMS-003/UserInfo.git",
       },
       "devDependencies": {
         "@babel/preset-env": "^7.29.5",
@@ -2414,7 +2414,7 @@
 
     "url-parse": ["url-parse@1.5.10", "https://registry.npmmirror.com/url-parse/-/url-parse-1.5.10.tgz", { "dependencies": { "querystringify": "^2.1.1", "requires-port": "^1.0.0" } }, "sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ=="],
 
-    "user-info": ["user-info@github:CMS-003/UserInfo#1942a1e", { "dependencies": { "@linaria/core": "^7.0.0", "@linaria/react": "^7.0.1", "@wyw-in-js/vite": "^1.1.0", "rc-dropdown": "^4.2.1", "react": "^19", "react-dom": "^19", "valtio": "^2.3.2", "vite-plugin-svgr": "^5.2.0" } }, "CMS-003-UserInfo-1942a1e", "sha512-nrPvKbnw8yrKXTkhf7txkpoO+jx+NJS/iFf1SuF3n0f/rd8zpeddvw6p9/ESIttw8FWZ1Z0Ddi0zV6D2IV7L9w=="],
+    "user-info": ["user-info@github:CMS-003/UserInfo#53a9881", { "dependencies": { "@linaria/core": "^7.0.0", "@linaria/react": "^7.0.1", "@wyw-in-js/vite": "^1.1.0", "rc-dropdown": "^4.2.1", "react": "^19", "react-dom": "^19", "valtio": "^2.3.2", "vite-plugin-svgr": "^5.2.0" } }, "CMS-003-UserInfo-53a9881", "sha512-x4J33d0jbudjA+b81o6cCLgalz7nbXIrlWkl15KMmxZhiTmAB2OsRyupU3fQ9Jb6XKbc3Z8ZVADwWGcVw0viBQ=="],
 
     "util-deprecate": ["util-deprecate@1.0.2", "https://registry.npmmirror.com/util-deprecate/-/util-deprecate-1.0.2.tgz", {}, "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw=="],
 
