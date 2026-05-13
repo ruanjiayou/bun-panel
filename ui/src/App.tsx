@@ -121,7 +121,9 @@ function App() {
         store.config[name] = config.value as string;
       });
       store.configs = resp.data;
-      document.querySelector('title')!.innerText = state.config.title;
+      if (store.config.title) {
+        document.querySelector('title')!.innerText = store.config.title;
+      }
     }
   }, []);
   const initEngine = useCallback(async () => {
@@ -257,15 +259,15 @@ function App() {
     <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
         <MenuWrap>
-          <Icon title="混合url" type={state.allow_mix ? 'allow_mix' : 'not_allow_mix'} onClick={() => {
+          <Icon size={30} title="混合url" type={state.allow_mix ? 'allow_mix' : 'not_allow_mix'} onClick={() => {
             store.allow_mix = !state.allow_mix;
             localStorage.setItem('__panel_allow_mix', state.allow_mix ? '1' : '0')
           }} />
-          <Icon title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} size={20} onClick={async () => {
+          <Icon size={30} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
             store.config.network = state.config.network === 'LAN' ? 'WAN' : 'LAN';
             await apis.updateConfig('network', state.config.network);
           }} />
-          <Icon title="配置" type={'setting'} size={20} onClick={() => {
+          <Icon size={30} title="配置" type={'setting'} onClick={() => {
             store.showMenu = !state.showMenu;
           }} />
           <UserInfo onLogout={() => {

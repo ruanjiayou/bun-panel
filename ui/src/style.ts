@@ -6,9 +6,9 @@ export const MenuWrap = styled.div`
   top: 1rem;
   display: flex;
   flex-direction: row;
-  column-gap: 0.5rem;
+  column-gap: 1rem;
   background-color: #3333337d;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border-radius: 5px;
 `
 export const Group = styled.div`
