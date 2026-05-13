@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "start": "bun src/server.ts",
-    "dev": "DATABASE_DIR=file:./data PORT=5555 bun --hot run src/server.ts",
+    "dev": "DATABASE_DIR=file:./data PORT=5555 STATIC_DIR=./data bun --hot run src/server.ts",
     "test": "bun test test/*.ts",
     "init-prisma": "bunx --bun prisma init --datasource-provider sqlite --output ./db",
     "edit-prisma": "bunx --bun prisma generate",

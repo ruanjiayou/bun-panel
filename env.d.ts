@@ -18,6 +18,7 @@ declare global {
 declare module "bun" {
   interface Env {
     PORT: string;
+    STATIC_DIR: string;
     DATABASE_DIR: string;
   }
 }

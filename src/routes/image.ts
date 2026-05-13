@@ -24,17 +24,19 @@ router.post('/', upload.single('image'), async (req, res) => {
   const data = {
     id,
     title: req.body.title || '',
-    filepath: `/uploads/${id}.`,
+    filepath: `/images/panel/${id}.`,
     created_time: new Date().toISOString(),
   }
   if (req.file) {
     data.filepath += mime.getExtension(req.file.mimetype);
-    await copyFile(req.file.path, path.join(config.root_dir, 'public', data.filepath));
+    await copyFile(req.file.path, path.join(config.static_dir, data.filepath));
     try {
       await unlink(req.file.path);
     } catch (e) {
       console.log(e);
     }
+  } else {
+    return res.fail()
   }
   const doc = await db.image.create({ data })
   res.success(doc);
@@ -43,7 +45,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const doc = await db.image.findFirst({ where: { id: req.params.id } })
   if (doc) {
-    const fullpath = path.join(config.root_dir, 'public', doc.filepath);
+    const fullpath = path.join(config.static_dir, doc.filepath);
     if (await Bun.file(fullpath).exists()) {
       await unlink(fullpath);
     }
