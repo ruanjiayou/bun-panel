@@ -12,6 +12,7 @@ import images from './routes/image';
 import getLogger from "utils/logger";
 import config from './config'
 import path from "path";
+import parse from "plugins/parse";
 
 const app = express();
 const logger = getLogger('access');
@@ -30,6 +31,7 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, parameterLimit: 100 }));
 
 app.use(ctx);
+app.use(parse);
 app.use((req, res, next) => {
   logger.info(req.url);
   next();

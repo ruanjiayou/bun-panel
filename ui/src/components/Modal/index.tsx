@@ -60,9 +60,15 @@ const Button = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    user-selecte: none;
+  }
 `
 
-export default function Modal({ title, style, children, visible, onDelete, onSave, onClose }: any) {
+export default function Modal({ title, style, children, visible, disabled, onDelete, onSave, onClose }: any) {
   const [localState, localStore] = useLocalProxy({
     total: 0,
     current: 1000,
@@ -107,8 +113,8 @@ export default function Modal({ title, style, children, visible, onDelete, onSav
           }}>
             删除
           </Button>}
-          <Button onClick={async () => {
-            if (localState.loading) {
+          <Button className={disabled ? 'disabled' : ''} onClick={async () => {
+            if (localState.loading || disabled) {
               return;
             }
             if (onSave) {

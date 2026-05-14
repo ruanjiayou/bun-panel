@@ -73,6 +73,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const GroupScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   nth: 'nth',
   name: 'name',
   fold: 'fold'
@@ -83,6 +84,7 @@ export type GroupScalarFieldEnum = (typeof GroupScalarFieldEnum)[keyof typeof Gr
 
 export const AppScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   gid: 'gid',
   name: 'name',
   desc: 'desc',
@@ -99,6 +101,7 @@ export type AppScalarFieldEnum = (typeof AppScalarFieldEnum)[keyof typeof AppSca
 
 export const ImageScalarFieldEnum = {
   id: 'id',
+  uid: 'uid',
   title: 'title',
   filepath: 'filepath',
   created_time: 'created_time'
@@ -108,19 +111,23 @@ export type ImageScalarFieldEnum = (typeof ImageScalarFieldEnum)[keyof typeof Im
 
 
 export const EngineScalarFieldEnum = {
+  id: 'id',
   name: 'name',
   title: 'title',
   icon: 'icon',
-  url: 'url'
+  url: 'url',
+  uid: 'uid'
 } as const
 
 export type EngineScalarFieldEnum = (typeof EngineScalarFieldEnum)[keyof typeof EngineScalarFieldEnum]
 
 
 export const ConfigScalarFieldEnum = {
+  id: 'id',
   name: 'name',
   title: 'title',
-  value: 'value'
+  value: 'value',
+  uid: 'uid'
 } as const
 
 export type ConfigScalarFieldEnum = (typeof ConfigScalarFieldEnum)[keyof typeof ConfigScalarFieldEnum]

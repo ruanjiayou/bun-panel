@@ -25,47 +25,59 @@ export type AggregateEngine = {
 }
 
 export type EngineMinAggregateOutputType = {
+  id: string | null
   name: string | null
   title: string | null
   icon: string | null
   url: string | null
+  uid: string | null
 }
 
 export type EngineMaxAggregateOutputType = {
+  id: string | null
   name: string | null
   title: string | null
   icon: string | null
   url: string | null
+  uid: string | null
 }
 
 export type EngineCountAggregateOutputType = {
+  id: number
   name: number
   title: number
   icon: number
   url: number
+  uid: number
   _all: number
 }
 
 
 export type EngineMinAggregateInputType = {
+  id?: true
   name?: true
   title?: true
   icon?: true
   url?: true
+  uid?: true
 }
 
 export type EngineMaxAggregateInputType = {
+  id?: true
   name?: true
   title?: true
   icon?: true
   url?: true
+  uid?: true
 }
 
 export type EngineCountAggregateInputType = {
+  id?: true
   name?: true
   title?: true
   icon?: true
   url?: true
+  uid?: true
   _all?: true
 }
 
@@ -142,10 +154,12 @@ export type EngineGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 export type EngineGroupByOutputType = {
+  id: string
   name: string
   title: string
   icon: string
   url: string
+  uid: string
   _count: EngineCountAggregateOutputType | null
   _min: EngineMinAggregateOutputType | null
   _max: EngineMaxAggregateOutputType | null
@@ -170,17 +184,21 @@ export type EngineWhereInput = {
   AND?: Prisma.EngineWhereInput | Prisma.EngineWhereInput[]
   OR?: Prisma.EngineWhereInput[]
   NOT?: Prisma.EngineWhereInput | Prisma.EngineWhereInput[]
+  id?: Prisma.StringFilter<"Engine"> | string
   name?: Prisma.StringFilter<"Engine"> | string
   title?: Prisma.StringFilter<"Engine"> | string
   icon?: Prisma.StringFilter<"Engine"> | string
   url?: Prisma.StringFilter<"Engine"> | string
+  uid?: Prisma.StringFilter<"Engine"> | string
 }
 
 export type EngineOrderByWithRelationInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
 }
 
 export type EngineWhereUniqueInput = Prisma.AtLeast<{
@@ -188,16 +206,20 @@ export type EngineWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.EngineWhereInput | Prisma.EngineWhereInput[]
   OR?: Prisma.EngineWhereInput[]
   NOT?: Prisma.EngineWhereInput | Prisma.EngineWhereInput[]
+  id?: Prisma.StringFilter<"Engine"> | string
   title?: Prisma.StringFilter<"Engine"> | string
   icon?: Prisma.StringFilter<"Engine"> | string
   url?: Prisma.StringFilter<"Engine"> | string
+  uid?: Prisma.StringFilter<"Engine"> | string
 }, "name">
 
 export type EngineOrderByWithAggregationInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   _count?: Prisma.EngineCountOrderByAggregateInput
   _max?: Prisma.EngineMaxOrderByAggregateInput
   _min?: Prisma.EngineMinOrderByAggregateInput
@@ -207,122 +229,154 @@ export type EngineScalarWhereWithAggregatesInput = {
   AND?: Prisma.EngineScalarWhereWithAggregatesInput | Prisma.EngineScalarWhereWithAggregatesInput[]
   OR?: Prisma.EngineScalarWhereWithAggregatesInput[]
   NOT?: Prisma.EngineScalarWhereWithAggregatesInput | Prisma.EngineScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"Engine"> | string
   name?: Prisma.StringWithAggregatesFilter<"Engine"> | string
   title?: Prisma.StringWithAggregatesFilter<"Engine"> | string
   icon?: Prisma.StringWithAggregatesFilter<"Engine"> | string
   url?: Prisma.StringWithAggregatesFilter<"Engine"> | string
+  uid?: Prisma.StringWithAggregatesFilter<"Engine"> | string
 }
 
 export type EngineCreateInput = {
+  id: string
   name: string
   title: string
   icon: string
   url: string
+  uid: string
 }
 
 export type EngineUncheckedCreateInput = {
+  id: string
   name: string
   title: string
   icon: string
   url: string
+  uid: string
 }
 
 export type EngineUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EngineUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EngineCreateManyInput = {
+  id: string
   name: string
   title: string
   icon: string
   url: string
+  uid: string
 }
 
 export type EngineUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EngineUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type EngineCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
 }
 
 export type EngineMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
 }
 
 export type EngineMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   url?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
 }
 
 
 
 export type EngineSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   name?: boolean
   title?: boolean
   icon?: boolean
   url?: boolean
+  uid?: boolean
 }, ExtArgs["result"]["engine"]>
 
 export type EngineSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   name?: boolean
   title?: boolean
   icon?: boolean
   url?: boolean
+  uid?: boolean
 }, ExtArgs["result"]["engine"]>
 
 export type EngineSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   name?: boolean
   title?: boolean
   icon?: boolean
   url?: boolean
+  uid?: boolean
 }, ExtArgs["result"]["engine"]>
 
 export type EngineSelectScalar = {
+  id?: boolean
   name?: boolean
   title?: boolean
   icon?: boolean
   url?: boolean
+  uid?: boolean
 }
 
-export type EngineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"name" | "title" | "icon" | "url", ExtArgs["result"]["engine"]>
+export type EngineOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "title" | "icon" | "url" | "uid", ExtArgs["result"]["engine"]>
 
 export type $EnginePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Engine"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    id: string
     name: string
     title: string
     icon: string
     url: string
+    uid: string
   }, ExtArgs["result"]["engine"]>
   composites: {}
 }
@@ -406,8 +460,8 @@ export interface EngineDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * // Get first 10 Engines
    * const engines = await prisma.engine.findMany({ take: 10 })
    * 
-   * // Only select the `name`
-   * const engineWithNameOnly = await prisma.engine.findMany({ select: { name: true } })
+   * // Only select the `id`
+   * const engineWithIdOnly = await prisma.engine.findMany({ select: { id: true } })
    * 
    */
   findMany<T extends EngineFindManyArgs>(args?: Prisma.SelectSubset<T, EngineFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnginePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -451,9 +505,9 @@ export interface EngineDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   ]
    * })
    * 
-   * // Create many Engines and only return the `name`
-   * const engineWithNameOnly = await prisma.engine.createManyAndReturn({
-   *   select: { name: true },
+   * // Create many Engines and only return the `id`
+   * const engineWithIdOnly = await prisma.engine.createManyAndReturn({
+   *   select: { id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -542,9 +596,9 @@ export interface EngineDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   ]
    * })
    * 
-   * // Update zero or more Engines and only return the `name`
-   * const engineWithNameOnly = await prisma.engine.updateManyAndReturn({
-   *   select: { name: true },
+   * // Update zero or more Engines and only return the `id`
+   * const engineWithIdOnly = await prisma.engine.updateManyAndReturn({
+   *   select: { id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -746,10 +800,12 @@ export interface Prisma__EngineClient<T, Null = never, ExtArgs extends runtime.T
  * Fields of the Engine model
  */
 export interface EngineFieldRefs {
+  readonly id: Prisma.FieldRef<"Engine", 'String'>
   readonly name: Prisma.FieldRef<"Engine", 'String'>
   readonly title: Prisma.FieldRef<"Engine", 'String'>
   readonly icon: Prisma.FieldRef<"Engine", 'String'>
   readonly url: Prisma.FieldRef<"Engine", 'String'>
+  readonly uid: Prisma.FieldRef<"Engine", 'String'>
 }
     
 

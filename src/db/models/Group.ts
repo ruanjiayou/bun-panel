@@ -38,6 +38,7 @@ export type GroupSumAggregateOutputType = {
 
 export type GroupMinAggregateOutputType = {
   id: string | null
+  uid: string | null
   nth: number | null
   name: string | null
   fold: number | null
@@ -45,6 +46,7 @@ export type GroupMinAggregateOutputType = {
 
 export type GroupMaxAggregateOutputType = {
   id: string | null
+  uid: string | null
   nth: number | null
   name: string | null
   fold: number | null
@@ -52,6 +54,7 @@ export type GroupMaxAggregateOutputType = {
 
 export type GroupCountAggregateOutputType = {
   id: number
+  uid: number
   nth: number
   name: number
   fold: number
@@ -71,6 +74,7 @@ export type GroupSumAggregateInputType = {
 
 export type GroupMinAggregateInputType = {
   id?: true
+  uid?: true
   nth?: true
   name?: true
   fold?: true
@@ -78,6 +82,7 @@ export type GroupMinAggregateInputType = {
 
 export type GroupMaxAggregateInputType = {
   id?: true
+  uid?: true
   nth?: true
   name?: true
   fold?: true
@@ -85,6 +90,7 @@ export type GroupMaxAggregateInputType = {
 
 export type GroupCountAggregateInputType = {
   id?: true
+  uid?: true
   nth?: true
   name?: true
   fold?: true
@@ -179,6 +185,7 @@ export type GroupGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 
 export type GroupGroupByOutputType = {
   id: string
+  uid: string
   nth: number
   name: string
   fold: number
@@ -209,6 +216,7 @@ export type GroupWhereInput = {
   OR?: Prisma.GroupWhereInput[]
   NOT?: Prisma.GroupWhereInput | Prisma.GroupWhereInput[]
   id?: Prisma.StringFilter<"Group"> | string
+  uid?: Prisma.StringFilter<"Group"> | string
   nth?: Prisma.IntFilter<"Group"> | number
   name?: Prisma.StringFilter<"Group"> | string
   fold?: Prisma.IntFilter<"Group"> | number
@@ -216,6 +224,7 @@ export type GroupWhereInput = {
 
 export type GroupOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   nth?: Prisma.SortOrder
   name?: Prisma.SortOrder
   fold?: Prisma.SortOrder
@@ -226,6 +235,7 @@ export type GroupWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.GroupWhereInput | Prisma.GroupWhereInput[]
   OR?: Prisma.GroupWhereInput[]
   NOT?: Prisma.GroupWhereInput | Prisma.GroupWhereInput[]
+  uid?: Prisma.StringFilter<"Group"> | string
   nth?: Prisma.IntFilter<"Group"> | number
   name?: Prisma.StringFilter<"Group"> | string
   fold?: Prisma.IntFilter<"Group"> | number
@@ -233,6 +243,7 @@ export type GroupWhereUniqueInput = Prisma.AtLeast<{
 
 export type GroupOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   nth?: Prisma.SortOrder
   name?: Prisma.SortOrder
   fold?: Prisma.SortOrder
@@ -248,6 +259,7 @@ export type GroupScalarWhereWithAggregatesInput = {
   OR?: Prisma.GroupScalarWhereWithAggregatesInput[]
   NOT?: Prisma.GroupScalarWhereWithAggregatesInput | Prisma.GroupScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Group"> | string
+  uid?: Prisma.StringWithAggregatesFilter<"Group"> | string
   nth?: Prisma.IntWithAggregatesFilter<"Group"> | number
   name?: Prisma.StringWithAggregatesFilter<"Group"> | string
   fold?: Prisma.IntWithAggregatesFilter<"Group"> | number
@@ -255,6 +267,7 @@ export type GroupScalarWhereWithAggregatesInput = {
 
 export type GroupCreateInput = {
   id?: string
+  uid: string
   nth: number
   name: string
   fold: number
@@ -262,6 +275,7 @@ export type GroupCreateInput = {
 
 export type GroupUncheckedCreateInput = {
   id?: string
+  uid: string
   nth: number
   name: string
   fold: number
@@ -269,6 +283,7 @@ export type GroupUncheckedCreateInput = {
 
 export type GroupUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   nth?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   fold?: Prisma.IntFieldUpdateOperationsInput | number
@@ -276,6 +291,7 @@ export type GroupUpdateInput = {
 
 export type GroupUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   nth?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   fold?: Prisma.IntFieldUpdateOperationsInput | number
@@ -283,6 +299,7 @@ export type GroupUncheckedUpdateInput = {
 
 export type GroupCreateManyInput = {
   id?: string
+  uid: string
   nth: number
   name: string
   fold: number
@@ -290,6 +307,7 @@ export type GroupCreateManyInput = {
 
 export type GroupUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   nth?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   fold?: Prisma.IntFieldUpdateOperationsInput | number
@@ -297,6 +315,7 @@ export type GroupUpdateManyMutationInput = {
 
 export type GroupUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   nth?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   fold?: Prisma.IntFieldUpdateOperationsInput | number
@@ -304,6 +323,7 @@ export type GroupUncheckedUpdateManyInput = {
 
 export type GroupCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   nth?: Prisma.SortOrder
   name?: Prisma.SortOrder
   fold?: Prisma.SortOrder
@@ -316,6 +336,7 @@ export type GroupAvgOrderByAggregateInput = {
 
 export type GroupMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   nth?: Prisma.SortOrder
   name?: Prisma.SortOrder
   fold?: Prisma.SortOrder
@@ -323,6 +344,7 @@ export type GroupMaxOrderByAggregateInput = {
 
 export type GroupMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   nth?: Prisma.SortOrder
   name?: Prisma.SortOrder
   fold?: Prisma.SortOrder
@@ -349,6 +371,7 @@ export type IntFieldUpdateOperationsInput = {
 
 export type GroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   nth?: boolean
   name?: boolean
   fold?: boolean
@@ -356,6 +379,7 @@ export type GroupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 
 export type GroupSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   nth?: boolean
   name?: boolean
   fold?: boolean
@@ -363,6 +387,7 @@ export type GroupSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type GroupSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   nth?: boolean
   name?: boolean
   fold?: boolean
@@ -370,18 +395,20 @@ export type GroupSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 
 export type GroupSelectScalar = {
   id?: boolean
+  uid?: boolean
   nth?: boolean
   name?: boolean
   fold?: boolean
 }
 
-export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nth" | "name" | "fold", ExtArgs["result"]["group"]>
+export type GroupOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "uid" | "nth" | "name" | "fold", ExtArgs["result"]["group"]>
 
 export type $GroupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Group"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    uid: string
     nth: number
     name: string
     fold: number
@@ -809,6 +836,7 @@ export interface Prisma__GroupClient<T, Null = never, ExtArgs extends runtime.Ty
  */
 export interface GroupFieldRefs {
   readonly id: Prisma.FieldRef<"Group", 'String'>
+  readonly uid: Prisma.FieldRef<"Group", 'String'>
   readonly nth: Prisma.FieldRef<"Group", 'Int'>
   readonly name: Prisma.FieldRef<"Group", 'String'>
   readonly fold: Prisma.FieldRef<"Group", 'Int'>

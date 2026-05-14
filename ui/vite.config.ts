@@ -111,6 +111,7 @@ export default defineConfig(({ command, mode }) => {
         '/gw/panel': {
           target: 'https://jiayou.work',
           changeOrigin: true,
+          // rewrite: (path) => path.replace(/^\/gw\/panel/, '')
         },
       }
     }

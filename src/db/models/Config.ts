@@ -25,41 +25,53 @@ export type AggregateConfig = {
 }
 
 export type ConfigMinAggregateOutputType = {
+  id: string | null
   name: string | null
   title: string | null
   value: string | null
+  uid: string | null
 }
 
 export type ConfigMaxAggregateOutputType = {
+  id: string | null
   name: string | null
   title: string | null
   value: string | null
+  uid: string | null
 }
 
 export type ConfigCountAggregateOutputType = {
+  id: number
   name: number
   title: number
   value: number
+  uid: number
   _all: number
 }
 
 
 export type ConfigMinAggregateInputType = {
+  id?: true
   name?: true
   title?: true
   value?: true
+  uid?: true
 }
 
 export type ConfigMaxAggregateInputType = {
+  id?: true
   name?: true
   title?: true
   value?: true
+  uid?: true
 }
 
 export type ConfigCountAggregateInputType = {
+  id?: true
   name?: true
   title?: true
   value?: true
+  uid?: true
   _all?: true
 }
 
@@ -136,9 +148,11 @@ export type ConfigGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 export type ConfigGroupByOutputType = {
+  id: string
   name: string
   title: string
   value: string
+  uid: string
   _count: ConfigCountAggregateOutputType | null
   _min: ConfigMinAggregateOutputType | null
   _max: ConfigMaxAggregateOutputType | null
@@ -163,15 +177,19 @@ export type ConfigWhereInput = {
   AND?: Prisma.ConfigWhereInput | Prisma.ConfigWhereInput[]
   OR?: Prisma.ConfigWhereInput[]
   NOT?: Prisma.ConfigWhereInput | Prisma.ConfigWhereInput[]
+  id?: Prisma.StringFilter<"Config"> | string
   name?: Prisma.StringFilter<"Config"> | string
   title?: Prisma.StringFilter<"Config"> | string
   value?: Prisma.StringFilter<"Config"> | string
+  uid?: Prisma.StringFilter<"Config"> | string
 }
 
 export type ConfigOrderByWithRelationInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   value?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
 }
 
 export type ConfigWhereUniqueInput = Prisma.AtLeast<{
@@ -179,14 +197,18 @@ export type ConfigWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ConfigWhereInput | Prisma.ConfigWhereInput[]
   OR?: Prisma.ConfigWhereInput[]
   NOT?: Prisma.ConfigWhereInput | Prisma.ConfigWhereInput[]
+  id?: Prisma.StringFilter<"Config"> | string
   title?: Prisma.StringFilter<"Config"> | string
   value?: Prisma.StringFilter<"Config"> | string
+  uid?: Prisma.StringFilter<"Config"> | string
 }, "name">
 
 export type ConfigOrderByWithAggregationInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   value?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   _count?: Prisma.ConfigCountOrderByAggregateInput
   _max?: Prisma.ConfigMaxOrderByAggregateInput
   _min?: Prisma.ConfigMinOrderByAggregateInput
@@ -196,106 +218,138 @@ export type ConfigScalarWhereWithAggregatesInput = {
   AND?: Prisma.ConfigScalarWhereWithAggregatesInput | Prisma.ConfigScalarWhereWithAggregatesInput[]
   OR?: Prisma.ConfigScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ConfigScalarWhereWithAggregatesInput | Prisma.ConfigScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"Config"> | string
   name?: Prisma.StringWithAggregatesFilter<"Config"> | string
   title?: Prisma.StringWithAggregatesFilter<"Config"> | string
   value?: Prisma.StringWithAggregatesFilter<"Config"> | string
+  uid?: Prisma.StringWithAggregatesFilter<"Config"> | string
 }
 
 export type ConfigCreateInput = {
+  id: string
   name: string
   title: string
   value: string
+  uid: string
 }
 
 export type ConfigUncheckedCreateInput = {
+  id: string
   name: string
   title: string
   value: string
+  uid: string
 }
 
 export type ConfigUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ConfigUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ConfigCreateManyInput = {
+  id: string
   name: string
   title: string
   value: string
+  uid: string
 }
 
 export type ConfigUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ConfigUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   value?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type ConfigCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   value?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
 }
 
 export type ConfigMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   value?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
 }
 
 export type ConfigMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   title?: Prisma.SortOrder
   value?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
 }
 
 
 
 export type ConfigSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   name?: boolean
   title?: boolean
   value?: boolean
+  uid?: boolean
 }, ExtArgs["result"]["config"]>
 
 export type ConfigSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   name?: boolean
   title?: boolean
   value?: boolean
+  uid?: boolean
 }, ExtArgs["result"]["config"]>
 
 export type ConfigSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   name?: boolean
   title?: boolean
   value?: boolean
+  uid?: boolean
 }, ExtArgs["result"]["config"]>
 
 export type ConfigSelectScalar = {
+  id?: boolean
   name?: boolean
   title?: boolean
   value?: boolean
+  uid?: boolean
 }
 
-export type ConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"name" | "title" | "value", ExtArgs["result"]["config"]>
+export type ConfigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "title" | "value" | "uid", ExtArgs["result"]["config"]>
 
 export type $ConfigPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Config"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    id: string
     name: string
     title: string
     value: string
+    uid: string
   }, ExtArgs["result"]["config"]>
   composites: {}
 }
@@ -379,8 +433,8 @@ export interface ConfigDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    * // Get first 10 Configs
    * const configs = await prisma.config.findMany({ take: 10 })
    * 
-   * // Only select the `name`
-   * const configWithNameOnly = await prisma.config.findMany({ select: { name: true } })
+   * // Only select the `id`
+   * const configWithIdOnly = await prisma.config.findMany({ select: { id: true } })
    * 
    */
   findMany<T extends ConfigFindManyArgs>(args?: Prisma.SelectSubset<T, ConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -424,9 +478,9 @@ export interface ConfigDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   ]
    * })
    * 
-   * // Create many Configs and only return the `name`
-   * const configWithNameOnly = await prisma.config.createManyAndReturn({
-   *   select: { name: true },
+   * // Create many Configs and only return the `id`
+   * const configWithIdOnly = await prisma.config.createManyAndReturn({
+   *   select: { id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -515,9 +569,9 @@ export interface ConfigDelegate<ExtArgs extends runtime.Types.Extensions.Interna
    *   ]
    * })
    * 
-   * // Update zero or more Configs and only return the `name`
-   * const configWithNameOnly = await prisma.config.updateManyAndReturn({
-   *   select: { name: true },
+   * // Update zero or more Configs and only return the `id`
+   * const configWithIdOnly = await prisma.config.updateManyAndReturn({
+   *   select: { id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -719,9 +773,11 @@ export interface Prisma__ConfigClient<T, Null = never, ExtArgs extends runtime.T
  * Fields of the Config model
  */
 export interface ConfigFieldRefs {
+  readonly id: Prisma.FieldRef<"Config", 'String'>
   readonly name: Prisma.FieldRef<"Config", 'String'>
   readonly title: Prisma.FieldRef<"Config", 'String'>
   readonly value: Prisma.FieldRef<"Config", 'String'>
+  readonly uid: Prisma.FieldRef<"Config", 'String'>
 }
     
 

@@ -14,6 +14,7 @@ datasource db {
 
 model Group {
   id   String @id @default(uuid())
+  uid  String
   nth  Int
   name String
   fold Int
@@ -23,6 +24,7 @@ model Group {
 
 model App {
   id      String @id @default(uuid())
+  uid     String
   gid     String
   name    String
   desc    String
@@ -38,26 +40,31 @@ model App {
 
 model Image {
   id           String @id @default(uuid())
+  uid          String
   title        String
   filepath     String
   created_time String
-  
+
   @@map("images")
 }
 
 model Engine {
+  id    String
   name  String @id
   title String
   icon  String
   url   String
-  
+  uid   String
+
   @@map("engines")
 }
 
 model Config {
+  id    String
   name  String @id
   title String
   value String
-  
+  uid   String
+
   @@map("configs")
 }

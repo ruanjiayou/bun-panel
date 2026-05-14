@@ -8,7 +8,7 @@ const Button = styled.label`
   font-size: 14px;
 `
 
-function Uploader({ value, id, field = "image", onUpload }: any) {
+function Uploader({ value, id, field = "image", onUpload, disabled = false }: any) {
   // 使用useState管理文件选择状态
 
   // 上传文件的处理函数
@@ -29,6 +29,7 @@ function Uploader({ value, id, field = "image", onUpload }: any) {
       </div>
       <input
         id={id}
+        disabled={disabled}
         type="file"
         style={{ display: 'none' }}
         onChange={handleFileChange}

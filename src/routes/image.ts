@@ -6,6 +6,7 @@ import { copyFile, rename, unlink } from "node:fs/promises";
 import mime from 'mime/lite';
 import path from 'node:path';
 import config from '../config';
+import protect from 'plugins/protect';
 
 const router = express.Router();
 const upload = multer({ dest: path.join(config.root_dir, '/data/.tmp') });
@@ -13,16 +14,18 @@ const upload = multer({ dest: path.join(config.root_dir, '/data/.tmp') });
 router.get('/', async (req, res) => {
   const pagination = req.paging();
   const docs = await db.image.findMany({
+    where: { uid: res.locals.user.id },
     skip: (pagination.page - 1) * pagination.limit,
     take: pagination.limit,
   });
   res.success(docs);
 });
 
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', protect, upload.single('image'), async (req, res) => {
   const id = v7();
   const data = {
     id,
+    uid: res.locals.user.id,
     title: req.body.title || '',
     filepath: `/images/panel/${id}.`,
     created_time: new Date().toISOString(),
@@ -42,8 +45,8 @@ router.post('/', upload.single('image'), async (req, res) => {
   res.success(doc);
 });
 
-router.delete('/:id', async (req, res) => {
-  const doc = await db.image.findFirst({ where: { id: req.params.id } })
+router.delete('/:id', protect, async (req, res) => {
+  const doc = await db.image.findFirst({ where: { id: req.params.id, uid: res.locals.user.id } })
   if (doc) {
     const fullpath = path.join(config.static_dir, doc.filepath);
     if (await Bun.file(fullpath).exists()) {

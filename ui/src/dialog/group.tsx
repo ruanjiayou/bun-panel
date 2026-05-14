@@ -5,15 +5,19 @@ import { store } from "@/store.js";
 import apis from '@/apis/index.js';
 import { useState } from 'react';
 import { cloneDeep } from 'lodash';
+import { User } from 'user-info';
 
 export default function DialogGroup({ }) {
   const state = useSnapshot(store)
+  const user = useSnapshot(User)
+  const disabled = !user.isLogin;
   const [data, setData] = useState<any>(cloneDeep(state.temp_group));
   return (
     <Modal
       title={data.id ? "修改" : "添加分组"}
       style={{ height: 150, alignItems: 'center' }}
       visible={true}
+      disabled={disabled}
       onClose={() => { store.showEditGroup = false; }}
       onSave={async () => {
         const resp = !(data.id)
@@ -32,19 +36,20 @@ export default function DialogGroup({ }) {
       <div style={{ marginLeft: 20 }}>
         <FormItem>
           <FormLabel>分组名称</FormLabel>
-          <input id="group_name" defaultValue={data.name} onChange={e => {
+          <input disabled={disabled} id="group_name" defaultValue={data.name} onChange={e => {
             setData({ ...data, name: e.target.value.trim() });
           }} />
         </FormItem>
         <FormItem>
           <FormLabel>是否折叠</FormLabel>
           <div>
-            <Switch checked={data.fold} onSwitch={checked => { setData({ ...data, fold: checked ? 1 : 0 }); }}>{data.fold ? '是' : '否'}</Switch>
+            <Switch disabled={disabled} checked={data.fold} onSwitch={checked => { setData({ ...data, fold: checked ? 1 : 0 }); }}>{data.fold ? '是' : '否'}</Switch>
           </div>
         </FormItem>
         <FormItem>
           <FormLabel style={{ paddingTop: 3 }}>添加应用</FormLabel>
           <div style={{ border: '1px dashed grey', borderRadius: 5, padding: '5px 15px' }} onClick={() => {
+            if (disabled) return;
             store.temp_app = { gid: data.id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
             store.showEditApp = true
             store.showEditGroup = false;

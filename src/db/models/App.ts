@@ -40,6 +40,7 @@ export type AppSumAggregateOutputType = {
 
 export type AppMinAggregateOutputType = {
   id: string | null
+  uid: string | null
   gid: string | null
   name: string | null
   desc: string | null
@@ -53,6 +54,7 @@ export type AppMinAggregateOutputType = {
 
 export type AppMaxAggregateOutputType = {
   id: string | null
+  uid: string | null
   gid: string | null
   name: string | null
   desc: string | null
@@ -66,6 +68,7 @@ export type AppMaxAggregateOutputType = {
 
 export type AppCountAggregateOutputType = {
   id: number
+  uid: number
   gid: number
   name: number
   desc: number
@@ -93,6 +96,7 @@ export type AppSumAggregateInputType = {
 
 export type AppMinAggregateInputType = {
   id?: true
+  uid?: true
   gid?: true
   name?: true
   desc?: true
@@ -106,6 +110,7 @@ export type AppMinAggregateInputType = {
 
 export type AppMaxAggregateInputType = {
   id?: true
+  uid?: true
   gid?: true
   name?: true
   desc?: true
@@ -119,6 +124,7 @@ export type AppMaxAggregateInputType = {
 
 export type AppCountAggregateInputType = {
   id?: true
+  uid?: true
   gid?: true
   name?: true
   desc?: true
@@ -219,6 +225,7 @@ export type AppGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
 
 export type AppGroupByOutputType = {
   id: string
+  uid: string
   gid: string
   name: string
   desc: string
@@ -255,6 +262,7 @@ export type AppWhereInput = {
   OR?: Prisma.AppWhereInput[]
   NOT?: Prisma.AppWhereInput | Prisma.AppWhereInput[]
   id?: Prisma.StringFilter<"App"> | string
+  uid?: Prisma.StringFilter<"App"> | string
   gid?: Prisma.StringFilter<"App"> | string
   name?: Prisma.StringFilter<"App"> | string
   desc?: Prisma.StringFilter<"App"> | string
@@ -268,6 +276,7 @@ export type AppWhereInput = {
 
 export type AppOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gid?: Prisma.SortOrder
   name?: Prisma.SortOrder
   desc?: Prisma.SortOrder
@@ -284,6 +293,7 @@ export type AppWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AppWhereInput | Prisma.AppWhereInput[]
   OR?: Prisma.AppWhereInput[]
   NOT?: Prisma.AppWhereInput | Prisma.AppWhereInput[]
+  uid?: Prisma.StringFilter<"App"> | string
   gid?: Prisma.StringFilter<"App"> | string
   name?: Prisma.StringFilter<"App"> | string
   desc?: Prisma.StringFilter<"App"> | string
@@ -297,6 +307,7 @@ export type AppWhereUniqueInput = Prisma.AtLeast<{
 
 export type AppOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gid?: Prisma.SortOrder
   name?: Prisma.SortOrder
   desc?: Prisma.SortOrder
@@ -318,6 +329,7 @@ export type AppScalarWhereWithAggregatesInput = {
   OR?: Prisma.AppScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AppScalarWhereWithAggregatesInput | Prisma.AppScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"App"> | string
+  uid?: Prisma.StringWithAggregatesFilter<"App"> | string
   gid?: Prisma.StringWithAggregatesFilter<"App"> | string
   name?: Prisma.StringWithAggregatesFilter<"App"> | string
   desc?: Prisma.StringWithAggregatesFilter<"App"> | string
@@ -331,6 +343,7 @@ export type AppScalarWhereWithAggregatesInput = {
 
 export type AppCreateInput = {
   id?: string
+  uid: string
   gid: string
   name: string
   desc: string
@@ -344,6 +357,7 @@ export type AppCreateInput = {
 
 export type AppUncheckedCreateInput = {
   id?: string
+  uid: string
   gid: string
   name: string
   desc: string
@@ -357,6 +371,7 @@ export type AppUncheckedCreateInput = {
 
 export type AppUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   gid?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   desc?: Prisma.StringFieldUpdateOperationsInput | string
@@ -370,6 +385,7 @@ export type AppUpdateInput = {
 
 export type AppUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   gid?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   desc?: Prisma.StringFieldUpdateOperationsInput | string
@@ -383,6 +399,7 @@ export type AppUncheckedUpdateInput = {
 
 export type AppCreateManyInput = {
   id?: string
+  uid: string
   gid: string
   name: string
   desc: string
@@ -396,6 +413,7 @@ export type AppCreateManyInput = {
 
 export type AppUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   gid?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   desc?: Prisma.StringFieldUpdateOperationsInput | string
@@ -409,6 +427,7 @@ export type AppUpdateManyMutationInput = {
 
 export type AppUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  uid?: Prisma.StringFieldUpdateOperationsInput | string
   gid?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   desc?: Prisma.StringFieldUpdateOperationsInput | string
@@ -422,6 +441,7 @@ export type AppUncheckedUpdateManyInput = {
 
 export type AppCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gid?: Prisma.SortOrder
   name?: Prisma.SortOrder
   desc?: Prisma.SortOrder
@@ -441,6 +461,7 @@ export type AppAvgOrderByAggregateInput = {
 
 export type AppMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gid?: Prisma.SortOrder
   name?: Prisma.SortOrder
   desc?: Prisma.SortOrder
@@ -454,6 +475,7 @@ export type AppMaxOrderByAggregateInput = {
 
 export type AppMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  uid?: Prisma.SortOrder
   gid?: Prisma.SortOrder
   name?: Prisma.SortOrder
   desc?: Prisma.SortOrder
@@ -475,6 +497,7 @@ export type AppSumOrderByAggregateInput = {
 
 export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   gid?: boolean
   name?: boolean
   desc?: boolean
@@ -488,6 +511,7 @@ export type AppSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 
 export type AppSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   gid?: boolean
   name?: boolean
   desc?: boolean
@@ -501,6 +525,7 @@ export type AppSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
 
 export type AppSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  uid?: boolean
   gid?: boolean
   name?: boolean
   desc?: boolean
@@ -514,6 +539,7 @@ export type AppSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
 
 export type AppSelectScalar = {
   id?: boolean
+  uid?: boolean
   gid?: boolean
   name?: boolean
   desc?: boolean
@@ -525,13 +551,14 @@ export type AppSelectScalar = {
   nth?: boolean
 }
 
-export type AppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gid" | "name" | "desc" | "cover" | "url_lan" | "url_wan" | "type" | "open" | "nth", ExtArgs["result"]["app"]>
+export type AppOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "uid" | "gid" | "name" | "desc" | "cover" | "url_lan" | "url_wan" | "type" | "open" | "nth", ExtArgs["result"]["app"]>
 
 export type $AppPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "App"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    uid: string
     gid: string
     name: string
     desc: string
@@ -965,6 +992,7 @@ export interface Prisma__AppClient<T, Null = never, ExtArgs extends runtime.Type
  */
 export interface AppFieldRefs {
   readonly id: Prisma.FieldRef<"App", 'String'>
+  readonly uid: Prisma.FieldRef<"App", 'String'>
   readonly gid: Prisma.FieldRef<"App", 'String'>
   readonly name: Prisma.FieldRef<"App", 'String'>
   readonly desc: Prisma.FieldRef<"App", 'String'>

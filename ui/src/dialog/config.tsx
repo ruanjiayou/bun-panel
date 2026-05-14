@@ -6,14 +6,18 @@ import { store, type IEngine, type IGroup } from "@/store.js";
 import { cloneDeep } from "lodash";
 import apis from "@/apis/index.js";
 import { HoverItem } from "@/style.js";
+import { User } from "user-info";
 
 export default function DialogConfig({ }) {
   const state = useSnapshot(store)
+  const user = useSnapshot(User)
+  const disabled = !user.isLogin;
   const [data, setData] = useState<any>(cloneDeep(state.config));
   return (
     <Modal
       title={"修改"}
       visible={true}
+      disabled={disabled}
       style={{ height: 400, alignItems: 'center' }}
       onClose={() => {
         store.showMenu = false
@@ -31,14 +35,14 @@ export default function DialogConfig({ }) {
       <div style={{ height: '100%' }}>
         <FormItem>
           <FormLabel>系统名称</FormLabel>
-          <input defaultValue={data.title} onChange={e => {
+          <input disabled={disabled} defaultValue={data.title} onChange={e => {
             setData({ ...data, title: e.target.value.trim() })
           }} />
         </FormItem>
         <FormItem>
           <FormLabel>网络模式</FormLabel>
           <div>
-            <Switch checked={data.network === 'WAN'} onSwitch={(checked: boolean) => {
+            <Switch disabled={disabled} checked={data.network === 'WAN'} onSwitch={(checked: boolean) => {
               setData({ ...data, network: checked ? 'WAN' : 'LAN' });
             }}>{state.config.network === 'LAN' ? '内网' : '公网'}</Switch>
           </div>
@@ -48,6 +52,7 @@ export default function DialogConfig({ }) {
           <div>
             <Select
               value={data.engine}
+              disabled={disabled}
               items={state.engines.map((it: IEngine) => ({ title: it.name, value: it.name }))}
               onChange={(v: string) => {
                 setData({ ...data, engine: v });
@@ -57,26 +62,26 @@ export default function DialogConfig({ }) {
         <FormItem>
           <FormLabel>显示搜索引擎</FormLabel>
           <div>
-            <Switch checked={data.show_search === '1'} onSwitch={(checked: boolean) => {
+            <Switch disabled={disabled} checked={data.show_search === '1'} onSwitch={(checked: boolean) => {
               setData({ ...data, show_search: checked ? '1' : '0' });
             }}>{data.show_search === '1' ? '显示' : '隐藏'}</Switch>
           </div>
         </FormItem>
         <FormItem>
           <FormLabel>自定义页脚</FormLabel>
-          <textarea defaultValue={data.footer || ''} onChange={e => {
+          <textarea disabled={disabled} defaultValue={data.footer || ''} onChange={e => {
             setData({ ...data, footer: e.target.value.trim() })
           }}></textarea>
         </FormItem>
         <FormItem>
           <FormLabel>壁纸设置</FormLabel>
           <div>
-            <Uploader id="bg" value={data.background_url} onUpload={(resp: any) => {
+            <Uploader id="bg" disabled={disabled} value={data.background_url} onUpload={(resp: any) => {
               if (resp.code === 0) {
                 setData({ ...data, background_url: resp.data.filepath })
               }
             }} />
-            <input defaultValue={data.background_url} onChange={e => {
+            <input disabled={disabled} defaultValue={data.background_url} onChange={e => {
               setData({ ...data, background_url: e.target.value.trim() })
             }} />
           </div>
@@ -90,8 +95,13 @@ export default function DialogConfig({ }) {
                   <img src={engine.icon} style={{ width: 20, marginRight: 5 }} alt="engine" />
                   {engine.name}
                 </div>
-                <Icon type="edit" size={18} onClick={() => { store.temp_engine = engine; store.showEditEngine = true; }} />
-                <Icon type="del" size={16} color='#000' onClick={async () => {
+                <Icon type="edit" disabled={disabled} size={18} onClick={() => {
+                  if (disabled) return;
+                  store.temp_engine = engine;
+                  store.showEditEngine = true;
+                }} />
+                <Icon type="del" disabled={disabled} size={16} color='#000' onClick={async () => {
+                  if (disabled) return;
                   const resp = await apis.deleteEngine(engine.name);
                   if (resp.status === 200 && resp.data.code === 0) {
                     await store.initEngine()
@@ -104,6 +114,7 @@ export default function DialogConfig({ }) {
               </HoverItem>
             ))}
             <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
+              if (disabled) return;
               store.showEditEngine = true;
               store.temp_engine = {} as IEngine;
             }}>
@@ -120,8 +131,13 @@ export default function DialogConfig({ }) {
                   {group.name}
                 </div>
                 <span style={{ display: 'flex', cursor: 'pointer' }} >
-                  <Icon type="edit" size={18} onClick={() => { store.temp_group = group as IGroup; store.showEditGroup = true; }} />
-                  <Icon type="del" size={18} color='#333' onClick={async () => {
+                  <Icon type="edit" disabled={disabled} size={18} onClick={() => {
+                    if (disabled) return;
+                    store.temp_group = group as IGroup;
+                    store.showEditGroup = true;
+                  }} />
+                  <Icon type="del" disabled={disabled} size={18} color='#333' onClick={async () => {
+                    if (disabled) return;
                     const resp = await apis.deleteGroup(group.id);
                     if (resp.status === 200 && resp.data.code === 0) {
                       await store.initAppGroup()
@@ -135,6 +151,7 @@ export default function DialogConfig({ }) {
               </HoverItem>
             ))}
             <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
+              if (disabled) return;
               store.temp_group = {
                 name: '',
                 nth: state.groups.length + 1,

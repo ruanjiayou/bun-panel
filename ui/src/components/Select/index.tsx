@@ -32,7 +32,7 @@ const Option = styled.div`
   font-size: 14px;
 `
 
-export default function Select({ value, items, onChange }: any) {
+export default function Select({ disabled = false, value, items, onChange }: any) {
   const [localState, localStore] = useLocalProxy({
     open: false,
     title: '无'
@@ -46,6 +46,7 @@ export default function Select({ value, items, onChange }: any) {
   return (
     <div style={{ position: 'relative', fontSize: 14 }}>
       <Title onClick={() => {
+        if (disabled) return;
         localStore.open = !localStore.open;
       }}>
         {localState.title}

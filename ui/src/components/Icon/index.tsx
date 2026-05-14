@@ -23,6 +23,10 @@ export const Center = styled.div`
   &:hover {
     opacity: 0.4;
   }
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
 `
 
 const types = {
@@ -42,9 +46,9 @@ const types = {
   allow_mix,
   not_allow_mix
 }
-export default function Icon({ type, size = 20, cursor = 'pointer', color = 'white', ...props }: any) {
+export default function Icon({ type, size = 20, color = 'white', disabled = false, ...props }: any) {
   const Image = types[type as keyof typeof types];
-  return (Image && <Center>
-    <Image style={assign({ width: size, height: size, cursor, fill: color }, props.style || {})} {...omit(props, ['style'])} />
+  return (Image && <Center className={disabled ? 'disabled' : ''}>
+    <Image style={assign({ width: size, height: size, fill: color }, props.style || {})} {...omit(props, ['style'])} />
   </Center>)
 }

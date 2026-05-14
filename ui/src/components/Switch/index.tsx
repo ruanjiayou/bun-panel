@@ -13,6 +13,9 @@ const Wrap = styled.span`
   border: 1px solid #bbb;
   border-radius: 15px;
   margin-right: 10px;
+  &.disabled {
+    opacity: 0.5;
+  }
 `
 const Handler = styled.span`
   width: 20px;
@@ -21,12 +24,12 @@ const Handler = styled.span`
   background-color: #ddd;
 `
 
-export default function Switch({ checked, onSwitch, children }: { checked: any, onSwitch: (checked: boolean) => void, children: any }) {
+export default function Switch({ disabled = false, checked, onSwitch, children }: { disabled?: boolean, checked: any, onSwitch: (checked: boolean) => void, children: any }) {
   return (
     <Container>
       <FullWidth>
-        <Wrap style={{ backgroundColor: checked ? '#39c' : '#fff', borderColor: checked ? '#39c' : '#bbb', justifyContent: checked ? 'flex-start' : 'flex-end' }} onClick={() => {
-          if (onSwitch) {
+        <Wrap className={disabled ? 'disabled' : ''} style={{ backgroundColor: checked ? '#39c' : '#fff', borderColor: checked ? '#39c' : '#bbb', justifyContent: checked ? 'flex-start' : 'flex-end' }} onClick={() => {
+          if (onSwitch && !disabled) {
             onSwitch(!checked);
           }
         }}>
@@ -34,6 +37,6 @@ export default function Switch({ checked, onSwitch, children }: { checked: any, 
         </Wrap>
         {children}
       </FullWidth>
-    </Container>
+    </Container >
   )
 }
