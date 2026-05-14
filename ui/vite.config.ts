@@ -32,7 +32,7 @@ export default defineConfig(({ command, mode }) => {
       wyw({
         preserveCssPaths: true,
         transformLibraries: true,
-        include: [/node_modules\/user-info/, './src/**/*.{ts,tsx,js,jsx}'],
+        include: ['**/user-info/**/*.{ts,tsx,js,jsx}', './src/**/*.{ts,tsx,js,jsx}'],
         babelOptions: {
           presets: ['@babel/preset-typescript', '@babel/preset-react', '@linaria/babel-preset',],
         },
@@ -87,14 +87,17 @@ export default defineConfig(({ command, mode }) => {
         // 将 @ 指向 src 目录
         '@': path.resolve(__dirname, './src'),
       },
+      preserveSymlinks: true,
     },
     optimizeDeps: {
       // 强制预构建包含 Linaria 的依赖
       include: [
-        'user-info',
         'react-is',
         'classnames',
-        '@linaria/core', '@linaria/react'],
+        '@linaria/core',
+        '@linaria/react',
+      ],
+      exclude: ['user-info'],
     },
     build: {
       outDir: 'panel',
@@ -103,6 +106,9 @@ export default defineConfig(({ command, mode }) => {
       host: true,
       port: 3060,
       allowedHosts: ['max.local', 'jiayou.work'],
+      watch: {
+        ignored: ['!**/node_modules/user-info/**']
+      },
       proxy: {
         '/images': {
           target: 'https://jiayou.work',
