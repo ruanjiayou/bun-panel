@@ -151,10 +151,8 @@ function App() {
     }, 100)
   }, [])
   useEffectOnce(() => {
-    if (!state.booted) {
-      store.allow_mix = localStorage.getItem('__panel_allow_mix') ? true : false;
-      init();
-    }
+    store.allow_mix = localStorage.getItem('__panel_allow_mix') ? true : false;
+    init();
   });
   useEffect(() => {
     if (user.access_token) {
@@ -184,10 +182,15 @@ function App() {
           <Icon size={24} title="配置" type={'setting'} onClick={() => {
             store.showMenu = !state.showMenu;
           }} />
-          <UserInfo onLogout={() => {
-            store.access_token = '';
-            store.refresh_token = '';
-          }} />
+          <UserInfo
+            afterLogin={() => {
+              window.location.reload()
+            }}
+            afterLogout={() => {
+              store.access_token = '';
+              store.refresh_token = '';
+              window.location.reload()
+            }} />
         </MenuWrap>
       </div>
       {state.isRefresh && <div style={{ zIndex: 1000, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#00000080' }}>
