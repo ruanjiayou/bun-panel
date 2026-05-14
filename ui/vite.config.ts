@@ -40,13 +40,35 @@ export default defineConfig(({ command, mode }) => {
       react(),
       svgr(),
       VitePWA({
+        workbox: {
+          navigateFallback: null, // 禁止导航回退
+          directoryIndex: null, // 防止 / 映射到 index.html
+          globIgnores: ['**/index.html'],
+          globPatterns: ['**/*.{js,css,ico,png,svg,jpg}'],
+          cleanupOutdatedCaches: true,
+          skipWaiting: true,
+          clientsClaim: true,
+          runtimeCaching: [{
+            urlPattern: ({ url }) => url.pathname.startsWith('/gw'),
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+            },
+          }, {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'images-cache',
+              expiration: {
+                maxEntries: 500,
+              },
+            },
+          }]
+        },
         registerType: 'autoUpdate',
         manifest,
         injectRegister: 'inline',
         strategies: 'generateSW',   // 使用注入模式
-        injectManifest: {
-          globPatterns: ['**/*.{js,css,html,ico,jpg,png,svg}'],
-        },
         devOptions: {
           enabled: false,      // 开发环境下启用 SW
           type: 'module',     // 使用 module 类型（仅 Chromium 内核）
@@ -83,11 +105,11 @@ export default defineConfig(({ command, mode }) => {
       allowedHosts: ['max.local', 'jiayou.work'],
       proxy: {
         '/images': {
-          target: 'http://localhost:5555',
+          target: 'http://192.168.0.124',
           changeOrigin: true,
         },
         '/gw/panel': {
-          target: 'http://localhost:5555',
+          target: 'http://192.168.0.124:5555',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/gw\/panel/, '')
         },
