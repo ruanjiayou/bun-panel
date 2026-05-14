@@ -6,15 +6,15 @@ import { useEffectOnce } from 'react-use';
 import apis from './apis/'
 import DialogGroup from './dialog/group.js';
 import DialogEngine from './dialog/engine.js';
-import { Icon, toast } from './components/index.js'
-import { FormItem, FormLabel, Center } from './components/style.js';
 import DialogApp from './dialog/app.js';
 import DialogConfig from './dialog/config.js';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
-import { omit, throttle } from 'lodash';
+import { throttle } from 'lodash';
 import UserInfo, { User } from 'user-info';
-import { proxy, useSnapshot } from 'valtio'
+import { useSnapshot } from 'valtio'
 import { store, type IApp, type IEngine, type IGroup } from "@/store";
+import { Icon } from './components/index.js'
+import { Center } from './components/style.js';
 import {
   Group,
   GroupTitle,
@@ -22,11 +22,16 @@ import {
   Card,
   Cell,
   MenuWrap,
-  HoverItem,
   AppDesc,
   AppIcon,
   AppTitle,
 } from './style.js'
+
+function Loading() {
+  return <span className="spin" style={{ position: 'absolute', left: '50%', top: '50%', display: 'flex', alignItems: 'center', width: '3rem', height: '3rem', marginLeft: '-1.5rem', marginTop: '-1.5rem' }}>
+    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="68147" width="100%" height="100%"><path fill="#fff" d="M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l0.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-0.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8z m756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-0.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8 0.1-4.5-3.5-8.2-8-8.2z" p-id="68148"></path></svg>
+  </span>
+}
 
 const AppItem = SortableElement<{ app: IApp }>(({ app }: { app: IApp }) => {
   const state = useSnapshot(store)
@@ -88,7 +93,7 @@ const GroupItem = SortableElement<{ group: IGroup }>(({ group }: { group: IGroup
     <Fragment>
       <GroupTitle>
         <GroupHandle group={group} />
-        <div style={{ display: group.id ? 'flex' : 'none', cursor: 'pointer', visibility: state.sort_gid === group.id ? 'visible' : 'hidden' }}>
+        <div style={{ display: !group.fold ? 'flex' : 'none', cursor: 'pointer', visibility: state.sort_gid === group.id ? 'visible' : undefined }}>
           <Icon type={'sort'} size={24} style={{ marginLeft: 5, marginTop: -2, fill: state.sort_gid === group.id ? '#00aaff' : 'white' }} onClick={() => {
             store.sort_gid = state.sort_gid === group.id ? '' : group.id;
           }} />
@@ -113,107 +118,18 @@ function App() {
   const state = useSnapshot(store)
   const user = useSnapshot(User)
   const [inputing, setInputing] = useState(false);
-  const initConfig = useCallback(async () => {
-    const resp = await apis.getConfigs();
-    if (resp.code === 0) {
-      resp.data.forEach(config => {
-        const name = config.name as string;
-        store.config[name] = config.value as string;
-      });
-      store.configs = resp.data;
-      if (store.config.title) {
-        document.querySelector('title')!.innerText = store.config.title;
-      }
-    }
-  }, []);
-  const initEngine = useCallback(async () => {
-    const resp4 = await apis.getEngines();
-    if (resp4.code === 0) {
-      store.engines = resp4.data;
-      store.defaultEngine = store.engines.find(it => it.name === store.config.engine)
-    }
-  }, []);
-  const initAppGroup = useCallback(async () => {
-    const resp2 = await apis.getGroups();
-    const resp3 = await apis.getApps();
-    if (resp2.code === 0 && resp3.code === 0) {
-      const groups = resp2.data.map((g: IGroup) => { g.apps = []; return g; });
-      const others: IGroup = { id: '', name: '未分组', fold: 1, nth: 0, apps: [] }
-      store.apps = resp3.data;
-      resp3.data.forEach(app => {
-        const group = groups.find((g: IGroup) => g.id === app.gid);
-        if (group) {
-          app.nth = group.apps.length;
-          group.apps.push(app);
-        } else {
-          app.nth = others.apps!.length;
-          others.apps!.push(app);
-        }
-      });
-      groups.push(others);
-      store.groups = groups;
-    }
-  }, []);
+
   const init = useCallback(async () => {
     store.access_token = user.access_token;
     store.refresh_token = user.refresh_token;
-    await initConfig();
-    await initEngine();
-    await initAppGroup();
+    await store.initConfig();
+    await store.initEngine();
+    store.initAppGroup();
   }, []);
   const search = useCallback(async (q: string) => {
     if (q) {
       const url = state.defaultEngine!.url;
       window.open(url.includes('%s') ? url.replace('%s', q) : url + q);
-    }
-  }, []);
-  const deleteGroup = useCallback(async (id: string) => {
-    const resp = await apis.deleteGroup(id);
-    if (resp.status === 200 && resp.data.code === 0) {
-      await initAppGroup()
-    } else if (resp.status !== 200) {
-      toast({ content: '请求错误' })
-    } else {
-      toast({ content: resp.data.message });
-    }
-  }, []);
-  const onSaveGroup = useCallback(async () => {
-    const resp = !(state.temp_group.id)
-      ? await apis.createGroup({ name: state.temp_group.name, fold: state.temp_group.fold, nth: state.temp_group.nth })
-      : await apis.updateGroup(state.temp_group.id, { name: state.temp_group.name, fold: state.temp_group.fold, nth: state.temp_group.nth });
-    if (resp.status === 200 && resp.data.code === 0) {
-      toast({ content: '操作成功' });
-    } else if (resp.status !== 200) {
-      toast({ content: '请求失败' });
-    } else {
-      toast({ content: resp.data.message });
-    }
-  }, []);
-  const onSaveEngine = useCallback(async () => {
-    const resp = !state.temp_engine.name
-      ? await apis.createEngine(state.temp_engine)
-      : await apis.updateEngine(state.temp_engine.name!, omit(state.temp_engine, ['id']));
-    if (resp.status === 200 && resp.data.code === 0) {
-      store.showEditEngine = false;
-      await initEngine();
-      toast({ content: '操作成功' });
-    } else if (resp.status !== 200) {
-      toast({ content: '请求失败' });
-    } else {
-      toast({ content: resp.data.message });
-    }
-  }, []);
-  const onSaveApp = useCallback(async () => {
-    const resp = !store.temp_app.id
-      ? await apis.createApp(store.temp_app)
-      : await apis.updateApp(store.temp_app.id, store.temp_app);
-    if (resp.status === 200 && resp.data.code === 0) {
-      await initAppGroup();
-      toast({ content: '操作成功' });
-    } else if (resp.status !== 200) {
-      toast({ content: '请求失败' });
-    } else {
-      toast({ content: resp.data.message });
     }
   }, []);
   const onWheel = useMemo(() => {
@@ -236,14 +152,12 @@ function App() {
   }, [])
   useEffectOnce(() => {
     if (!state.booted) {
-      store.booted = true;
       store.allow_mix = localStorage.getItem('__panel_allow_mix') ? true : false;
       init();
     }
   });
   useEffect(() => {
-    if (!state.booted && user.access_token) {
-      store.booted = true
+    if (user.access_token) {
       init()
     }
   }, [user.access_token])
@@ -259,15 +173,15 @@ function App() {
     <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
         <MenuWrap>
-          <Icon size={30} title="混合url" type={state.allow_mix ? 'allow_mix' : 'not_allow_mix'} onClick={() => {
+          <Icon size={24} title="混合url" type={state.allow_mix ? 'allow_mix' : 'not_allow_mix'} onClick={() => {
             store.allow_mix = !state.allow_mix;
             localStorage.setItem('__panel_allow_mix', state.allow_mix ? '1' : '0')
           }} />
-          <Icon size={30} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
+          {!state.allow_mix && <Icon size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
             store.config.network = state.config.network === 'LAN' ? 'WAN' : 'LAN';
             await apis.updateConfig('network', state.config.network);
-          }} />
-          <Icon size={30} title="配置" type={'setting'} onClick={() => {
+          }} />}
+          <Icon size={24} title="配置" type={'setting'} onClick={() => {
             store.showMenu = !state.showMenu;
           }} />
           <UserInfo onLogout={() => {
@@ -277,56 +191,59 @@ function App() {
         </MenuWrap>
       </div>
       {state.isRefresh && <div style={{ zIndex: 1000, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#00000080' }}>
-        <span className="spin" style={{ position: 'absolute', left: '50%', top: '50%', display: 'flex', alignItems: 'center', width: '3rem', height: '3rem', marginLeft: '-1.5rem', marginTop: '-1.5rem' }}>
-          <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="68147" width="100%" height="100%"><path fill="#fff" d="M168 504.2c1-43.7 10-86.1 26.9-126 17.3-41 42.1-77.7 73.7-109.4S337 212.3 378 195c42.4-17.9 87.4-27 133.9-27s91.5 9.1 133.8 27c40.9 17.3 77.7 42.1 109.3 73.8 9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47c-5.3 4.1-3.5 12.5 3 14.1l175.7 43c5 1.2 9.9-2.6 9.9-7.7l0.8-180.9c0-6.7-7.7-10.5-12.9-6.3l-56.4 44.1C765.8 155.1 646.2 92 511.8 92 282.7 92 96.3 275.6 92 503.8c-0.1 4.5 3.5 8.2 8 8.2h60c4.4 0 7.9-3.5 8-7.8z m756 7.8h-60c-4.4 0-7.9 3.5-8 7.8-1 43.7-10 86.1-26.9 126-17.3 41-42.1 77.8-73.7 109.4S687 811.7 646 829c-42.4 17.9-87.4 27-133.9 27s-91.5-9.1-133.9-27c-40.9-17.3-77.7-42.1-109.3-73.8-9.9-9.9-19.2-20.4-27.8-31.4l60.2-47c5.3-4.1 3.5-12.5-3-14.1l-175.7-43c-5-1.2-9.9 2.6-9.9 7.7l-0.7 181c0 6.7 7.7 10.5 12.9 6.3l56.4-44.1C258.2 868.9 377.8 932 512.2 932c229.2 0 415.5-183.7 419.8-411.8 0.1-4.5-3.5-8.2-8-8.2z" p-id="68148"></path></svg>
-        </span>
+        <Loading />
       </div>}
       <div className='title'>
-        <div style={{ backgroundImage: `url("/images/panel/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")`, color: "transparent" }}>{state.config.title}</div>
+        <div style={{
+          backgroundImage: `url("/images/panel/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")`,
+        }}>{state.config.title}</div>
       </div>
-      {[1, "1"].includes(state.config.show_search) && <div className='search'>
-        <Center style={{ position: 'relative' }} onWheel={(e) => {
-          onWheel(e.nativeEvent.deltaY)
-        }}>
-          {
-            state.defaultEngine && <img src={state.defaultEngine.icon} style={{ marginRight: 5, width: 24 }} alt="engine" onClick={() => store.show_engine_dialog = !state.show_engine_dialog} />
-          }
-          <div id="dialog_engine" style={{ display: state.show_engine_dialog ? 'block' : 'none', position: 'absolute', top: 40, left: 10, padding: '0 10px 10px', borderRadius: 5, backgroundColor: '#575757bf', zIndex: 2 }}>
-            {state.engines.map(engine => <img src={engine.icon} alt={engine.name} key={engine.name} style={{ width: 24, marginTop: 10 }} onClick={async () => {
-              store.defaultEngine = engine;
-              store.config.engine = engine.name;
-              store.show_engine_dialog = false;
-              await apis.updateConfig('engine', engine.name);
-              await initConfig();
-            }} />)}
-            <Center><Icon type={'add'} style={{ marginTop: 10 }} onClick={() => {
-              store.temp_engine = {} as IEngine;
-              store.showEditEngine = true;
-              store.show_engine_dialog = false;
-            }} /></Center>
+      {
+        [1, "1"].includes(state.config.show_search) && <div className='search'>
+          <Center style={{ position: 'relative' }} onWheel={(e) => {
+            onWheel(e.nativeEvent.deltaY)
+          }}>
+            {
+              state.defaultEngine && <img src={state.defaultEngine.icon} style={{ marginRight: 5, width: 24 }} alt="engine" onClick={() => store.show_engine_dialog = !state.show_engine_dialog} />
+            }
+            <div id="dialog_engine" style={{ display: state.show_engine_dialog ? 'block' : 'none', position: 'absolute', top: 40, left: 10, padding: '0 10px 10px', borderRadius: 5, backgroundColor: '#575757bf', zIndex: 2 }}>
+              {state.engines.map(engine => <img src={engine.icon} alt={engine.name} key={engine.name} style={{ width: 24, marginTop: 10 }} onClick={async () => {
+                store.defaultEngine = engine;
+                store.config.engine = engine.name;
+                store.show_engine_dialog = false;
+                await apis.updateConfig('engine', engine.name);
+                await store.initConfig();
+              }} />)}
+              <Center><Icon type={'add'} style={{ marginTop: 10 }} onClick={() => {
+                store.temp_engine = {} as IEngine;
+                store.showEditEngine = true;
+                store.show_engine_dialog = false;
+              }} /></Center>
+            </div>
+          </Center>
+          <input id="search" autoComplete='off' placeholder='搜索答案' onCompositionStart={() => {
+            setInputing(true);
+          }} onCompositionEnd={() => {
+            setInputing(false)
+          }} onKeyDown={e => {
+            if (!inputing && e.key === 'Enter') {
+              const q = e.currentTarget.value.trim();
+              e.currentTarget.value = '';
+              search(q);
+            }
+          }} />
+          <div style={{ padding: 8, marginRight: 5, cursor: 'pointer' }} onClick={(e) => {
+            const elem = document.getElementById('search') as HTMLInputElement;
+            search(elem.value.trim())
+            elem.value = '';
+          }}>
+            <Icon type="search" size={20} />
           </div>
-        </Center>
-        <input id="search" autoComplete='off' placeholder='搜索答案' onCompositionStart={() => {
-          setInputing(true);
-        }} onCompositionEnd={() => {
-          setInputing(false)
-        }} onKeyDown={e => {
-          if (!inputing && e.key === 'Enter') {
-            const q = e.currentTarget.value.trim();
-            e.currentTarget.value = '';
-            search(q);
-          }
-        }} />
-        <div style={{ padding: 8, marginRight: 5, cursor: 'pointer' }} onClick={(e) => {
-          const elem = document.getElementById('search') as HTMLInputElement;
-          search(elem.value.trim())
-          elem.value = '';
-        }}>
-          <Icon type="search" size={20} />
         </div>
-      </div>}
+      }
       <Group className='group'>
-        <GroupList axis="y" lockAxis='y' items={store.groups} useDragHandle={true} onSortEnd={({ oldIndex, newIndex }) => {
+        {state.booted ? (state.groups.length === 0 ? <span>empty</span> : null) : <Loading />}
+        <GroupList axis="y" lockAxis='y' items={state.groups.slice() as IGroup[]} useDragHandle={true} onSortEnd={({ oldIndex, newIndex }) => {
           if (oldIndex !== newIndex && state.groups[oldIndex]!.id && state.groups[newIndex]!.id) {
             const [old] = store.groups.splice(oldIndex, 1);
             store.groups.splice(newIndex, 0, old!);
@@ -334,86 +251,12 @@ function App() {
           }
         }} />
       </Group>
-      <DialogConfig visible={state.showMenu} onClose={() => store.showMenu = false} onSave={async (data: any) => {
-        await apis.batchUpdateConfig(data);
-        await initConfig();
-      }}>
-        <FormItem>
-          <FormLabel>搜索引擎管理</FormLabel>
-          <div style={{ width: 150 }}>
-            {state.engines.map(engine => (
-              <HoverItem key={engine.name}>
-                <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                  <img src={engine.icon} style={{ width: 20, marginRight: 5 }} alt="engine" />
-                  {engine.name}
-                </div>
-                <Icon type="edit" size={18} onClick={() => { store.temp_engine = engine; store.showEditEngine = true; }} />
-                <Icon type="del" size={16} color='#000' onClick={async () => {
-                  const resp = await apis.deleteEngine(engine.name);
-                  if (resp.status === 200 && resp.data.code === 0) {
-                    await initEngine()
-                  } else if (resp.status !== 200) {
-                    toast({ content: '请求错误' })
-                  } else {
-                    toast({ content: resp.data.message });
-                  }
-                }} />
-              </HoverItem>
-            ))}
-            <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
-              store.showEditEngine = true;
-              store.temp_engine = {} as IEngine;
-            }}>
-              添加搜索 <Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
-            </Center>
-          </div>
-        </FormItem>
-        <FormItem>
-          <FormLabel>分组管理</FormLabel>
-          <div style={{ width: 150 }}>
-            {state.groups.map(group => (
-              group.id && <HoverItem key={group.id}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {group.name}
-                </div>
-                <span style={{ display: 'flex', cursor: 'pointer' }} >
-                  <Icon type="edit" size={18} onClick={() => { store.temp_group = group as IGroup; store.showEditGroup = true; }} />
-                  <Icon type="del" size={18} color='#333' onClick={deleteGroup} />
-                </span>
-              </HoverItem>
-            ))}
-            <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
-              store.temp_group = {
-                name: '',
-                nth: state.groups.length + 1,
-                fold: 0,
-              };
-              store.showEditGroup = true
-            }}>
-              添加分组<Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
-            </Center>
-          </div>
-        </FormItem>
-      </DialogConfig>
-      <DialogGroup visible={state.showEditGroup} onAdd={(id: string) => {
-        store.temp_app = { gid: id, name: '', desc: '', cover: '', url_lan: '', url_wan: '', open: 1, type: 1 };
-        store.showEditApp = true
-      }} onClose={() => {
-        store.showEditGroup = false;
-      }} onSave={onSaveGroup} />
-      <DialogApp
-        visible={state.showEditApp}
-        onClose={() => store.showEditApp = false}
-        onSave={onSaveApp}
-        afterDelete={() => {
-          store.remAppById(state.temp_app.id!)
-        }}
-      />
-      <DialogEngine visible={state.showEditEngine} onClose={() => {
-        store.showEditEngine = false;
-      }} onSave={onSaveEngine} />
+      {state.showMenu && <DialogConfig />}
+      {state.showEditGroup && <DialogGroup />}
+      {state.showEditApp && <DialogApp />}
+      {state.showEditEngine && <DialogEngine />}
       <div className='footer' dangerouslySetInnerHTML={{ __html: state.config.footer || '' }}></div>
-    </div>
+    </div >
   )
 }
 

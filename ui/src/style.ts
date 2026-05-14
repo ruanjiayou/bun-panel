@@ -12,7 +12,7 @@ export const MenuWrap = styled.div`
   border-radius: 5px;
 `
 export const Group = styled.div`
-
+  position: relative;
 `
 export const GroupTitle = styled.div`
   color: white;

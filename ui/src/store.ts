@@ -1,18 +1,20 @@
 import { useRef } from "react";
 import { proxy, useSnapshot } from 'valtio'
-import { proxyMap } from 'valtio/utils'
+import apis from "./apis";
 
 export type IConfig = {
   name: string;
   title: string;
   value: string;
+  uid: string;
 }
 export type IGroup = {
   id: string;
   name: string;
   nth: number;
   fold: number;
-  apps?: IApp[]
+  apps?: IApp[];
+  uid: string;
 }
 export type IApp = {
   id: string;
@@ -25,13 +27,14 @@ export type IApp = {
   type: number;
   open: number;
   nth: number;
+  uid: string;
 }
 export type IEngine = {
-  id?: number;
   name: string;
   title: string;
   icon: string;
   url: string;
+  uid: string;
 }
 
 
@@ -76,5 +79,47 @@ export const store = proxy({
       }
     }
     this.apps = this.apps.filter(app => app.id !== id)
+  },
+  async initConfig(){
+    const resp = await apis.getConfigs();
+    if (resp.code === 0) {
+      resp.data.forEach(config => {
+        const name = config.name as string;
+        this.config[name] = config.value as string;
+      });
+      this.configs = resp.data;
+      if (this.config.title) {
+        document.querySelector('title')!.innerText = this.config.title;
+      }
+    }
+  },
+  async initEngine(){
+    const resp4 = await apis.getEngines();
+    if (resp4.code === 0) {
+      this.engines = resp4.data;
+      this.defaultEngine = this.engines.find(it => it.name === this.config.engine)
+    }
+  },
+  async initAppGroup() {
+    try {
+      const resp2 = await apis.getGroups();
+      const resp3 = await apis.getApps();
+      if (resp2.code === 0 && resp3.code === 0) {
+        const groups = resp2.data.map((g: IGroup) => { g.apps = []; return g; });
+        this.apps = resp3.data;
+        resp3.data.forEach(app => {
+          const group = groups.find((g: IGroup) => g.id === app.gid);
+          if (group) {
+            app.nth = group.apps.length;
+            group.apps.push(app);
+          }
+        });
+        this.groups = groups;
+      }
+    } catch (err) {
+
+    } finally {
+      store.booted = true;
+    }
   }
 })

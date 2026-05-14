@@ -11,7 +11,7 @@
   }
 
   .title {
-    font-size: 5rem;
+    font-size: 4rem;
     text-align: center;
   }
 
@@ -50,6 +50,10 @@
   &:hover>a {
     background-color: #333;
   }
+}
+
+.cell.disabled {
+  opacity: 0.2;
 }
 
 .cell.disabled a:hover {
@@ -205,6 +209,22 @@ textarea:focus {
   background-size: cover;
   background-clip: text;
   -webkit-background-clip: text;
+
+  color: transparent;
+  border-radius: 40px;
+  padding: 0 2rem;
+  box-shadow: #ffdb9a 0 0 15px 0px;
+  animation: flush 1s infinite alternate ease-in-out;
+}
+
+@keyframes flush {
+  from {
+    box-shadow: #ffdb9a 0 0 15px 0px;
+  }
+
+  to {
+    box-shadow: #ffdb9a 0 0 15px 3px;
+  }
 }
 
 .footer {

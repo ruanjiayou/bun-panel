@@ -22,7 +22,7 @@ export default defineConfig(({ command, mode }) => {
     "scope": "/",
     "start_url": "/panel",
     "display": "fullscreen",
-    "theme_color": "#000000",
+    "theme_color": "#e0583a",
     "background_color": "#ffffff"
   }
 
@@ -70,7 +70,7 @@ export default defineConfig(({ command, mode }) => {
         injectRegister: 'inline',
         strategies: 'generateSW',   // 使用注入模式
         devOptions: {
-          enabled: false,      // 开发环境下启用 SW
+          enabled: true,      // 开发环境下启用 SW
           type: 'module',     // 使用 module 类型（仅 Chromium 内核）
         },
       }),
@@ -105,13 +105,12 @@ export default defineConfig(({ command, mode }) => {
       allowedHosts: ['max.local', 'jiayou.work'],
       proxy: {
         '/images': {
-          target: 'http://192.168.0.124',
+          target: 'https://jiayou.work',
           changeOrigin: true,
         },
         '/gw/panel': {
-          target: 'http://192.168.0.124:5555',
+          target: 'https://jiayou.work',
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/gw\/panel/, '')
         },
       }
     }

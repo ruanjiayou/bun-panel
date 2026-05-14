@@ -4,21 +4,40 @@ import { useCallback } from "react";
 import apis from "../apis/index.js";
 import { useSnapshot } from 'valtio'
 import { store, type IGroup } from "@/store.js";
+import { toast } from '../components/'
 
-export default function DialogApp({ visible, onClose, onSave, afterDelete }: any) {
+export default function DialogApp({  }) {
   const state = useSnapshot(store)
   const data = state.temp_app;
   const OnDelete = useCallback(async () => {
     try {
       await apis.deleteApp(data.id!)
-      onClose();
-      afterDelete && afterDelete()
+      store.showEditApp = false
+      store.remAppById(state.temp_app.id!)
     } catch (e) {
 
     }
   }, [])
   return (
-    <Modal title={data.id ? "修改" : "添加"} style={{ alignItems: 'center' }} visible={visible} onDelete={data.id ? OnDelete : null} onClose={onClose} onSave={onSave}>
+    <Modal title={data.id ? "修改" : "添加"}
+      style={{ alignItems: 'center' }}
+      visible={true}
+      onClose={() => {
+        store.showEditApp = false
+      }}
+      onSave={async () => {
+        const resp = !store.temp_app.id
+          ? await apis.createApp(store.temp_app)
+          : await apis.updateApp(store.temp_app.id, store.temp_app);
+        if (resp.status === 200 && resp.data.code === 0) {
+          await store.initAppGroup();
+          toast({ content: '操作成功' });
+        } else if (resp.status !== 200) {
+          toast({ content: '请求失败' });
+        } else {
+          toast({ content: resp.data.message });
+        }
+      }}>
       <div style={{ marginLeft: 20 }}>
         <FormItem>
           <FormLabel>名称</FormLabel>
