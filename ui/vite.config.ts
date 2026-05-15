@@ -16,14 +16,52 @@ export default defineConfig(({ command, mode }) => {
         "src": "favicon.ico",
         "sizes": "64x64 32x32 24x24 16x16",
         "type": "image/x-icon"
-      }
+      },
+      {
+        "src": "logo-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "logo-512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      },
+      // {
+      //   "src": "/images/logo.jpg",
+      //   "sizes": "72x72",
+      //   "type": "image/jpg",
+      //   "purpose": "monochrome"
+      // }
     ],
     "id": "panel",
     "scope": "/",
     "start_url": "/panel",
     "display": "fullscreen",
-    "theme_color": "#e0583a",
-    "background_color": "#ffffff"
+    "theme_color": "#333",
+    "background_color": "wheat",
+    "share_target": {
+      action: '/gw/panel/upload',
+      method: 'POST',
+      "enctype": "multipart/form-data",
+      params: {
+        title: 'title',
+        text: 'text',
+        url: 'url',
+        files: [
+          {
+            "name": "image",        // 表单字段名
+            "accept": ["image/jpeg", "image/png", ".jpg", ".png"]
+          },
+          {
+            "name": "documents",
+            "accept": ["text", "text/csv", ".csv"]
+          }
+        ]
+      }
+    },
+    "launch_handler": { client_mode: "focus-existing" },
+
   }
 
   return {
