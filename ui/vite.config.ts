@@ -44,33 +44,44 @@ export default defineConfig(({ command, mode }) => {
           navigateFallback: null, // 禁止导航回退
           directoryIndex: null, // 防止 / 映射到 index.html
           globIgnores: ['**/index.html'],
-          globPatterns: ['**/*.{js,css,ico,png,svg,jpg}'],
+          globPatterns: ['**/*.{js,css,ico,png,svg,jpg,txt}'],
           cleanupOutdatedCaches: true,
           skipWaiting: true,
           clientsClaim: true,
-          runtimeCaching: [{
-            urlPattern: ({ url }) => url.pathname.startsWith('/gw'),
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-            },
-          }, {
-            urlPattern: ({ request }) => request.destination === 'image',
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'images-cache',
-              expiration: {
-                maxEntries: 500,
+          runtimeCaching: [
+            {
+              urlPattern: ({ url }) => url.pathname.startsWith('/gw/user/oauth/refresh'),
+              handler: 'NetworkOnly',
+              options: {
+                cacheName: 'no-cache',
               },
             },
-          }]
+            {
+              urlPattern: ({ url }) => url.pathname.startsWith('/gw/'),
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'api-cache',
+              },
+            },
+            {
+              urlPattern: ({ request }) => request.destination === 'image',
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'images-cache',
+                expiration: {
+                  maxEntries: 500,
+                },
+              },
+            },
+          ]
         },
+        // mode: 'development',
         registerType: 'autoUpdate',
         manifest,
         injectRegister: 'inline',
         strategies: 'generateSW',   // 使用注入模式
         devOptions: {
-          enabled: true,      // 开发环境下启用 SW
+          enabled: false,      // 开发环境下启用 SW
           type: 'module',     // 使用 module 类型（仅 Chromium 内核）
         },
       }),
@@ -111,11 +122,11 @@ export default defineConfig(({ command, mode }) => {
       },
       proxy: {
         '/images': {
-          target: 'https://jiayou.work',
+          target: 'http://192.168.0.124',
           changeOrigin: true,
         },
         '/gw/panel': {
-          target: 'https://jiayou.work',
+          target: 'http://192.168.0.124',
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/gw\/panel/, '')
         },

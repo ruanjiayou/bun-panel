@@ -33,7 +33,7 @@ const shttp = axios.create({
 
 shttp.interceptors.request.use(
   (config) => {
-    if (store.access_token) {
+    if (store.access_token && config.url !== '/gw/user/oauth/refresh') {
       config.headers['Authorization'] = 'Bearer ' + store.access_token;
     }
     return config;
@@ -60,7 +60,7 @@ shttp.interceptors.response.use(
       }
       isRefreshing = true;
       try {
-        const resp = await axios.post(`${store.baseURL}/gw/user/oauth/refresh`, null, {
+        const resp = await axios.post(`${store.domain}/gw/user/oauth/refresh`, null, {
           headers: { Authorization: store.refresh_token, }
         });
         if (resp && resp.data && resp.data.code === 0) {
