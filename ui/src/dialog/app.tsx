@@ -1,17 +1,18 @@
 import { Modal, Uploader, Select } from "../components/index.js";
 import { FormItem, FormLabel } from "../components/style.js";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import apis from "../apis/index.js";
 import { useSnapshot } from 'valtio'
 import { store, type IGroup } from "@/store.js";
 import { toast } from '../components/'
 import { User } from "user-info";
+import { cloneDeep } from "lodash";
 
 export default function DialogApp({ }) {
   const state = useSnapshot(store)
   const user = useSnapshot(User)
   const disabled = !user.isLogin;
-  const data = state.temp_app;
+  const [data, setData] = useState<any>(cloneDeep(state.temp_app));
   return (
     <Modal title={data.id ? "修改" : "添加"}
       style={{ alignItems: 'center' }}
@@ -36,13 +37,13 @@ export default function DialogApp({ }) {
       <div style={{ marginLeft: 20 }}>
         <FormItem>
           <FormLabel>名称</FormLabel>
-          <input value={data.name} disabled={disabled} onChange={e => {
+          <input defaultValue={data.name} disabled={disabled} onChange={e => {
             store.temp_app.name = e.target.value.trim();
           }} />
         </FormItem>
         <FormItem>
           <FormLabel>描述</FormLabel>
-          <input disabled={disabled} value={data.desc} onChange={e => {
+          <input disabled={disabled} defaultValue={data.desc} onChange={e => {
             store.temp_app.desc = e.target.value.trim();
           }} />
         </FormItem>
@@ -54,7 +55,7 @@ export default function DialogApp({ }) {
                 store.temp_app.cover = resp.data.filepath;
               }
             }} />
-            <input disabled={disabled} value={data.cover} onChange={e => {
+            <input disabled={disabled} defaultValue={data.cover} onChange={e => {
               store.temp_app.cover = e.target.value.trim();
             }} />
           </div>
@@ -73,13 +74,13 @@ export default function DialogApp({ }) {
         </FormItem>
         <FormItem>
           <FormLabel>公网地址</FormLabel>
-          <input value={data.url_wan} disabled={disabled} onChange={e => {
+          <input defaultValue={data.url_wan} disabled={disabled} onChange={e => {
             store.temp_app.url_wan = e.target.value.trim();
           }} />
         </FormItem>
         <FormItem>
           <FormLabel>内网地址</FormLabel>
-          <input value={data.url_lan} disabled={disabled} onChange={e => {
+          <input defaultValue={data.url_lan} disabled={disabled} onChange={e => {
             store.temp_app.url_lan = e.target.value.trim();
           }} />
         </FormItem>

@@ -7,8 +7,6 @@ import menu from '../../assets/menu.svg?react'
 import setting from '../../assets/setting.svg?react'
 import local from '../../assets/local.svg?react'
 import network from '../../assets/network.svg?react'
-import allow_mix from '../../assets/allow-mix.svg?react'
-import not_allow_mix from '../../assets/not-allow-mix.svg?react'
 import search from '../../assets/search.svg?react'
 import view from '../../assets/view.svg?react'
 import voff from '../../assets/view-off.svg?react'
@@ -43,8 +41,6 @@ const types = {
   setting,
   local,
   network,
-  allow_mix,
-  not_allow_mix
 }
 export default function Icon({ type, size = 20, color = 'white', disabled = false, ...props }: any) {
   const Image = types[type as keyof typeof types];

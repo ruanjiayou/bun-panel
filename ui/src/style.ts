@@ -80,7 +80,7 @@ export const AppIcon = styled.img`
   width: 2.6rem;
   height: 2.6rem;
   margin: 0 1rem 0 10px;
-  border-radius: 1rem;
+  border-radius: 5px;
 `
 export const AppTitle = styled.div`
   font-size: 16px;

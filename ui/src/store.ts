@@ -57,7 +57,6 @@ export const store = proxy({
   showEditEngine: false,
   sort_gid: '',
   show_engine_dialog: false,
-  allow_mix: true,
   // temp
   temp_engine: {} as IEngine,
   temp_group: {} as Partial<IGroup>,

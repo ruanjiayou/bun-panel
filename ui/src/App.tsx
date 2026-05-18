@@ -35,7 +35,7 @@ function Loading() {
 
 const AppItem = SortableElement<{ app: IApp }>(({ app }: { app: IApp }) => {
   const state = useSnapshot(store)
-  const url = state.allow_mix ? (state.config.network === 'LAN' ? app.url_lan || app.url_wan : app.url_wan || app.url_lan) : (state.config.network === 'LAN' ? app.url_lan : app.url_wan);
+  const url = state.config.network === 'LAN' ? app.url_lan : app.url_wan;
   return <Cell key={app.id}
     className={`cell ${(state.sort_gid === app.gid || !url) ? '' : 'spin-colorful'} ${!url ? ' disabled' : ''}`}
     onMouseDown={e => {
@@ -150,10 +150,6 @@ function App() {
       }
     }, 100)
   }, [])
-  useEffectOnce(() => {
-    store.allow_mix = localStorage.getItem('__panel_allow_mix') ? true : false;
-    init();
-  });
   useEffect(() => {
     if (user.access_token) {
       init()
@@ -171,14 +167,10 @@ function App() {
     <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
         <MenuWrap>
-          <Icon size={24} title="混合url" type={state.allow_mix ? 'allow_mix' : 'not_allow_mix'} onClick={() => {
-            store.allow_mix = !state.allow_mix;
-            localStorage.setItem('__panel_allow_mix', state.allow_mix ? '1' : '0')
-          }} />
-          {!state.allow_mix && <Icon size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
+          <Icon size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
             store.config.network = state.config.network === 'LAN' ? 'WAN' : 'LAN';
             await apis.updateConfig('network', state.config.network);
-          }} />}
+          }} />
           <Icon size={24} title="配置" type={'setting'} onClick={() => {
             store.showMenu = !state.showMenu;
           }} />
@@ -197,9 +189,12 @@ function App() {
         <Loading />
       </div>}
       <div className='title'>
-        <div style={{
-          backgroundImage: `url("/images/panel/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")`,
-        }}>{state.config.title}</div>
+        <div style={{ backgroundColor: '#00000070', borderRadius: 40, display: 'inline-block' }}>
+          <div className='bg' style={{
+            backgroundImage: `url("/images/panel/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")`,
+          }}>{state.config.title}</div>
+
+        </div>
       </div>
       {
         [1, "1"].includes(state.config.show_search) && <div className='search'>
@@ -250,7 +245,7 @@ function App() {
           if (oldIndex !== newIndex && state.groups[oldIndex]!.id && state.groups[newIndex]!.id) {
             const [old] = store.groups.splice(oldIndex, 1);
             store.groups.splice(newIndex, 0, old!);
-            apis.updateGroups(state.groups.filter(g => !!g.id).map((g, nth) => ({ id: g.id, nth: nth + 1 })))
+            apis.updateGroups(store.groups.filter(g => !!g.id).map((g, nth) => ({ id: g.id, nth: nth + 1 })))
           }
         }} />
       </Group>

@@ -78,35 +78,68 @@ export default defineConfig(({ command, mode }) => {
       react(),
       svgr(),
       VitePWA({
-        workbox: {
-          navigateFallback: null, // 禁止导航回退
-          directoryIndex: null, // 防止 / 映射到 index.html
+        // strategies: 'generateSW',
+        // workbox: {
+        //   navigateFallback: null, // 禁止导航回退
+        //   directoryIndex: null, // 防止 / 映射到 index.html
+        //   globIgnores: ['**/index.html'],
+        //   globPatterns: ['**/*.{js,css,ico,png,svg,jpg}'],
+        //   cleanupOutdatedCaches: true,
+        //   skipWaiting: true,
+        //   clientsClaim: true,
+        //   runtimeCaching: [{
+        //     urlPattern: ({ url }) => url.pathname.startsWith('/gw'),
+        //     handler: 'NetworkFirst',
+        //     options: {
+        //       cacheName: 'api-cache',
+        //       plugins: [
+        //         {
+        //           // 关键拦截钩子：决定是否允许写入缓存
+        //           cacheWillUpdate: async ({ response }) => {
+        //             if (!response || response.status !== 200) {
+        //               return null;
+        //             }
+        //             try {
+        //               // 克隆响应以读取 JSON，防止流被锁死
+        //               const clonedResponse = response.clone();
+        //               const body = await clonedResponse.json();
+
+        //               if (body && body.code !== 0) {
+        //                 console.log('业务错误码，拒绝写入 PWA 缓存');
+        //                 return null; // 返回 null 阻止此条响应进入缓存
+        //               }
+        //             } catch (e) {
+        //               // 无法解析为 JSON 的响应（如纯文本、文件），保持原样接收
+        //             }
+        //             return response; // 正常响应，允许缓存
+        //           }
+        //         }
+        //       ]
+        //     },
+        //   }, {
+        //     urlPattern: ({ request }) => request.destination === 'image',
+        //     handler: 'StaleWhileRevalidate',
+        //     options: {
+        //       cacheName: 'images-cache',
+        //       expiration: {
+        //         maxEntries: 500,
+        //       },
+        //     },
+        //   }]
+        // },
+        manifest,
+        strategies: 'injectManifest',   // 使用注入模式
+        srcDir: 'src',
+        filename: 'sw.ts',
+        registerType: 'autoUpdate',
+        injectManifest: {
+          manifestTransforms: [],
           globIgnores: ['**/index.html'],
           globPatterns: ['**/*.{js,css,ico,png,svg,jpg}'],
-          cleanupOutdatedCaches: true,
-          skipWaiting: true,
-          clientsClaim: true,
-          runtimeCaching: [{
-            urlPattern: ({ url }) => url.pathname.startsWith('/gw'),
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-            },
-          }, {
-            urlPattern: ({ request }) => request.destination === 'image',
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'images-cache',
-              expiration: {
-                maxEntries: 500,
-              },
-            },
-          }]
+          // 注意：navigateFallback 和 directoryIndex 在 injectManifest 模式下
+          // 不再由 vite 配置，需要去 sw.ts 里控制（或者像你一样直接不配导航回退）
         },
-        registerType: 'autoUpdate',
-        manifest,
-        injectRegister: 'inline',
-        strategies: 'generateSW',   // 使用注入模式
+        injectRegister: 'auto',
         devOptions: {
           enabled: true,      // 开发环境下启用 SW
           type: 'module',     // 使用 module 类型（仅 Chromium 内核）

@@ -203,11 +203,12 @@ textarea:focus {
   box-sizing: border-box;
 }
 
-.title>div {
+.title .bg {
   display: inline-block;
   color: white;
   background-size: cover;
   background-clip: text;
+  background-repeat: round;
   -webkit-background-clip: text;
 
   color: transparent;

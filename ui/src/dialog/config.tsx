@@ -48,7 +48,7 @@ export default function DialogConfig({ }) {
           </div>
         </FormItem>
         <FormItem>
-          <FormLabel>默认搜索引擎</FormLabel>
+          <FormLabel>默认引擎</FormLabel>
           <div>
             <Select
               value={data.engine}
@@ -60,7 +60,7 @@ export default function DialogConfig({ }) {
           </div>
         </FormItem>
         <FormItem>
-          <FormLabel>显示搜索引擎</FormLabel>
+          <FormLabel>显示搜索</FormLabel>
           <div>
             <Switch disabled={disabled} checked={data.show_search === '1'} onSwitch={(checked: boolean) => {
               setData({ ...data, show_search: checked ? '1' : '0' });
@@ -68,26 +68,7 @@ export default function DialogConfig({ }) {
           </div>
         </FormItem>
         <FormItem>
-          <FormLabel>自定义页脚</FormLabel>
-          <textarea disabled={disabled} defaultValue={data.footer || ''} onChange={e => {
-            setData({ ...data, footer: e.target.value.trim() })
-          }}></textarea>
-        </FormItem>
-        <FormItem>
-          <FormLabel>壁纸设置</FormLabel>
-          <div>
-            <Uploader id="bg" disabled={disabled} value={data.background_url} onUpload={(resp: any) => {
-              if (resp.code === 0) {
-                setData({ ...data, background_url: resp.data.filepath })
-              }
-            }} />
-            <input disabled={disabled} defaultValue={data.background_url} onChange={e => {
-              setData({ ...data, background_url: e.target.value.trim() })
-            }} />
-          </div>
-        </FormItem>
-        <FormItem>
-          <FormLabel>搜索引擎管理</FormLabel>
+          <FormLabel>搜索管理</FormLabel>
           <div style={{ width: 150 }}>
             {state.engines.map(engine => (
               <HoverItem key={engine.name}>
@@ -121,6 +102,25 @@ export default function DialogConfig({ }) {
               添加搜索 <Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
             </Center>
           </div>
+        </FormItem>
+        <FormItem>
+          <FormLabel>壁纸设置</FormLabel>
+          <div>
+            <Uploader id="bg" disabled={disabled} value={data.background_url} onUpload={(resp: any) => {
+              if (resp.code === 0) {
+                setData({ ...data, background_url: resp.data.filepath })
+              }
+            }} />
+            <input disabled={disabled} defaultValue={data.background_url} onChange={e => {
+              setData({ ...data, background_url: e.target.value.trim() })
+            }} />
+          </div>
+        </FormItem>
+        <FormItem>
+          <FormLabel>自定义页脚</FormLabel>
+          <textarea disabled={disabled} defaultValue={data.footer || ''} onChange={e => {
+            setData({ ...data, footer: e.target.value.trim() })
+          }}></textarea>
         </FormItem>
         <FormItem>
           <FormLabel>分组管理</FormLabel>
