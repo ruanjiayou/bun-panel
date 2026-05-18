@@ -47,6 +47,7 @@ export function useLocalProxy<T extends object>(initialState: T) {
 }
 
 export const store = proxy({
+  domain: window.location.origin,
   baseURL: '/gw/panel',
   isRefresh: false,
   access_token: '',
@@ -79,7 +80,7 @@ export const store = proxy({
     }
     this.apps = this.apps.filter(app => app.id !== id)
   },
-  async initConfig(){
+  async initConfig() {
     const resp = await apis.getConfigs();
     if (resp.code === 0) {
       resp.data.forEach(config => {
@@ -92,7 +93,7 @@ export const store = proxy({
       }
     }
   },
-  async initEngine(){
+  async initEngine() {
     const resp4 = await apis.getEngines();
     if (resp4.code === 0) {
       this.engines = resp4.data;

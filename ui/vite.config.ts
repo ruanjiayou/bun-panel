@@ -141,7 +141,7 @@ export default defineConfig(({ command, mode }) => {
         },
         injectRegister: 'auto',
         devOptions: {
-          enabled: true,      // 开发环境下启用 SW
+          enabled: false,      // 开发环境下启用 SW
           type: 'module',     // 使用 module 类型（仅 Chromium 内核）
         },
       }),
@@ -182,11 +182,11 @@ export default defineConfig(({ command, mode }) => {
       },
       proxy: {
         '/images': {
-          target: 'https://jiayou.work',
+          target: 'http://192.168.0.124',
           changeOrigin: true,
         },
         '/gw/panel': {
-          target: 'https://jiayou.work',
+          target: 'http://192.168.0.124',
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/gw\/panel/, '')
         },
