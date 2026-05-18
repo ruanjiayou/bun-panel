@@ -230,6 +230,9 @@ textarea:focus {
 
 .footer {
   padding: 3px;
+  display: flex;
+  gap: 10px;
+  color: wheat;
 }
 
 @keyframes spin {

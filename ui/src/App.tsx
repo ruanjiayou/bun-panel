@@ -151,9 +151,7 @@ function App() {
     }, 100)
   }, [])
   useEffect(() => {
-    if (user.access_token) {
-      init()
-    }
+    init()
   }, [user.access_token])
   useEffect(() => {
     const search = new URLSearchParams(window.location.search)
@@ -253,7 +251,10 @@ function App() {
       {state.showEditGroup && <DialogGroup />}
       {state.showEditApp && <DialogApp />}
       {state.showEditEngine && <DialogEngine />}
-      <div className='footer' dangerouslySetInnerHTML={{ __html: state.config.footer || '' }}></div>
+      <div className='footer'>
+        <span dangerouslySetInnerHTML={{ __html: state.config.footer || '' }}></span>
+        <span dangerouslySetInnerHTML={{ __html: '<wb:share-button appkey="177146223" addition="number" type="button" picture_search="false" default_text="个人专属导航"></wb:share-button>' }}></span>
+      </div>
     </div >
   )
 }
