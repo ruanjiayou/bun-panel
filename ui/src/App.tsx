@@ -152,7 +152,7 @@ function App() {
   }, [])
   useEffect(() => {
     init()
-  }, [user.access_token])
+  }, [])
   useEffect(() => {
     const search = new URLSearchParams(window.location.search)
     const refresh_token = search.get('refresh_token')

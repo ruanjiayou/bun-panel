@@ -65,6 +65,8 @@ shttp.interceptors.response.use(
         });
         if (resp && resp.data && resp.data.code === 0) {
           const tokens = resp.data.data;
+          store.access_token = tokens.access_token;
+          store.refresh_token = tokens.refresh_token;
           User.setAccessToken(tokens.access_token)
           User.setRefreshToken(tokens.refresh_token)
         }
