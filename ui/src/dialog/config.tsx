@@ -39,14 +39,14 @@ export default function DialogConfig({ }) {
             setData({ ...data, title: e.target.value.trim() })
           }} />
         </FormItem>
-        <FormItem>
+        {/* <FormItem>
           <FormLabel>网络模式</FormLabel>
           <div>
             <Switch disabled={disabled} checked={data.network === 'WAN'} onSwitch={(checked: boolean) => {
               setData({ ...data, network: checked ? 'WAN' : 'LAN' });
             }}>{state.config.network === 'LAN' ? '内网' : '公网'}</Switch>
           </div>
-        </FormItem>
+        </FormItem> */}
         <FormItem>
           <FormLabel>默认引擎</FormLabel>
           <div>
@@ -80,6 +80,7 @@ export default function DialogConfig({ }) {
                   if (disabled) return;
                   store.temp_engine = engine;
                   store.showEditEngine = true;
+                  store.showMenu = false;
                 }} />
                 <Icon type="del" disabled={disabled} size={16} color='#000' onClick={async () => {
                   if (disabled) return;
@@ -96,8 +97,9 @@ export default function DialogConfig({ }) {
             ))}
             <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
               if (disabled) return;
-              store.showEditEngine = true;
               store.temp_engine = {} as IEngine;
+              store.showEditEngine = true;
+              store.showMenu = false;
             }}>
               添加搜索 <Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
             </Center>
@@ -135,6 +137,7 @@ export default function DialogConfig({ }) {
                     if (disabled) return;
                     store.temp_group = group as IGroup;
                     store.showEditGroup = true;
+                    store.showMenu = false;
                   }} />
                   <Icon type="del" disabled={disabled} size={18} color='#333' onClick={async () => {
                     if (disabled) return;
@@ -158,6 +161,7 @@ export default function DialogConfig({ }) {
                 fold: 0,
               };
               store.showEditGroup = true
+              store.showMenu = false;
             }}>
               添加分组<Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
             </Center>

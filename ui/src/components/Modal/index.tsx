@@ -1,4 +1,3 @@
-import { useEffectOnce } from "react-use"
 import { styled } from '@linaria/react'
 import { useLocalProxy } from "@/store";
 
@@ -74,15 +73,6 @@ export default function Modal({ title, style, children, visible, disabled, onDel
     current: 1000,
     index: 1001,
     loading: false,
-  })
-  useEffectOnce(() => {
-    if (localState.total === 0) {
-      localStore.current = 1000;
-    }
-    localStore.total++;
-    return () => {
-      localStore.total--;
-    }
   })
   return (
     visible && <Container style={{ zIndex: localState.index }}>

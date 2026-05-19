@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import './App.css';
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-import { useEffectOnce } from 'react-use';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import Dropdown from 'rc-dropdown';
+import 'rc-dropdown/assets/index.css'
 import apis from './apis/'
 import DialogGroup from './dialog/group.js';
 import DialogEngine from './dialog/engine.js';
@@ -15,6 +16,8 @@ import { useSnapshot } from 'valtio'
 import { store, type IApp, type IEngine, type IGroup } from "@/store";
 import { Icon } from './components/index.js'
 import { Center } from './components/style.js';
+import UserRound from './assets/user-round.svg?react';
+import Github from './assets/github.svg?react';
 import {
   Group,
   GroupTitle,
@@ -120,10 +123,10 @@ function App() {
   const [inputing, setInputing] = useState(false);
 
   const init = useCallback(async () => {
-    store.access_token = user.access_token;
-    store.refresh_token = user.refresh_token;
-    await store.initConfig();
-    await store.initEngine();
+    store.access_token = User.access_token;
+    store.refresh_token = User.refresh_token;
+    store.initConfig();
+    store.initEngine();
     store.initAppGroup();
   }, []);
   const search = useCallback(async (q: string) => {
@@ -165,22 +168,33 @@ function App() {
     <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
         <MenuWrap>
-          <Icon size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
-            store.config.network = state.config.network === 'LAN' ? 'WAN' : 'LAN';
-            await apis.updateConfig('network', state.config.network);
+          <Icon size={24} title="网络模式" type={state.config['network-mode'] === 'LAN' ? 'local' : 'network'} onClick={async () => {
+            store.config['network-mode'] = state.config['network-mode'] === 'LAN' ? 'WAN' : 'LAN';
+            localStorage.setItem('network-mode', store.config['network-mode']);
+            // await apis.updateConfig('network', state.config.network);
           }} />
           <Icon size={24} title="配置" type={'setting'} onClick={() => {
             store.showMenu = !state.showMenu;
           }} />
-          <UserInfo
+          {user.isLogin ? <Dropdown
+            trigger={['click']}
+            overlay={<div className='menu'>
+              <div className='menu-item'>{user.profile?.nickname}</div>
+              <div className='menu-item' onClick={() => {
+                User.logout()
+                init()
+              }}>退出</div>
+            </div>}
+            animation="slide-up"
+          >
+            {user.profile && user.profile.avatar
+              ? <img src={user.profile.avatar} style={{ width: 24, height: 24, borderRadius: 24, }} />
+              : <UserRound width={30} />}
+          </Dropdown> : <UserInfo
             afterLogin={() => {
-              window.location.reload()
+              init()
             }}
-            afterLogout={() => {
-              store.access_token = '';
-              store.refresh_token = '';
-              window.location.reload()
-            }} />
+          />}
         </MenuWrap>
       </div>
       {state.isRefresh && <div style={{ zIndex: 1000, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#00000080' }}>
@@ -253,7 +267,9 @@ function App() {
       {state.showEditEngine && <DialogEngine />}
       <div className='footer'>
         <span dangerouslySetInnerHTML={{ __html: state.config.footer || '' }}></span>
-        <span dangerouslySetInnerHTML={{ __html: '<wb:share-button appkey="177146223" addition="number" type="button" picture_search="false" default_text="个人专属导航"></wb:share-button>' }}></span>
+        <a href="https://github.com/CMS-003" target='_blank' style={{ fontSize: 0 }}>
+          <Github width={20} style={{ marginRight: 10, }} />
+        </a>
       </div>
     </div >
   )

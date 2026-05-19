@@ -67,6 +67,7 @@ export default defineConfig(({ command, mode }) => {
   return {
     base: env.APP_SCOPE,
     plugins: [
+      svgr(),
       wyw({
         preserveCssPaths: true,
         transformLibraries: true,
@@ -76,7 +77,6 @@ export default defineConfig(({ command, mode }) => {
         },
       }),
       react(),
-      svgr(),
       VitePWA({
         // strategies: 'generateSW',
         // workbox: {
