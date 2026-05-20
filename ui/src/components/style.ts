@@ -92,3 +92,25 @@ export const FormLabel = styled.div`
     width: 80px;
   }
 `
+
+export const Button = styled.label`
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  background-color: #29aeff;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  &:hover {
+    opacity: 0.7;
+  }
+  &.disabled {
+    cursor: not-allowed;
+    backgroup-color: #81ceed;
+    opacity: 0.7;
+  }
+`

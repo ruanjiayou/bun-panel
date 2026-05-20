@@ -67,7 +67,7 @@ export const store = proxy({
   defaultEngine: null as undefined | null | IEngine,
   configs: [] as IConfig[],
   config: {
-    'network-mode': localStorage.getItem('network-mode') || 'wan'
+    'network': localStorage.getItem('network') || 'WAN'
   } as { [key: string]: any },
   groups: [] as IGroup[],
   apps: [] as IApp[],

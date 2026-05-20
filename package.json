@@ -11,7 +11,7 @@
     "bunjs"
   ],
   "scripts": {
-    "start": "bun src/server.ts",
+    "start": "bun run src/server.ts",
     "dev": "DATABASE_DIR=file:./data PORT=5555 STATIC_DIR=./data bun --hot run src/server.ts",
     "test": "bun test test/*.ts",
     "init-prisma": "bunx --bun prisma init --datasource-provider sqlite --output ./db",

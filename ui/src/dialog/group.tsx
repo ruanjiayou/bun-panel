@@ -33,7 +33,7 @@ export default function DialogGroup({ }) {
         }
       }}
     >
-      <div style={{ marginLeft: 20 }}>
+      <div>
         <FormItem>
           <FormLabel>分组名称</FormLabel>
           <input disabled={disabled} id="group_name" defaultValue={data.name} onChange={e => {

@@ -168,9 +168,9 @@ function App() {
     <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
         <MenuWrap>
-          <Icon size={24} title="网络模式" type={state.config['network-mode'] === 'LAN' ? 'local' : 'network'} onClick={async () => {
-            store.config['network-mode'] = state.config['network-mode'] === 'LAN' ? 'WAN' : 'LAN';
-            localStorage.setItem('network-mode', store.config['network-mode']);
+          <Icon size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
+            store.config.network = state.config.network === 'LAN' ? 'WAN' : 'LAN';
+            localStorage.setItem('network', store.config.network);
             // await apis.updateConfig('network', state.config.network);
           }} />
           <Icon size={24} title="配置" type={'setting'} onClick={() => {

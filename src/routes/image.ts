@@ -7,6 +7,7 @@ import mime from 'mime/lite';
 import path from 'node:path';
 import config from '../config';
 import protect from 'plugins/protect';
+import downloadWebsiteIcon from 'utils/getIcon';
 
 const router = express.Router();
 const upload = multer({ dest: path.join(config.root_dir, '/data/.tmp') });
@@ -57,6 +58,25 @@ router.delete('/:id', protect, async (req, res) => {
   res.success();
 });
 
+router.post('/parse', protect, async (req, res) => {
+  try {
+    const id = v7()
+    const dir = path.resolve(config.static_dir);
+    const fullpath = await downloadWebsiteIcon(req.body.url, dir, './images/panel/' + id)
+    const filepath = '/' + path.relative(dir, fullpath!)
 
+    const data = {
+      id,
+      uid: res.locals.user.id,
+      title: req.body.title || '',
+      filepath,
+      created_time: new Date().toISOString(),
+    }
+    await db.image.create({ data })
+    return res.success({ url: filepath })
+  } catch (err) {
+    res.fail()
+  }
+})
 
 export default router;

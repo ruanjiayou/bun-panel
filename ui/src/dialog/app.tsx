@@ -1,5 +1,5 @@
-import { Modal, Uploader, Select } from "../components/index.js";
-import { FormItem, FormLabel } from "../components/style.js";
+import { Modal, Uploader, Select, Icon } from "../components/index.js";
+import { AlignAround, FormItem, FormLabel, Button } from "../components/style.js";
 import { useCallback, useState } from "react";
 import apis from "../apis/index.js";
 import { useSnapshot } from 'valtio'
@@ -13,6 +13,26 @@ export default function DialogApp({ }) {
   const user = useSnapshot(User)
   const disabled = !user.isLogin;
   const [data, setData] = useState<any>(cloneDeep(state.temp_app));
+  const [isParsing, setParse] = useState(false)
+  const parseURL = async (url: string) => {
+    if (isParsing) return;
+    setParse(true)
+    apis.parseURL(url)
+      .then(body => {
+        if (body.code === 0) {
+          store.temp_app.cover = body.data.url;
+          setData({ ...data, cover: body.data.url })
+        } else {
+          alert('解析错误')
+        }
+      })
+      .catch(err => {
+        alert('解析失败')
+      })
+      .finally(() => {
+        setParse(false)
+      })
+  }
   return (
     <Modal title={data.id ? "修改" : "添加"}
       style={{ alignItems: 'center' }}
@@ -34,7 +54,7 @@ export default function DialogApp({ }) {
           toast({ content: resp.data.message });
         }
       }}>
-      <div style={{ marginLeft: 20 }}>
+      <div>
         <FormItem>
           <FormLabel>名称</FormLabel>
           <input defaultValue={data.name} disabled={disabled} onChange={e => {
@@ -50,14 +70,30 @@ export default function DialogApp({ }) {
         <FormItem>
           <FormLabel>图标</FormLabel>
           <div>
-            <Uploader id="app" value={data.cover} disabled={disabled} onUpload={(resp: any) => {
+            <input disabled={disabled || isParsing} defaultValue={data.cover} onBlur={e => {
+              store.temp_app.cover = e.target.value.trim();
+            }} />
+            <Uploader id="app" value={data.cover} disabled={disabled || isParsing} onUpload={(resp: any) => {
               if (resp.code === 0) {
                 store.temp_app.cover = resp.data.filepath;
               }
-            }} />
-            <input disabled={disabled} defaultValue={data.cover} onChange={e => {
-              store.temp_app.cover = e.target.value.trim();
-            }} />
+            }}>
+              <AlignAround style={{ gap: 10 }}>
+                <Button htmlFor='app'>
+                  上传文件
+                </Button>
+                <Button onClick={() => {
+                  if (store.temp_app.url_lan || store.temp_app.url_wan) {
+                    parseURL(store.temp_app.url_wan! || store.temp_app.url_lan!)
+                  } else {
+                    alert('请先输入URL')
+                  }
+                }}>
+                  {isParsing && <Icon type='loading' size={14} spin />}
+                  从URL解析
+                </Button>
+              </AlignAround>
+            </Uploader>
           </div>
         </FormItem>
         <FormItem>
@@ -84,7 +120,7 @@ export default function DialogApp({ }) {
             store.temp_app.url_lan = e.target.value.trim();
           }} />
         </FormItem>
-      </div>
-    </Modal>
+      </div >
+    </Modal >
   )
 }

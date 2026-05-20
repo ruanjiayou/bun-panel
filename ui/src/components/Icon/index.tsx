@@ -11,6 +11,7 @@ import search from '../../assets/search.svg?react'
 import view from '../../assets/view.svg?react'
 import voff from '../../assets/view-off.svg?react'
 import sort from '../../assets/sort.svg?react'
+import loading from '../../assets/loading.svg?react'
 import { styled } from '@linaria/react'
 import { assign, omit } from 'lodash'
 
@@ -41,10 +42,11 @@ const types = {
   setting,
   local,
   network,
+  loading,
 }
-export default function Icon({ type, size = 20, color = 'white', disabled = false, ...props }: any) {
+export default function Icon({ type, size = 20, color = 'white', spin = false, disabled = false, ...props }: any) {
   const Image = types[type as keyof typeof types];
-  return (Image && <Center className={disabled ? 'disabled' : ''}>
+  return (Image && <Center className={[disabled ? 'disabled' : '', spin ? 'spin' : ''].join(' ')}>
     <Image style={assign({ width: size, height: size, fill: color }, props.style || {})} {...omit(props, ['style'])} />
   </Center>)
 }

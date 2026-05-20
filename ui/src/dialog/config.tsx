@@ -95,14 +95,14 @@ export default function DialogConfig({ }) {
                 }} />
               </HoverItem>
             ))}
-            <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
+            {!disabled && <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
               if (disabled) return;
               store.temp_engine = {} as IEngine;
               store.showEditEngine = true;
               store.showMenu = false;
             }}>
               添加搜索 <Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
-            </Center>
+            </Center>}
           </div>
         </FormItem>
         <FormItem>
@@ -153,7 +153,7 @@ export default function DialogConfig({ }) {
                 </span>
               </HoverItem>
             ))}
-            <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
+            {!disabled && <Center className="pointer" style={{ padding: 3, marginTop: 5, border: '1px dashed #ccc', borderRadius: 3 }} onClick={() => {
               if (disabled) return;
               store.temp_group = {
                 name: '',
@@ -164,7 +164,7 @@ export default function DialogConfig({ }) {
               store.showMenu = false;
             }}>
               添加分组<Icon type="add" size={16} style={{ fill: '#666', marginLeft: 5 }} />
-            </Center>
+            </Center>}
           </div>
         </FormItem>
       </div>

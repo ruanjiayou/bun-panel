@@ -1,14 +1,7 @@
 import apis from '../../apis/index.js';
-import { styled } from '@linaria/react'
+import { Button } from '../style.js';
 
-const Button = styled.label`
-  border: 1px solid #ccc;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 14px;
-`
-
-function Uploader({ value, id, field = "image", onUpload, disabled = false }: any) {
+function Uploader({ value, id, field = "image", onUpload, disabled = false, children }: any) {
   // 使用useState管理文件选择状态
 
   // 上传文件的处理函数
@@ -24,7 +17,7 @@ function Uploader({ value, id, field = "image", onUpload, disabled = false }: an
 
   return (
     <div style={{ marginBottom: 10 }}>
-      <div style={{ width: 150, marginBottom: 5 }}>
+      <div style={{ width: 150, margin: '5px 0', backgroundColor: '#eee', minHeight: 50, }}>
         {value && <img src={value} style={{ width: '100%', maxWidth: 100 }} alt="preview" />}
       </div>
       <input
@@ -34,10 +27,11 @@ function Uploader({ value, id, field = "image", onUpload, disabled = false }: an
         style={{ display: 'none' }}
         onChange={handleFileChange}
       />
-      <Button htmlFor={id}>
-        上传文件
-      </Button>
-
+      {
+        children || <Button className={disabled ? 'disabled' : ''} htmlFor={id}>
+          上传文件
+        </Button>
+      }
     </div>
   )
 }

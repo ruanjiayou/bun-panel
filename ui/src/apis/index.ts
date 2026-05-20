@@ -73,7 +73,9 @@ async function uploadImage(formdata: any) {
 async function deleteImage(id: string) {
   return await shttp.delete(`/api/images/${id}`);
 }
-
+async function parseURL(domain: string) {
+  return await shttp.post('/api/images/parse', { url: domain }, { headers: { 'Content-Type': 'application/json' } })
+}
 const apis = {
   getApps,
   createApp,
@@ -95,5 +97,6 @@ const apis = {
   getImages,
   uploadImage,
   deleteImage,
+  parseURL,
 }
 export default apis;
