@@ -18,6 +18,9 @@ import { Icon } from './components/index.js'
 import { Center } from './components/style.js';
 import UserRound from './assets/user-round.svg?react';
 import Github from './assets/github.svg?react';
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
+
 import {
   Group,
   GroupTitle,
@@ -94,14 +97,16 @@ const GroupItem = SortableElement<{ group: IGroup }>(({ group }: { group: IGroup
   const state = useSnapshot(store)
   return (<div key={group.id} >
     <Fragment>
-      <GroupTitle>
-        <GroupHandle group={group} />
-        <div style={{ display: !group.fold ? 'flex' : 'none', cursor: 'pointer', visibility: state.sort_gid === group.id ? 'visible' : undefined }}>
-          <Icon type={'sort'} size={24} style={{ marginLeft: 5, marginTop: -2, fill: state.sort_gid === group.id ? '#00aaff' : 'white' }} onClick={() => {
-            store.sort_gid = state.sort_gid === group.id ? '' : group.id;
-          }} />
-        </div>
-      </GroupTitle>
+      <div className='tour-group-title' style={{ display: 'inline-block' }}>
+        <GroupTitle>
+          <GroupHandle group={group} />
+          <div style={{ display: !group.fold ? 'flex' : 'none', cursor: 'pointer', visibility: state.sort_gid === group.id ? 'visible' : undefined }}>
+            <Icon type={'sort'} size={24} style={{ marginLeft: 5, marginTop: -2, fill: state.sort_gid === group.id ? '#00aaff' : 'white' }} onClick={() => {
+              store.sort_gid = state.sort_gid === group.id ? '' : group.id;
+            }} />
+          </div>
+        </GroupTitle>
+      </div>
       {group.fold === 0 && <AppList axis="xy" items={group.apps!} onSortEnd={({ oldIndex, newIndex }) => {
         if (oldIndex !== newIndex) {
           const [old] = group.apps!.splice(oldIndex, 1);
@@ -125,9 +130,95 @@ function App() {
   const init = useCallback(async () => {
     store.access_token = User.access_token;
     store.refresh_token = User.refresh_token;
-    store.initConfig();
-    store.initEngine();
-    store.initAppGroup();
+    const results = await Promise.allSettled([store.initConfig(), store.initEngine(), store.initAppGroup()])
+    const tour_key = 'app_tour_v1_done'
+    if (!localStorage.getItem(tour_key)) {
+      const tour = driver({
+        animate: true,
+        steps: [
+          {
+            element: '#menuBtn',
+            popover: {
+              title: '菜单',
+              description: '打开应用菜单',
+              side: 'right',
+              align: 'start'
+            }
+          },
+          {
+            element: '.network-setting',
+            popover: {
+              title: '网络设置',
+              description: '切换内网/公网',
+              side: 'bottom',
+              align: 'center'
+            }
+          },
+          // {
+          //   element: '.system-setting',
+          //   popover: {
+          //     title: '系统设置',
+          //     description: '',
+          //     side: 'bottom',
+          //     align: 'center',
+          //   }
+          // },
+          // {
+          //   element: '.user-info',
+          //   popover: {
+          //     title: '用户登录',
+          //     side: 'bottom',
+          //     align: 'center'
+          //   }
+          // },
+          {
+            element: '.search',
+            popover: {
+              title: '搜索输入框',
+              side: 'bottom',
+              align: 'center'
+            }
+          },
+          // {
+          //   element: '.search-engine',
+          //   popover: {
+          //     title: '选择搜索引擎',
+          //     side: 'bottom',
+          //     align: 'center'
+          //   }
+          // },
+          {
+            element: '.tour-group-title:nth-child(1)',
+            popover: {
+              title: '分组',
+              description: '点击进行应用排序,拖拽进行分组排序,右击打开设置弹框',
+              side: 'bottom',
+              align: 'center',
+            },
+          },
+          {
+            element: '.cell:nth-child(1)',
+            popover: {
+              title: '应用',
+              description: '点击打开网页,右击打开设置弹框',
+              side: 'bottom',
+              align: 'center'
+            }
+          }
+        ],
+        showProgress: true,
+        showButtons: ['next', 'previous'],
+        overlayClickBehavior: 'nextStep',
+        progressText: '步骤 {{current}}/{{total}}',
+        prevBtnText: '上一步',
+        nextBtnText: '下一步',
+        doneBtnText: '完成',
+        onDestroyed: () => {
+          localStorage.setItem(tour_key, 'done');
+        }
+      });
+      tour.drive()
+    }
   }, []);
   const search = useCallback(async (q: string) => {
     if (q) {
@@ -167,34 +258,36 @@ function App() {
   return (
     <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
-        <MenuWrap>
-          <Icon size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
+        <MenuWrap className='setting-nav'>
+          <Icon className="network-setting" size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
             store.config.network = state.config.network === 'LAN' ? 'WAN' : 'LAN';
             localStorage.setItem('network', store.config.network);
             // await apis.updateConfig('network', state.config.network);
           }} />
-          <Icon size={24} title="配置" type={'setting'} onClick={() => {
+          <Icon className="system-setting" size={24} title="配置" type={'setting'} onClick={() => {
             store.showMenu = !state.showMenu;
           }} />
-          {user.isLogin ? <Dropdown
-            trigger={['click']}
-            overlay={<div className='menu'>
-              <div className='menu-item'>{user.profile?.nickname}</div>
-              <div className='menu-item' onClick={() => {
-                User.logout()
+          <div className='user-info'>
+            {user.isLogin ? <Dropdown
+              trigger={['click']}
+              overlay={<div className='menu'>
+                <div className='menu-item'>{user.profile?.nickname}</div>
+                <div className='menu-item' onClick={() => {
+                  User.logout()
+                  init()
+                }}>退出</div>
+              </div>}
+              animation="slide-up"
+            >
+              {user.profile && user.profile.avatar
+                ? <img src={user.profile.avatar} style={{ width: 24, height: 24, borderRadius: 24, }} />
+                : <UserRound width={30} />}
+            </Dropdown> : <UserInfo
+              afterLogin={() => {
                 init()
-              }}>退出</div>
-            </div>}
-            animation="slide-up"
-          >
-            {user.profile && user.profile.avatar
-              ? <img src={user.profile.avatar} style={{ width: 24, height: 24, borderRadius: 24, }} />
-              : <UserRound width={30} />}
-          </Dropdown> : <UserInfo
-            afterLogin={() => {
-              init()
-            }}
-          />}
+              }}
+            />}
+          </div>
         </MenuWrap>
       </div>
       {state.isRefresh && <div style={{ zIndex: 1000, position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: '#00000080' }}>
@@ -210,7 +303,7 @@ function App() {
       </div>
       {
         [1, "1"].includes(state.config.show_search) && <div className='search'>
-          <Center style={{ position: 'relative' }} onWheel={(e) => {
+          <Center className='search-engine' style={{ position: 'relative' }} onWheel={(e) => {
             onWheel(e.nativeEvent.deltaY)
           }}>
             {

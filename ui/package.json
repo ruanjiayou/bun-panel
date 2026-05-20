@@ -13,6 +13,7 @@
     "@wyw-in-js/vite": "^1.1.0",
     "axios": "^1.7.7",
     "customize-cra": "^1.0.0",
+    "driver.js": "^1.4.0",
     "lodash": "4.17.23",
     "rc-dropdown": "^4.2.1",
     "react": "^18.2.0",
