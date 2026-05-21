@@ -9,8 +9,8 @@ import path from 'path';
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const manifest: Partial<ManifestOptions> = {
-    "short_name": "灯塔",
-    "name": "灯塔",
+    "short_name": "灯塔导航",
+    "name": "灯塔导航",
     "id": "panel",
     "scope": "/",
     "start_url": "/panel",

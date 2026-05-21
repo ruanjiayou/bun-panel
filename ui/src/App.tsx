@@ -2,6 +2,7 @@
 
 import './App.css';
 import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { Toaster, toast } from 'sonner';
 import Dropdown from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css'
 import apis from './apis/'
@@ -155,6 +156,15 @@ function App() {
               align: 'center'
             }
           },
+          {
+            element: '.notification-setting',
+            popover: {
+              title: '通知推送',
+              description: '',
+              side: 'bottom',
+              align: 'center'
+            }
+          },
           // {
           //   element: '.system-setting',
           //   popover: {
@@ -218,7 +228,40 @@ function App() {
           localStorage.setItem(tour_key, 'done');
         }
       });
-      tour.drive()
+      const tid = toast((
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+          <div>
+            <strong style={{ display: 'block', fontSize: '14px' }}>开始介绍</strong>
+            <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#666' }}>
+              功能引导介绍
+            </p>
+          </div>
+          {/* 自定义按钮排版 */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
+            <button
+              onClick={() => { toast.dismiss(tid); localStorage.setItem(tour_key, 'done') }}
+              style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #ccc', background: '#fff', cursor: 'pointer' }}
+            >
+              跳过
+            </button>
+            <button
+              onClick={() => {
+                toast.dismiss(tid);
+                tour.drive()
+              }}
+              style={{ padding: '4px 8px', borderRadius: '4px', border: 'none', background: '#ff4d4f', color: '#fff', cursor: 'pointer' }}
+            >
+              开始
+            </button>
+          </div>
+        </div>
+      ), {
+        position: 'top-center',
+        duration: Infinity,
+        classNames: {
+          content: 'toast-content'
+        }
+      });
     }
   }, []);
   const search = useCallback(async (q: string) => {
@@ -259,6 +302,7 @@ function App() {
   return (
     <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
+        <Toaster richColors />
         <MenuWrap className='setting-nav'>
           <Icon className="network-setting" size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
             store.config.network = state.config.network === 'LAN' ? 'WAN' : 'LAN';
@@ -267,7 +311,7 @@ function App() {
           }} />
           <Icon
             className="notification-setting"
-            size={24}
+            size={28}
             title="通知"
             type={state.permission_notification ? 'notification_on' : 'notification_off'}
             onClick={() => {

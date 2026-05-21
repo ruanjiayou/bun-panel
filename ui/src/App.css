@@ -335,3 +335,8 @@ textarea:focus {
   height: 30px;
   border-radius: 50%;
 }
+
+
+.toast-content {
+  flex: 1;
+}
