@@ -32,6 +32,7 @@ import {
   AppIcon,
   AppTitle,
 } from './style.js'
+import { subscribeUserToPush, unsubscribePush } from './utils/notification.js';
 
 function Loading() {
   return <span className="spin" style={{ position: 'absolute', left: '50%', top: '50%', display: 'flex', alignItems: 'center', width: '3rem', height: '3rem', marginLeft: '-1.5rem', marginTop: '-1.5rem' }}>
@@ -264,6 +265,34 @@ function App() {
             localStorage.setItem('network', store.config.network);
             // await apis.updateConfig('network', state.config.network);
           }} />
+          <Icon
+            className="notification-setting"
+            size={24}
+            title="通知"
+            type={state.permission_notification ? 'notification_on' : 'notification_off'}
+            onClick={() => {
+              if (!User.isLogin) {
+                return alert('请先登录')
+              }
+              if (state.permission_notification) {
+                unsubscribePush()
+              } else {
+                if (window.Notification) {
+                  window.Notification
+                    .requestPermission()
+                    .then(permission => {
+                      if (permission === 'granted') {
+                        store.permission_notification = true;
+                        subscribeUserToPush()
+                      }
+                    })
+                    .catch(err => {
+                      alert(err.message)
+                    });
+                }
+              }
+            }}
+          />
           <Icon className="system-setting" size={24} title="配置" type={'setting'} onClick={() => {
             store.showMenu = !state.showMenu;
           }} />

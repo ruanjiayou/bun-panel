@@ -9,23 +9,32 @@ import path from 'path';
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const manifest: Partial<ManifestOptions> = {
-    "short_name": "Panel",
-    "name": "Panel",
+    "short_name": "灯塔",
+    "name": "灯塔",
+    "id": "panel",
+    "scope": "/",
+    "start_url": "/panel",
+    "display": "fullscreen",
+    "theme_color": "#333",
+    "background_color": "wheat",
     "icons": [
       {
         "src": "favicon.ico",
-        "sizes": "64x64 32x32 24x24 16x16",
-        "type": "image/x-icon"
+        "sizes": "32x32",
+        "type": "image/x-icon",
+        "purpose": "any maskable"
       },
       {
         "src": "logo-192.png",
         "sizes": "192x192",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "any"
       },
       {
         "src": "logo-512.png",
         "sizes": "512x512",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "any"
       },
       // {
       //   "src": "/images/logo.jpg",
@@ -34,12 +43,7 @@ export default defineConfig(({ command, mode }) => {
       //   "purpose": "monochrome"
       // }
     ],
-    "id": "panel",
-    "scope": "/",
-    "start_url": "/panel",
-    "display": "fullscreen",
-    "theme_color": "#333",
-    "background_color": "wheat",
+    "screenshots": [],
     "share_target": {
       action: '/gw/panel/upload',
       method: 'POST',
@@ -66,6 +70,9 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     base: env.APP_SCOPE,
+    define: {
+      'process.env.WEB_PUSH': JSON.stringify(env.WEB_PUSH),
+    },
     plugins: [
       svgr(),
       wyw({
@@ -78,55 +85,6 @@ export default defineConfig(({ command, mode }) => {
       }),
       react(),
       VitePWA({
-        // strategies: 'generateSW',
-        // workbox: {
-        //   navigateFallback: null, // 禁止导航回退
-        //   directoryIndex: null, // 防止 / 映射到 index.html
-        //   globIgnores: ['**/index.html'],
-        //   globPatterns: ['**/*.{js,css,ico,png,svg,jpg}'],
-        //   cleanupOutdatedCaches: true,
-        //   skipWaiting: true,
-        //   clientsClaim: true,
-        //   runtimeCaching: [{
-        //     urlPattern: ({ url }) => url.pathname.startsWith('/gw'),
-        //     handler: 'NetworkFirst',
-        //     options: {
-        //       cacheName: 'api-cache',
-        //       plugins: [
-        //         {
-        //           // 关键拦截钩子：决定是否允许写入缓存
-        //           cacheWillUpdate: async ({ response }) => {
-        //             if (!response || response.status !== 200) {
-        //               return null;
-        //             }
-        //             try {
-        //               // 克隆响应以读取 JSON，防止流被锁死
-        //               const clonedResponse = response.clone();
-        //               const body = await clonedResponse.json();
-
-        //               if (body && body.code !== 0) {
-        //                 console.log('业务错误码，拒绝写入 PWA 缓存');
-        //                 return null; // 返回 null 阻止此条响应进入缓存
-        //               }
-        //             } catch (e) {
-        //               // 无法解析为 JSON 的响应（如纯文本、文件），保持原样接收
-        //             }
-        //             return response; // 正常响应，允许缓存
-        //           }
-        //         }
-        //       ]
-        //     },
-        //   }, {
-        //     urlPattern: ({ request }) => request.destination === 'image',
-        //     handler: 'StaleWhileRevalidate',
-        //     options: {
-        //       cacheName: 'images-cache',
-        //       expiration: {
-        //         maxEntries: 500,
-        //       },
-        //     },
-        //   }]
-        // },
         manifest,
         strategies: 'injectManifest',   // 使用注入模式
         srcDir: 'src',

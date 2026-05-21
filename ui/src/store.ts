@@ -63,6 +63,7 @@ export const store = proxy({
   temp_group: {} as Partial<IGroup>,
   temp_app: {} as Partial<IApp>,
 
+  permission_notification: window.Notification && window.Notification.permission === 'granted' ? true : false,
   booted: false,
   defaultEngine: null as undefined | null | IEngine,
   configs: [] as IConfig[],

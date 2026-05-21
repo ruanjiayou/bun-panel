@@ -12,6 +12,8 @@ import view from '../../assets/view.svg?react'
 import voff from '../../assets/view-off.svg?react'
 import sort from '../../assets/sort.svg?react'
 import loading from '../../assets/loading.svg?react'
+import notification_on from '../../assets/notification-on.svg?react'
+import notification_off from '../../assets/notification-off.svg?react'
 import { styled } from '@linaria/react'
 import { assign, omit } from 'lodash'
 
@@ -43,6 +45,8 @@ const types = {
   local,
   network,
   loading,
+  notification_on,
+  notification_off,
 }
 export default function Icon({ type, size = 20, color = 'white', spin = false, disabled = false, ...props }: any) {
   const Image = types[type as keyof typeof types];

@@ -3,11 +3,15 @@
 
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#f86c2a" />
+  <link rel="icon" href="/logo.jpg" /><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="Web site created using create-react-app" />
   <link rel="apple-touch-icon" href="/logo.jpg" />
+  <!-- 针对 iOS 的独立配置 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Panel">
+  <!-- 针对不同屏幕尺寸的 iPhone 闪屏图片（示例） -->
+  <link rel="apple-touch-startup-image" href="/logo-192.png">
   <title>导航</title>
   <script src="https://tjs.sjs.sinajs.cn/open/api/js/wb.js" type="text/javascript" charset="utf-8" defer></script>
 </head>
@@ -15,10 +19,11 @@
 <body>
   <div id="root"></div>
   <script type="module" src="/src/index.jsx"></script>
-  <span id="weibo-share" style="position: absolute;left: 50%;bottom: 0;line-height: 0;font-size: 0;">
-    <wb:share-button appkey="177146223" addition="number" type="button" picture_search="false" default_text="个人专属导航"></wb:share-button>
+  <span id="weibo-share" style="position: absolute;left: 50%;bottom: 5px;line-height: 0;font-size: 0;padding-bottom: calc(env(safe-area-inset-bottom) / 2);">
+    <wb:share-button appkey="177146223" addition="number" type="button" picture_search="false"
+      default_text="个人专属导航"></wb:share-button>
   </span>
-  
+
 </body>
 
 </html>

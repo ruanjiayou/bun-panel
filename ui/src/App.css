@@ -233,8 +233,9 @@ textarea:focus {
   gap: 10px;
   color: wheat;
   transform: translateX(-50%);
-  margin-bottom: 4px;
+  margin: 10px 0;
   align-items: center;
+  padding-bottom: calc(env(safe-area-inset-bottom) / 2);
 }
 
 @keyframes spin {
