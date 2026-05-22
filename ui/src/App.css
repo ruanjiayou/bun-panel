@@ -143,6 +143,12 @@ textarea:focus {
   box-sizing: border-box;
 }
 
+.bg-wrap {
+  background-color: #00000070;
+  border-radius: 40px;
+  display: inline-block;
+}
+
 .title .bg {
   display: inline-block;
   color: white;
@@ -332,7 +338,7 @@ textarea:focus {
     padding-left: 2rem;
   }
 
-  .title>div {
+  .bg-wrap {
     background-color: transparent;
     border-radius: 0;
   }

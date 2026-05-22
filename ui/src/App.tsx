@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import './App.css';
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
 import { Toaster, toast } from 'sonner';
 import Dropdown from 'rc-dropdown';
 import 'rc-dropdown/assets/index.css'
@@ -303,7 +303,7 @@ function App() {
   return (
     <div className="App" style={{ backgroundImage: state.config.background_url ? `url(${state.config.background_url})` : '' }}>
       <div className='topnav'>
-        <Toaster richColors />
+        <Toaster richColors offset={{ top: 80 }} mobileOffset={{ top: 80 }} />
         <MenuWrap className='setting-nav'>
           <Icon className="network-setting" size={24} title="网络模式" type={state.config.network === 'LAN' ? 'local' : 'network'} onClick={async () => {
             store.config.network = state.config.network === 'LAN' ? 'WAN' : 'LAN';
@@ -368,7 +368,7 @@ function App() {
         <Loading />
       </div>}
       <div className='title'>
-        <div style={{ backgroundColor: '#00000070', borderRadius: 40, display: 'inline-block' }}>
+        <div className='bg-wrap'>
           <div className='bg' style={{
             backgroundImage: `url("/images/panel/cf03e199-aa4b-4787-aa44-b479eb008abb.jpg")`,
           }}>{state.config.title}</div>
