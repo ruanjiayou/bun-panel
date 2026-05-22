@@ -13,6 +13,7 @@ export default defineConfig(({ command, mode }) => {
     "name": "灯塔导航",
     "id": "panel",
     "scope": "/",
+    "lang": "zh-CN",
     "start_url": "/panel",
     "display": "fullscreen",
     "theme_color": "#333",
@@ -143,7 +144,7 @@ export default defineConfig(({ command, mode }) => {
           target: 'http://192.168.0.124',
           changeOrigin: true,
         },
-        '/gw/panel': {
+        '/gw/': {
           target: 'http://192.168.0.124',
           changeOrigin: true,
           // rewrite: (path) => path.replace(/^\/gw\/panel/, '')
