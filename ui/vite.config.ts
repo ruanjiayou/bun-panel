@@ -1,16 +1,20 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA, type ManifestOptions } from 'vite-plugin-pwa';
+import { createHtmlPlugin } from 'vite-plugin-html';
+import { compression } from 'vite-plugin-compression2';
+import Obfuscator from 'vite-plugin-bundle-obfuscator';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 import svgr from 'vite-plugin-svgr';
 import wyw from '@wyw-in-js/vite';
 import path from 'path';
-// import { visualizer } from 'rollup-plugin-visualizer';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const manifest: Partial<ManifestOptions> = {
-    "short_name": "灯塔导航",
-    "name": "灯塔导航",
+    "short_name": env.APP_NAME,
+    "name": env.APP_NAME,
     "id": "panel",
     "scope": "/",
     "lang": "zh-CN",
@@ -92,6 +96,7 @@ export default defineConfig(({ command, mode }) => {
         filename: 'sw.ts',
         registerType: 'autoUpdate',
         injectManifest: {
+          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10MB
           manifestTransforms: [],
           globIgnores: ['**/index.html'],
           globPatterns: ['**/*.{js,css,ico,png,svg,jpg}'],
@@ -104,6 +109,45 @@ export default defineConfig(({ command, mode }) => {
           type: 'module',     // 使用 module 类型（仅 Chromium 内核）
         },
       }),
+      ViteImageOptimizer({}),
+      createHtmlPlugin({
+        inject: {
+          data: {
+            APP_NAME: env.APP_NAME
+          }
+        }
+      }),
+      // 需nginx配置开启静态预压缩寻找
+      // compression({
+      //   algorithms: ['brotliCompress'],
+      //   exclude: [/\.(br)$/, /\.(gz)$/]
+      // }),
+      // 
+      // 混淆得丧心病狂了😭
+      // Obfuscator({
+      //   obfuscateWorker: true,
+      //   threadPool: true,
+      //   options: {
+      //     // 🟢 关键 1：彻底关闭控制流平坦化（体积暴增的元凶！能省下 50% 空间）
+      //     controlFlowFlattening: false,
+      //     // 🟢 关键 2：彻底关闭死代码注入（直接杜绝无用垃圾代码）
+      //     deadCodeInjection: false,
+      //     // 🟢 关键 3：保留基础的变量/函数名混淆和字符串打乱（性价比最高）
+      //     compact: true,
+      //     identifierNamesGenerator: 'hexadecimal',
+
+      //     stringArray: true,
+      //     stringArrayEncoding: ['base64'], // 仅使用基础的 base64 加密字符串
+
+      //     stringArrayThreshold: 0.5,       // 75% 的字符串进入加密池即可
+
+      //     // 🟢 关键 4：如果你开了这个，千万不要开 selfDefending，否则代码会膨胀且无法压缩
+      //     selfDefending: false,// 🟢 关键 5：排除第三方库（后面会详细讲）
+      //     excludes: [
+      //       '**/node_modules/**',
+      //     ]
+      //   },
+      // }),
       // visualizer({
       //   open: true, // 构建完成后自动打开报告
       //   filename: 'stats.html', // 生成的分析文件名

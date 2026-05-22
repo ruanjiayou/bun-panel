@@ -10,11 +10,11 @@
   <link rel="apple-touch-icon" href="/logo.jpg" />
   <!-- 针对 iOS 的独立配置 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Panel">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="<%= APP_NAME %>">
   <!-- 针对不同屏幕尺寸的 iPhone 闪屏图片（示例） -->
   <link rel="apple-touch-startup-image" href="/logo-192.png">
-  <title>导航</title>
+  <title><%= APP_NAME %></title>
   <!-- 日志测试 -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
   <script>eruda.init();</script> -->
@@ -27,7 +27,7 @@
   <span id="weibo-share"
     style="position: absolute;left: 50%;bottom: 5px;line-height: 0;font-size: 0;padding-bottom: calc(env(safe-area-inset-bottom) / 2);">
     <wb:share-button appkey="177146223" addition="number" type="button" picture_search="false"
-      default_text="个人专属导航"></wb:share-button>
+      default_text="<%= APP_NAME %>"></wb:share-button>
   </span>
 
 </body>
