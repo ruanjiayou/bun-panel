@@ -97,19 +97,20 @@ const GroupHandle = SortableHandle<{ group: IGroup }>(({ group }: { group: IGrou
 ))
 const GroupItem = SortableElement<{ group: IGroup }>(({ group }: { group: IGroup }) => {
   const state = useSnapshot(store)
-  return (<div key={group.id} >
+  const groupState = useSnapshot(group)
+  return (<div key={groupState.id} >
     <Fragment>
       <div className='tour-group-title' style={{ display: 'inline-block' }}>
         <GroupTitle>
-          <GroupHandle group={group} />
-          <div style={{ display: !group.fold ? 'flex' : 'none', cursor: 'pointer', visibility: state.sort_gid === group.id ? 'visible' : undefined }}>
-            <Icon type={'sort'} size={24} style={{ marginLeft: 5, marginTop: -2, fill: state.sort_gid === group.id ? '#00aaff' : 'white' }} onClick={() => {
+          <GroupHandle group={groupState as IGroup} />
+          <div style={{ display: !groupState.fold ? 'flex' : 'none', cursor: 'pointer', visibility: state.sort_gid === groupState.id ? 'visible' : undefined }}>
+            <Icon type={'sort'} size={24} style={{ marginLeft: 5, marginTop: -2, fill: state.sort_gid === groupState.id ? '#00aaff' : 'white' }} onClick={() => {
               store.sort_gid = state.sort_gid === group.id ? '' : group.id;
             }} />
           </div>
         </GroupTitle>
       </div>
-      {group.fold === 0 && <AppList axis="xy" items={group.apps!} onSortEnd={({ oldIndex, newIndex }) => {
+      {groupState.fold === 0 && <AppList axis="xy" items={group.apps!} onSortEnd={({ oldIndex, newIndex }) => {
         if (oldIndex !== newIndex) {
           const [old] = group.apps!.splice(oldIndex, 1);
           group.apps!.splice(newIndex, 0, old!);
@@ -419,7 +420,7 @@ function App() {
       }
       <Group className='group'>
         {state.booted ? (state.groups.length === 0 ? <span>empty</span> : null) : <Loading />}
-        <GroupList axis="y" lockAxis='y' items={state.groups.slice() as IGroup[]} useDragHandle={true} onSortEnd={({ oldIndex, newIndex }) => {
+        <GroupList axis="y" lockAxis='y' items={store.groups.slice() as IGroup[]} useDragHandle={true} onSortEnd={({ oldIndex, newIndex }) => {
           if (oldIndex !== newIndex && state.groups[oldIndex]!.id && state.groups[newIndex]!.id) {
             const [old] = store.groups.splice(oldIndex, 1);
             store.groups.splice(newIndex, 0, old!);
