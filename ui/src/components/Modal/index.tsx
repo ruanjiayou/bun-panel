@@ -4,10 +4,8 @@ import { Button, FormItem, FormLabel } from '../style';
 
 const Container = styled.div`
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  inset: 0;
+  height: 100vh;
   background-color: #0000008a;
 `
 
@@ -18,8 +16,6 @@ const Title = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: #eeeeee;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
 `
 
 const Main = styled.div`
@@ -28,7 +24,8 @@ const Main = styled.div`
   top: 50%;
   transform: translate(-50%,-65%);
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 5px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 `
@@ -44,7 +41,8 @@ const Body = styled.div`
   }
 `
 const Footer = styled.div`
-  margin-bottom: 10px;
+  padding: 10px 0;
+  background-color: #eeeeee;
 `
 
 export default function Modal({ title, style, children, visible, disabled, onDelete, onSave, onClose }: any) {
